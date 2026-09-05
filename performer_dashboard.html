@@ -15,8 +15,9 @@
     <div id="peekDisplay">Awaiting Selection...</div>
 
     <script type="module">
-        import { initializeApp } from "https://unpkg.com";
-        import { getDatabase, ref, set, onValue } from "https://unpkg.com";
+        import { initializeApp } from "https://unpkg.com/firebase@10.8.0/app.dist/index.esm.js";
+        import { getDatabase, ref, set, onValue } from "https://unpkg.com/firebase@10.8.0/database.dist/index.esm.js";
+
 
         // Must completely match the config mapping used by the spectator file
         const firebaseConfig = {
