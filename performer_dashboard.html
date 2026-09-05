@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secret Observer Dashboard</title>
+    <style>
+        body { background: #000; color: #00ff00; font-family: monospace; text-align: center; padding-top: 100px; }
+        #peekDisplay { font-size: 48px; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <h1>LIVE MAGIC PEEK VIEW</h1>
+    <div id="peekDisplay">Awaiting Selection...</div>
+
+    <script type="module">
+        // Import initialization and the live data listening function ('onValue')
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
+        import { getDatabase, ref, onValue } from "https://gstatic.com";
+
+        // Must completely match the config mapping used by the spectator file
+        const firebaseConfig = {
+            apiKey: "AIzaSyApEFZIG71Fa4OgukSTpyKB-nJXv6Q3TWQ",
+            authDomain: "random--word-generator.firebaseapp.com",
+            databaseURL: "https://random--word-generator-default-rtdb.firebaseio.com",
+            projectId: "random--word-generator",
+            storageBucket: "random--word-generator.firebasestorage.app",
+            messagingSenderId: "894532217122",
+            appId: "1:894532217122:web:cc358ec080280d20dd9d7b"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const database = getDatabase(app);
+
+        // Establishes a permanent live websocket connection looking at the data path
+        onValue(ref(database, 'currentSelection'), (snapshot) => {
+            const data = snapshot.val();
+            if (data && data.word) {
+                // The moment the cloud updates, this changes your text display instantly without refreshing
+                document.getElementById('peekDisplay').textContent = data.word;
+            }
+        });
+    </script>
+</body>
+</html>

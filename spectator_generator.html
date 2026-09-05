@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Random Word Generator</title>
+</head>
+<body>
+
+    <h1>Random Word Generator</h1>
+    <button id="genButton">Generate Word</button>
+    <h2 id="wordDisplay">---</h2>
+
+    <!-- type="module" is required to allow the use of modern JS 'import' statements -->
+    <script type="module">
+        // Import the required initialization and database tools directly from Firebase's servers
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
+        import { getDatabase, ref, set } from "https://gstatic.com";
+
+        // Your specific Firebase live credentials
+        const firebaseConfig = {
+            apiKey: "AIzaSyApEFZIG71Fa4OgukSTpyKB-nJXv6Q3TWQ",
+            authDomain: "random--word-generator.firebaseapp.com",
+            databaseURL: "https://random--word-generator-default-rtdb.firebaseio.com",
+            projectId: "random--word-generator",
+            storageBucket: "random--word-generator.firebasestorage.app",
+            messagingSenderId: "894532217122",
+            appId: "1:894532217122:web:cc358ec080280d20dd9d7b"
+        };
+
+        // Connects this script to your Firebase database instance
+        const app = initializeApp(firebaseConfig);
+        const database = getDatabase(app);
+
+        // Your custom array containing your forced routine words
+        const wordList = ["Midnight", "Shadow", "Anchor", "Paradox", "Labyrinth"];
+        let currentIndex = 0;
+
+        // Tracks the tap event on your generation button
+        document.getElementById('genButton').addEventListener('click', function() {
+            const chosenWord = wordList[currentIndex];
+            
+            // Updates what the spectator physically sees on their screen
+            document.getElementById('wordDisplay').textContent = chosenWord;
+
+            // Silently writes the chosen word data straight up to the cloud database path
+            set(ref(database, 'currentSelection'), {
+                word: chosenWord,
+                timestamp: Date.now()
+            });
+
+            // Moves the counter to the next word in the sequence loop
+            currentIndex = (currentIndex + 1) % wordList.length;
+        });
+    </script>
+</body>
+</html>
