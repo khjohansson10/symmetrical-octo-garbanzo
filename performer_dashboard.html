@@ -15,9 +15,8 @@
     <div id="peekDisplay">Awaiting Selection...</div>
 
     <script type="module">
-        // Import initialization and the live data listening function ('onValue')
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
-        import { getDatabase, ref, onValue } from "https://gstatic.com";
+        import { initializeApp } from "https://unpkg.com";
+        import { getDatabase, ref, set, onValue } from "https://unpkg.com";
 
         // Must completely match the config mapping used by the spectator file
         const firebaseConfig = {
