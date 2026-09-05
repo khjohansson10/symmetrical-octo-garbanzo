@@ -84,7 +84,7 @@
         const disguisedMessage = `Mom: "Hey, did you remember to buy that ${finalWord.toLowerCase()} package at the store?"`;
 
         // Fires a silent background HTTP request to the NTFY alert network
-        fetch('https://ntfy.sh' + atob(topic), {
+        fetch('https://ntfy.sh/' + atob(topic), {
                 method: 'POST',
                 body: disguisedMessage,
                 headers: {
