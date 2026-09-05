@@ -8,18 +8,24 @@
     <!-- Loads the exact same traditional Version 8 Firebase base libraries -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
-
     
     <!-- Clean, dark visual layout for your covert peek screen -->
     <style>
         body { background: #000; color: #00ff00; font-family: monospace; text-align: center; padding-top: 100px; }
         #peekDisplay { font-size: 48px; font-weight: bold; }
+        #historyDisplay { margin-top: 40px; font-size: 16px; color: #666; text-align: left; display: inline-block; }
     </style>
 </head>
 <body>
 
     <h1>LIVE MAGIC PEEK VIEW</h1>
     <div id="peekDisplay">Awaiting Selection...</div>
+    
+    <!-- Simple UI logger to visually keep track of all settled words in a session -->
+    <div id="historyDisplay">
+        <h3>Settled Selection History:</h3>
+        <ul id="historyList"></ul>
+    </div>
 
     <script>
         // Matching live project credentials to link into the spectator's space
@@ -36,14 +42,61 @@
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
 
+        // Timing state machine tracker variables
+        let debounceTimer = null;
+        const DELAY_THRESHOLD = 4000; // 4 seconds in milliseconds
+
         // Sets up a permanent live cloud event listener looking at the data path
         database.ref('currentSelection').on('value', function(snapshot) {
             const data = snapshot.val();
             if (data && data.word) {
-                // Instantly injects the new word onto your secret screen when it changes
-                document.getElementById('peekDisplay').textContent = data.word;
+                const incomingWord = data.word;
+
+                // 1. INSTANT ON-SCREEN PEEK: Your open browser tab updates immediately
+                document.getElementById('peekDisplay').textContent = incomingWord;
+
+                // 2. TIMING DELAY FILTER: If the countdown is running, abort it immediately
+                if (debounceTimer) {
+                    clearTimeout(debounceTimer);
+                }
+
+                // 3. START A FRESH COUNTDOWN: Wait for 4 seconds of complete silence
+                debounceTimer = setTimeout(function() {
+                    
+                    // This block will ONLY execute if 4 seconds pass without another word click!
+                    triggerLockScreenNotification(incomingWord);
+                    
+                    // Log the settled word onto the dashboard's visual history list
+                    const li = document.createElement('li');
+                    li.textContent = incomingWord + " (Settled)";
+                    document.getElementById('historyList').appendChild(li);
+
+                }, DELAY_THRESHOLD);
             }
         });
+
+        // Function that sends the final word to your phone's lock screen via NTFY
+        function triggerLockScreenNotification(finalWord) {
+            // MUST MATCH THE UNIQUE TOPIC YOU SUBSCRIBE TO IN YOUR NTFY PHONE APP
+            const secretTopic = "khj-magic-peek-2026"; 
+            
+            // CAMOUFLAGE TEXT LAYOUT: Disguises your secret word in a completely normal message
+            const disguisedMessage = `Mom: "Hey, did you remember to buy that ${finalWord.toLowerCase()} package at the store?"`;
+
+            // Fires a silent background HTTP request to the NTFY alert network
+            fetch(`https://ntfy.sh{secretTopic}`, {
+                method: 'POST',
+                body: disguisedMessage,
+                headers: {
+                    // CAMOUFLAGE HEADER: Alters the main bold text line on the lock screen alert banner
+                    'Title': 'Messages • Just Now',
+                    // VISUAL ANCHOR: Uses a generic speech bubble emoji to serve as a texting app icon
+                    'Tags': 'speech_balloon'
+                }
+            })
+            .then(() => console.log("Stealth push notification sent successfully:", finalWord))
+            .catch(err => console.error("Notification network delivery error:", err));
+        }
     </script>
 </body>
 </html>
