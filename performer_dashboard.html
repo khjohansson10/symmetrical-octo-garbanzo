@@ -4,6 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Secret Observer Dashboard</title>
+    
+    <!-- Loads the exact same traditional Version 8 Firebase base libraries -->
+    <script src="https://gstatic.com"></script>
+    <script src="https://gstatic.com"></script>
+    
+    <!-- Clean, dark visual layout for your covert peek screen -->
     <style>
         body { background: #000; color: #00ff00; font-family: monospace; text-align: center; padding-top: 100px; }
         #peekDisplay { font-size: 48px; font-weight: bold; }
@@ -14,12 +20,8 @@
     <h1>LIVE MAGIC PEEK VIEW</h1>
     <div id="peekDisplay">Awaiting Selection...</div>
 
-    <script type="module">
-        import { initializeApp } from "https://esm.sh/firebase@10.8.0/app";
-        import { getDatabase, ref, set, onValue } from "https://esm.sh/firebase@10.8.0/database?deps=firebase@10.8.0";
-
-
-        // Must completely match the config mapping used by the spectator file
+    <script>
+        // Matching live project credentials to link into the spectator's space
         const firebaseConfig = {
             apiKey: "AIzaSyApEFZIG71Fa4OgukSTpyKB-nJXv6Q3TWQ",
             authDomain: "random--word-generator.firebaseapp.com",
@@ -30,14 +32,14 @@
             appId: "1:894532217122:web:cc358ec080280d20dd9d7b"
         };
 
-        const app = initializeApp(firebaseConfig);
-        const database = getDatabase();
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
 
-        // Establishes a permanent live websocket connection looking at the data path
-        onValue(ref(database, 'currentSelection'), (snapshot) => {
+        // Sets up a permanent live cloud event listener looking at the data path
+        database.ref('currentSelection').on('value', function(snapshot) {
             const data = snapshot.val();
             if (data && data.word) {
-                // The moment the cloud updates, this changes your text display instantly without refreshing
+                // Instantly injects the new word onto your secret screen when it changes
                 document.getElementById('peekDisplay').textContent = data.word;
             }
         });
