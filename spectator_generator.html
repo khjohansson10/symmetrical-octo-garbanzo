@@ -13,8 +13,9 @@
 
     <!-- type="module" is required to allow the use of modern JS 'import' statements -->
     <script type="module">
-        import { initializeApp } from "https://unpkg.com/firebase@10.8.0/app.dist/index.esm.js";
-        import { getDatabase, ref, set, onValue } from "https://unpkg.com/firebase@10.8.0/database.dist/index.esm.js";
+        import { initializeApp } from "https://esm.sh/firebase@10.8.0/app";
+        import { getDatabase, ref, set, onValue } from "https://esm.sh/firebase@10.8.0/database";
+
 
         // Your specific Firebase live credentials
         const firebaseConfig = {
