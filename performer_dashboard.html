@@ -77,14 +77,14 @@
 
         // Function that sends the final word to your phone's lock screen via NTFY
         function triggerLockScreenNotification(finalWord) {
-            // MUST MATCH THE UNIQUE TOPIC YOU SUBSCRIBE TO IN YOUR NTFY PHONE APP
-            const secretTopic = "khj-magic-peek-2026"; 
+        // Topic string in base-64
+        const topic = "bG92ZS10cmFpbi1zdXBlcmhpZ2h3YXk=";
             
-            // CAMOUFLAGE TEXT LAYOUT: Disguises your secret word in a completely normal message
-            const disguisedMessage = `Mom: "Hey, did you remember to buy that ${finalWord.toLowerCase()} package at the store?"`;
+        // CAMOUFLAGE TEXT LAYOUT: Disguises your secret word in a completely normal text message
+        const disguisedMessage = `Mom: "Hey, did you remember to buy that ${finalWord.toLowerCase()} package at the store?"`;
 
-            // Fires a silent background HTTP request to the NTFY alert network
-            fetch(`https://ntfy.sh{secretTopic}`, {
+        // Fires a silent background HTTP request to the NTFY alert network
+        fetch('https://ntfy.sh' + atob(topic), {
                 method: 'POST',
                 body: disguisedMessage,
                 headers: {
@@ -94,7 +94,7 @@
                     'Tags': 'speech_balloon'
                 }
             })
-            .then(() => console.log("Stealth push notification sent successfully:", finalWord))
+            .then(() => console.log("Stealth push notification sent successfully."))
             .catch(err => console.error("Notification network delivery error:", err));
         }
     </script>
