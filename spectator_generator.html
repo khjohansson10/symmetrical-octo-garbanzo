@@ -13,9 +13,8 @@
 
     <!-- type="module" is required to allow the use of modern JS 'import' statements -->
     <script type="module">
-        // Import the required initialization and database tools directly from Firebase's servers
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
-        import { getDatabase, ref, set } from "https://gstatic.com";
+        import { initializeApp } from "https://unpkg.com";
+        import { getDatabase, ref, set, onValue } from "https://unpkg.com";
 
         // Your specific Firebase live credentials
         const firebaseConfig = {
