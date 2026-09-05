@@ -81,7 +81,7 @@
         const topic = "bG92ZS10cmFpbi1zdXBlcmhpZ2h3YXk=";
             
         // CAMOUFLAGE TEXT LAYOUT: Disguises your secret word in a completely normal text message
-        const disguisedMessage = `Mom: "Hey, did you remember to buy that ${finalWord.toLowerCase()} package at the store?"`;
+        const disguisedMessage = `"Hey Kenny, just checking in on your progress with the ${finalWord.toLowerCase()} case. Do you think you'll be finished with it this biweek?"`;
 
         // Fires a silent background HTTP request to the NTFY alert network
         fetch('https://ntfy.sh/' + atob(topic), {
@@ -89,7 +89,7 @@
                 body: disguisedMessage,
                 headers: {
                     // CAMOUFLAGE HEADER: Alters the main bold text line on the lock screen alert banner
-                    'Title': 'Messages - Just Now',
+                    'Title': 'Peter.Vasat@USPTO.gov sent a message:',
                     // VISUAL ANCHOR: Uses a generic speech bubble emoji to serve as a texting app icon
                     'Tags': 'speech_balloon'
                 }
