@@ -10,11 +10,9 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
         body { background-color: #fcfcfc; color: #333333; min-height: 100vh; display: flex; flex-direction: column; -webkit-font-smoothing: antialiased; }
         
-        /* Teal Banner Navigation */
-        header { background-color: #1bbc9b; color: #ffffff; width: 100%; position: sticky; top: 0; z-index: 1000; }
-        
-        /* Fixed: Adjusted padding on the navbar wrapper right-side container to shift the menu icon left */
-        .nav-container { padding: 12px 18px 12px 15px; max-width: 800px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+        /* Fixed: Secured the top banner background color and visibility block */
+        header { background-color: #1bbc9b !important; color: #ffffff; width: 100%; position: sticky; top: 0; z-index: 1000; display: block; }
+        .nav-container { padding: 12px 18px 12px 15px; max-width: 800px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; background-color: #1bbc9b; }
         .logo-text { font-size: 16.5px; font-weight: 500; color: #ffffff; text-decoration: none; letter-spacing: 0.8px; text-transform: uppercase; }
         .menu-toggle { background: transparent; border: none; color: #ffffff; font-size: 20px; cursor: pointer; display: flex; flex-direction: column; gap: 4px; margin-right: 2px; }
         .menu-bar { width: 18px; height: 2px; background: #ffffff; }
@@ -31,11 +29,14 @@
         
         /* Standard input configurations sizing specifications */
         .field-input, .field-select { height: 28px; padding: 2px 6px; border: 1px solid #cccccc; border-radius: 4px; background-color: #ffffff; font-size: 14px; color: #333333; outline: none; }
-        .field-input-words { width: 55px; text-align: center; }
+        
+        /* Fixed: Forced the value text inside the input box to be strictly left-aligned */
+        .field-input-words { width: 55px; text-align: left !important; padding-left: 8px; }
+        
         .field-select { width: 95px; }
         .field-input-letter { width: 30px; text-align: center; padding: 2px; }
 
-        /* Fixed: Indent container now only captures the specific lower sub-options */
+        /* Indent container now only captures the specific lower sub-options */
         .indented-sub-group { display: flex; flex-direction: column; gap: 10px; padding-left: 20px; width: 100%; }
 
         /* Innocent radio selection grid alignments */
@@ -47,7 +48,7 @@
         .field-select-large { height: 32px; width: 110px; font-size: 15px; padding: 4px 8px; }
         .field-input-large { height: 32px; width: 65px; font-size: 15px; padding: 4px 8px; }
 
-        /* Fixed: Reset button pulled out of indentation group to align with left edge elements */
+        /* Reset button pulled out of indentation group to align with left edge elements */
         .btn-reset-options { background: #ffffff; color: #333; border: 1px solid #ccc; border-radius: 4px; padding: 6px 12px; font-size: 14.5px; cursor: pointer; width: max-content; margin-top: 2px; }
         .btn-reset-options:active { background-color: #e6e6e6; border-color: #adadad; }
 
@@ -59,12 +60,12 @@
         .btn-blue-generate { display: block; background-color: #337ab7; color: #ffffff; border: 1px solid #2e6da4; padding: 7px 12px; font-size: 14.5px; font-weight: 400; border-radius: 4px; cursor: pointer; text-align: center; width: max-content; margin-bottom: 25px; }
         .btn-blue-generate:active { background-color: #286090; border-color: #204d74; }
 
-        /* Fixed: Adjusted display panel styling to match vertical base metrics flawlessly */
+        /* Fixed: Ensured clean horizontal alignment and scaling for word display workspace */
         .word-presentation-box { text-align: center; margin: 40px auto; padding: 5px; display: flex; align-items: center; justify-content: center; gap: 15px; width: 100%; max-width: 500px; }
-        .word-text-display { font-size: 42px; font-weight: 700; color: #333333; letter-spacing: -0.5px; word-break: break-all; line-height: 1.1; }
+        .word-text-display { font-size: 42px; font-weight: 700; color: #333333; letter-spacing: -0.5px; word-break: break-all; line-height: 1; display: inline-block; vertical-align: middle; }
         
-        /* Fixed: Heart scaled up and aligned flat onto the text baseline grid structure */
-        .heart-svg-wrapper { width: 44px; height: 44px; color: #1bbc9b; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; transition: transform 0.1s ease; margin-top: 2px; }
+        /* Fixed: Scaled the layout box dimensions up and forced flat vertical center line locks */
+        .heart-svg-wrapper { width: 46px; height: 46px; color: #1bbc9b; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; transition: transform 0.1s ease; margin-top: 4px; vertical-align: middle; }
         .heart-svg-wrapper:active { transform: scale(0.9); }
 
         footer { border-top: 1px solid #e5e5e5; background-color: #ffffff; padding: 20px 15px; font-size: 13px; color: #777777; width: 100%; text-align: left; margin-top: auto; }
@@ -73,6 +74,7 @@
 </head>
 <body>
 
+    <header>
         <div class="nav-container">
             <a href="#" class="logo-text">Random Word Generator</a>
             <button class="menu-toggle">
@@ -141,10 +143,11 @@
             <button id="genButton" class="btn-blue-generate">Generate Random Words</button>
 
             <div class="word-presentation-box">
-                <div id="wordDisplay" class="word-text-display">---</div>
+                <!-- Fixed: Website opens with the first array element loaded natively instead of placeholders -->
+                <div id="wordDisplay" class="word-text-display">midnight</div>
                 
                 <div id="heartToggle" class="heart-svg-wrapper">
-                    <svg id="heartIconSvg" viewBox="0 0 32 32" width="100%" height="100%" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <svg id="heartIconSvg" viewBox="0 0 32 32" width="100%" height="100%" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
                     </svg>
                 </div>
