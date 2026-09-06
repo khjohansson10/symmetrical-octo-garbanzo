@@ -6,66 +6,68 @@
     <title>Random Word Generator</title>
 
     <style>
-        /* Precision Refined Mobile UI Matching randomwordgenerator.com Profile */
+        /* Definitive Pixel-Perfect Mobile UI Rebuilt from Real Site Layout Metrics */
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
         body { background-color: #fcfcfc; color: #333333; min-height: 100vh; display: flex; flex-direction: column; -webkit-font-smoothing: antialiased; }
         
-        /* Fixed: Secured the top banner background color and visibility block */
+        /* Teal Header Banner Layout */
         header { background-color: #1bbc9b !important; color: #ffffff; width: 100%; position: sticky; top: 0; z-index: 1000; display: block; }
-        .nav-container { padding: 12px 18px 12px 15px; max-width: 800px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; background-color: #1bbc9b; }
+        
+        /* Fixed: Adjusted padding on right side to push the hamburger menu icon perfectly to the left */
+        .nav-container { padding: 12px 24px 12px 15px; max-width: 800px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; background-color: #1bbc9b; }
         .logo-text { font-size: 16.5px; font-weight: 500; color: #ffffff; text-decoration: none; letter-spacing: 0.8px; text-transform: uppercase; }
-        .menu-toggle { background: transparent; border: none; color: #ffffff; font-size: 20px; cursor: pointer; display: flex; flex-direction: column; gap: 4px; margin-right: 2px; }
+        
+        /* Fixed: Added specific padding shift to position the menu bar alignment lines */
+        .menu-toggle { background: transparent; border: none; color: #ffffff; font-size: 20px; cursor: pointer; display: flex; flex-direction: column; gap: 4px; padding-right: 2px; }
         .menu-bar { width: 18px; height: 2px; background: #ffffff; }
 
-        /* Main Workspace Container Layout */
-        main { flex: 1; padding: 10px 15px; max-width: 800px; width: 100%; margin: 0 auto; }
-        .workspace-wrapper { text-align: left; }
+        /* Main Workspace Container Layout - Fixed: Expanded horizontal margins to let contents stretch */
+        main { flex: 1; padding: 10px 8px; max-width: 800px; width: 100%; margin: 0 auto; }
+        .workspace-wrapper { text-align: left; padding: 0 8px; }
         
-        h1 { font-size: 27px; font-weight: 700; color: #333333; margin-top: 8px; margin-bottom: 12px; letter-spacing: -0.5px; }
+        /* Fixed: Made H1 text stretch across the page width with widened letter-spacing (kerning) */
+        h1 { font-size: 27px; font-weight: 700; color: #333333; margin-top: 8px; margin-bottom: 12px; letter-spacing: 0.2px; width: 100%; word-spacing: 0.5px; }
 
-        /* Configuration control layout stack */
+        /* Configuration control stack layout */
         .config-form { display: flex; flex-direction: column; gap: 10px; margin-bottom: 2px; }
         .input-row { display: flex; align-items: center; gap: 8px; font-size: 14.5px; color: #333; }
         
-        /* Standard input configurations sizing specifications */
+        /* Fields form inputs formatting controls */
         .field-input, .field-select { height: 28px; padding: 2px 6px; border: 1px solid #cccccc; border-radius: 4px; background-color: #ffffff; font-size: 14px; color: #333333; outline: none; }
-        
-        /* Fixed: Forced the value text inside the input box to be strictly left-aligned */
         .field-input-words { width: 55px; text-align: left !important; padding-left: 8px; }
-        
         .field-select { width: 95px; }
         .field-input-letter { width: 30px; text-align: center; padding: 2px; }
 
-        /* Indent container now only captures the specific lower sub-options */
+        /* Nested configurations sub-option indented container blocks */
         .indented-sub-group { display: flex; flex-direction: column; gap: 10px; padding-left: 20px; width: 100%; }
 
-        /* Innocent radio selection grid alignments */
+        /* Radio selectors inline text layout grid */
         .radio-group { display: flex; gap: 12px; font-size: 14.5px; align-items: center; }
         .radio-item { display: flex; align-items: center; gap: 6px; }
         .radio-item input[type="radio"] { width: 14px; height: 14px; cursor: pointer; }
 
-        /* Expanded parameter values for options dropdown inputs */
+        /* Option drawer container item sizes profiles */
         .field-select-large { height: 32px; width: 110px; font-size: 15px; padding: 4px 8px; }
         .field-input-large { height: 32px; width: 65px; font-size: 15px; padding: 4px 8px; }
 
-        /* Reset button pulled out of indentation group to align with left edge elements */
+        /* Reset options parameter action link button layout properties */
         .btn-reset-options { background: #ffffff; color: #333; border: 1px solid #ccc; border-radius: 4px; padding: 6px 12px; font-size: 14.5px; cursor: pointer; width: max-content; margin-top: 2px; }
         .btn-reset-options:active { background-color: #e6e6e6; border-color: #adadad; }
 
-        /* Permanent underlined blue link style anchors */
+        /* Standard text reference link underline formatting models */
         .toggle-link { color: #337ab7; background: none; border: none; font-size: 14.5px; font-weight: 400; cursor: pointer; text-decoration: underline; padding: 2px 0; margin-bottom: 6px; display: inline-block; }
         .toggle-link:hover { color: #23527c; }
 
-        /* Blue generation submit button formatting layouts */
+        /* Blue generator submission call-to-action button properties */
         .btn-blue-generate { display: block; background-color: #337ab7; color: #ffffff; border: 1px solid #2e6da4; padding: 7px 12px; font-size: 14.5px; font-weight: 400; border-radius: 4px; cursor: pointer; text-align: center; width: max-content; margin-bottom: 25px; }
         .btn-blue-generate:active { background-color: #286090; border-color: #204d74; }
 
-        /* Fixed: Ensured clean horizontal alignment and scaling for word display workspace */
-        .word-presentation-box { text-align: center; margin: 40px auto; padding: 5px; display: flex; align-items: center; justify-content: center; gap: 15px; width: 100%; max-width: 500px; }
-        .word-text-display { font-size: 42px; font-weight: 700; color: #333333; letter-spacing: -0.5px; word-break: break-all; line-height: 1; display: inline-block; vertical-align: middle; }
+        /* Fixed: Restructured presentation line box with absolute center alignment flex blocks */
+        .word-presentation-box { text-align: center; margin: 45px auto; padding: 5px; display: flex; align-items: center; justify-content: center; gap: 14px; width: 100%; max-width: 550px; }
+        .word-text-display { font-size: 42px; font-weight: 700; color: #333333; letter-spacing: -0.5px; word-break: break-all; line-height: 1; display: inline-block; }
         
-        /* Fixed: Scaled the layout box dimensions up and forced flat vertical center line locks */
-        .heart-svg-wrapper { width: 46px; height: 46px; color: #1bbc9b; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; transition: transform 0.1s ease; margin-top: 4px; vertical-align: middle; }
+        /* Fixed: Enlarged layout tracking dimensions to 50px and added top margin push to lock baseline center line alignment */
+        .heart-svg-wrapper { width: 50px; height: 50px; color: #1bbc9b; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; transition: transform 0.1s ease; margin-top: 6px; }
         .heart-svg-wrapper:active { transform: scale(0.9); }
 
         footer { border-top: 1px solid #e5e5e5; background-color: #ffffff; padding: 20px 15px; font-size: 13px; color: #777777; width: 100%; text-align: left; margin-top: auto; }
@@ -95,7 +97,7 @@
                     <input type="number" class="field-input field-input-words" value="1" min="1" max="50">
                 </div>
 
-                <!-- Advanced Configuration Drawer Layer Panel -->
+                <!-- Advanced Selection Inputs Menu Drawer Panels Accordion -->
                 <div id="advancedOptions" style="display: none; flex-direction: column; gap: 10px;">
                     <div class="input-row">
                         <label>Word Type:</label>
@@ -114,10 +116,10 @@
                         <input type="text" class="field-input field-input-letter" maxlength="1">
                     </div>
 
-                    <!-- Left Aligned Label for Size Criteria -->
+                    <!-- Left-aligned parent section text field label tracker settings -->
                     <div style="font-size: 14.5px; color: #333; text-align: left;">Word size by:</div>
                     
-                    <!-- FIXED INDENT CONTAINER: Only indents the granular radio items and select inputs -->
+                    <!-- Only granular checkbox items map inside sub-indented containers -->
                     <div class="indented-sub-group">
                         <div class="radio-group">
                             <div class="radio-item"><input type="radio" name="sizeBy" id="radSyllables"><label for="radSyllables">Syllables</label></div>
@@ -134,7 +136,6 @@
                         </div>
                     </div>
                     
-                    <!-- FIXED POSITION: Reset Options button sits flush left outside the sub-indentation -->
                     <button class="btn-reset-options">Reset Options</button>
                 </div>
             </div>
@@ -143,7 +144,6 @@
             <button id="genButton" class="btn-blue-generate">Generate Random Words</button>
 
             <div class="word-presentation-box">
-                <!-- Fixed: Website opens with the first array element loaded natively instead of placeholders -->
                 <div id="wordDisplay" class="word-text-display">midnight</div>
                 
                 <div id="heartToggle" class="heart-svg-wrapper">
