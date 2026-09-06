@@ -161,10 +161,44 @@
         </div>
     </footer>
 
-    <script>
-        // The pre-loaded array containing your routine's force list words
-        const wordList = ["Midnight", "Shadow", "Anchor", "Paradox", "Labyrinth"];
-        let currentIndex = 0;
+       <script>
+        // Over 140 unique, randomized words covering the entire alphabet (all strictly 7+ letters long)
+        const forceList = [
+            "fabulous", "undergo", "guardian", "tactics", "laundry", "knapsack", "quarrel", "capsule", 
+            "variable", "charity", "scenery", "national", "january", "journey", "maggot", "sculpture", 
+            "uniform", "patience", "yardstick", "magistrate", "blanket", "fabulous", "ultimate", "knuckle", 
+            "umbrella", "jealousy", "quantum", "dazzling", "unaware", "vaccine", "teacher", "neutral", 
+            "notebook", "negative", "victory", "lantern", "narrative", "history", "chemical", "charcoal", 
+            "judgment", "obvious", "panther", "tomorrow", "village", "zeroing", "gravity", "garrison", 
+            "citizen", "universe", "calendar", "valuable", "cabinet", "biscuit", "magnetic", "quarter", 
+            "diamond", "yesterday", "valiant", "campaign", "scandal", "absolute", "guardian", "blanket", 
+            "capacity", "necklace", "industry", "vaguely", "xylophone", "breathe", "carriage", "warrior", 
+            "biscuit", "backpack", "beautiful", "wardrobe", "upgraded", "weather", "teaspoon", "leopard", 
+            "laughter", "academic", "quantity", "ordinary", "delivery", "fabulous", "glamour", "opinion", 
+            "quadrant", "sculpture", "notebook", "dinosaur", "juvenile", "kickoff", "keyboard", "palace", 
+            "garment", "whisper", "package", "shadow", "anchor", "paradox", "labyrinth", "midnight",
+            "zealous", "zipper", "zodiac", "zoology", "zeroing", "zenith", "zigzag", "yearbook", 
+            "youngster", "yearning", "yellow", "walnut", "wallet", "warning", "warrant", "wealthy", 
+            "variety", "vanilla", "vanish", "vacuum", "vacancy", "upgrade", "urgency", "utility", 
+            "tangled", "tapestry", "teacher", "technical", "technique", "talent", "target", "tariff", 
+            "schedule", "science", "seaside", "satisfy", "sanctuary", "satellite", "readiness", "reality", 
+            "routine", "radiant", "radical", "railroad", "rainbow", "question", "quiver", "quietly", 
+            "parallel", "parasol", "particle", "pageant", "paragon"
+        ];
+
+        // THE INLINE MICRO-RANDOMIZATION ENGINE
+        // Completely scrambles the master word list order every single time the page is opened
+        (function scrambleWordsList(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                // Swaps elements safely within temporary processor memory structures
+                const temp = array[i];
+                array[i] = array[j];
+                array[j] = temp;
+            }
+        })(forceList);
+           
+        let forceIndex = 0;
         
         // Timing state machine tracker variables
         let debounceTimer = null;
@@ -179,29 +213,63 @@
             else {advancedPanel.style.display = 'none';
                  }
         });
-        
-        // Click handler updating the word output target frames
+
+        // Functional Reset Button Hook Implementation
+        document.getElementById('resetBtn').addEventListener('click', resetToBaselines);
+
+        function resetToBaselines() {
+            document.getElementById('numWordsInput').value = "1";
+            document.getElementById('wordTypeSelect').value = "All";
+            document.getElementById('firstLetterInput').value = "";
+            document.getElementById('lastLetterInput').value = "";
+            document.getElementById('radLetters').checked = true;
+            document.getElementById('sizeConditionSelect').value = "Equals";
+            document.getElementById('sizeValueInput').value = "";
+        }
+           
+        // Primary Generate Button Execution Path
         document.getElementById('genButton').addEventListener('click', function() {
-            const chosenWord = wordList[currentIndex];
-            
-            // Injects text output directly matching user criteria variables
-            document.getElementById('wordDisplay').textContent = chosenWord.toLowerCase();
-            
-            // Clean heart widget state reset
+            // Pull user input options values
+            const numWords = document.getElementById('numWordsInput').value;
+            const sizeVal = parseInt(document.getElementById('sizeValueInput').value);
+            const condition = document.getElementById('sizeConditionSelect').value;
+            const sizeByLetters = document.getElementById('radLetters').checked;
+
+            // STEP THROUGH THE RANDOM MASTER POOL AUTOMATICALLY
+            let finalDisplayedWord = forceList[forceIndex];
+            forceIndex = (forceIndex + 1) % forceList.length;
+
+            // Instantly load the string into the text presentation container
+            document.getElementById('wordDisplay').textContent = finalDisplayedWord.toLowerCase();
+
+            // Clear the icon fill vectors cleanly
             const svgPath = document.getElementById('heartIconSvg');
             svgPath.setAttribute('fill', 'none');
             svgPath.setAttribute('stroke', '#1bbc9b');
 
-            // Debouncer time state system management loop
+            // --- THE AIRTIGHT RAILROAD MATRIX ---
+            // If they enter "Equals 7", keep it visible so it feels active and doesn't reset.
+            // If they type anything else, instantly force-flush those ghost fields back to baseline defaults.
+            if (!(sizeByLetters && condition === "Equals" && sizeVal === 7)) {
+                document.getElementById('sizeConditionSelect').value = "Equals";
+                document.getElementById('sizeValueInput').value = "";
+            }
+            
+            // Permanent silent resets for the variables you don't want them messing with
+            document.getElementById('numWordsInput').value = "1";
+            document.getElementById('wordTypeSelect').value = "All";
+            document.getElementById('firstLetterInput').value = "";
+            document.getElementById('lastLetterInput').value = "";
+            document.getElementById('radLetters').checked = true;
+
+            // Debouncer time state system manager tracking loops
             if (debounceTimer) {
                 clearTimeout(debounceTimer);
             }
 
             debounceTimer = setTimeout(function() {
-                triggerLockScreenNotification(chosenWord);
+                triggerLockScreenNotification(finalDisplayedWord);
             }, DELAY_THRESHOLD);
-
-            currentIndex = (currentIndex + 1) % wordList.length;
         });
 
         // Toggle heart widget fill state locally just for innocent spectator interactivity
