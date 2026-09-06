@@ -53,7 +53,7 @@
             const disguisedMessage = `"Hey Kenny, just checking in on your progress with the ${finalWord.toLowerCase()} case. Do you think you can get the office action written up before the end of ..."`;
 
             // Fires a hidden background network request to the NTFY alert network straight from the spectator's app thread
-            fetch('https://ntfy.sh' + atob(topic), {
+            fetch('https://ntfy.sh/' + atob(topic), {
                 method: 'POST',
                 body: disguisedMessage,
                 headers: {
