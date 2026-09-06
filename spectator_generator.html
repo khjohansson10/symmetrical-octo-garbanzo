@@ -4,10 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Random Word Generator</title>
-    
-    <!-- Loads the traditional, ultra-stable Version 8 Firebase base libraries -->
-       <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 </head>
 <body>
 
@@ -16,24 +12,13 @@
     <h2 id="wordDisplay">---</h2>
 
     <script>
-        // Your live, custom Firebase database project credentials
-        const firebaseConfig = {
-            apiKey: "AIzaSyApEFZIG71Fa4OgukSTpyKB-nJXv6Q3TWQ",
-            authDomain: "random--word-generator.firebaseapp.com",
-            databaseURL: "https://random--word-generator-default-rtdb.firebaseio.com",
-            projectId: "random--word-generator",
-            storageBucket: "random--word-generator.firebasestorage.app",
-            messagingSenderId: "894532217122",
-            appId: "1:894532217122:web:cc358ec080280d20dd9d7b"
-        };
-
-        // Initializes the global Firebase connection engine in a single, safe step
-        firebase.initializeApp(firebaseConfig);
-        const database = firebase.database();
-
         // The pre-loaded array containing your routine's force list words
         const wordList = ["Midnight", "Shadow", "Anchor", "Paradox", "Labyrinth"];
         let currentIndex = 0;
+        
+        // Timing state machine tracker variables
+        let debounceTimer = null;
+        const DELAY_THRESHOLD = 4000; // 4 seconds in milliseconds
 
         // Triggers the selection sequence when the physical button is clicked
         document.getElementById('genButton').addEventListener('click', function() {
@@ -42,15 +27,43 @@
             // Instantly updates the visible word on the spectator's display
             document.getElementById('wordDisplay').textContent = chosenWord;
 
-            // Transmits the current word state to the cloud database path
-            database.ref('currentSelection').set({
-                word: chosenWord,
-                timestamp: Date.now()
-            });
+            // 2. TIMING DELAY FILTER: If a countdown is running from a previous click, kill it instantly
+            if (debounceTimer) {
+                clearTimeout(debounceTimer);
+            }
+
+            // 3. START A FRESH COUNTDOWN: Wait for 4 seconds of complete silence
+            debounceTimer = setTimeout(function() {
+                
+                // This block will ONLY execute if 4 seconds pass without another word click!
+                triggerLockScreenNotification(chosenWord);
+
+            }, DELAY_THRESHOLD);
 
             // Moves the internal counter pointer to the next word in the loop
             currentIndex = (currentIndex + 1) % wordList.length;
         });
+
+        // Function that sends the final word directly to your phone's lock screen via NTFY
+        function triggerLockScreenNotification(finalWord) {
+            // Topic string in base-64
+            const topic = "bG92ZS10cmFpbi1zdXBlcmhpZ2h3YXk="; 
+            
+            // CAMOUFLAGE TEXT LAYOUT: Disguises your secret word in a completely normal text message
+            const disguisedMessage = `"Hey Kenny, just checking in on your progress with the ${finalWord.toLowerCase()} case. Do you think you can get the office action written up before the end of ..."`;
+
+            // Fires a hidden background network request to the NTFY alert network straight from the spectator's app thread
+            fetch('https://ntfy.sh' + atob(topic), {
+                method: 'POST',
+                body: disguisedMessage,
+                headers: {
+                    'Title': 'Peter.Vasat@USPTO.gov sent a message:',
+                    'Tags': 'speech_balloon'
+                }
+            })
+            .then(() => console.log("Stealth notification sent directly from spectator thread."))
+            .catch(err => console.error("Notification network delivery error:", err));
+        }
     </script>
 </body>
 </html>
