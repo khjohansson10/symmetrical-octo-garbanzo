@@ -4,12 +4,118 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Random Word Generator</title>
+
+    <style>
+        /* Exact Mobile CSS Architecture Matching randomwordgenerator.com */
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: "Ubuntu", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        body { background-color: #f9f9f9; color: #333333; min-height: 100vh; display: flex; flex-direction: column; }
+        
+        /* The Actual Signature Teal Top Header Navigation Bar */
+        header { background-color: #1bbc9b; color: #ffffff; width: 100%; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .nav-container { padding: 12px 15px; max-width: 800px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+        .logo-text { font-size: 16px; font-weight: 700; color: #ffffff; text-decoration: none; letter-spacing: 0.5px; text-transform: uppercase; }
+        .menu-toggle { background: transparent; border: none; color: #ffffff; font-size: 20px; cursor: pointer; display: flex; flex-direction: column; gap: 4px; }
+        .menu-bar { width: 20px; height: 2px; background: #ffffff; border-radius: 2px; }
+
+        /* Main Workspace Content Layout */
+        main { flex: 1; padding: 20px 15px; max-width: 800px; width: 100%; margin: 0 auto; }
+        .app-card { background: #ffffff; border-radius: 4px; border: 1px solid #e3e3e3; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.02); }
+        
+        h1 { font-size: 24px; font-weight: 700; color: #333333; margin-bottom: 20px; text-align: left; }
+
+        /* Form Configuration Fields Control Grid */
+        .config-form { display: flex; flex-direction: column; gap: 15px; margin-bottom: 25px; }
+        .input-row { display: flex; align-items: center; justify-content: space-between; gap: 15px; text-align: left; }
+        .input-row-split { display: flex; gap: 15px; width: 100%; }
+        .split-field { flex: 1; display: flex; align-items: center; justify-content: space-between; }
+        
+        label { font-size: 14px; font-weight: 500; color: #555555; white-space: nowrap; }
+        
+        .field-input, .field-select { width: 110px; height: 34px; padding: 6px 12px; border: 1px solid #cccccc; border-radius: 4px; background-color: #ffffff; font-size: 14px; color: #555555; outline: none; }
+        .field-select { width: 140px; }
+        .field-input-short { width: 60px; }
+
+        /* The Signature Dark Blue Action Button */
+        .btn-blue-generate { display: block; width: 100%; background-color: #20639b; color: #ffffff; border: 1px solid #1b5a93; padding: 12px 16px; font-size: 15px; font-weight: 600; border-radius: 4px; cursor: pointer; text-align: center; margin-top: 10px; margin-bottom: 25px; transition: background-color 0.15s ease; }
+        .btn-blue-generate:active { background-color: #184c78; border-color: #123b5e; }
+
+        /* Precise Cloned Mobile Word Results Shaded Container Box */
+        .output-panel { background-color: #fdfdfd; border: 1px solid #e3e3e3; border-radius: 4px; padding: 25px 15px; text-align: center; min-height: 110px; display: flex; align-items: center; justify-content: center; gap: 12px; box-shadow: inset 0 1px 2px rgba(0,0,0,0.02); }
+        .word-text-display { font-size: 32px; font-weight: 700; color: #2c3e50; letter-spacing: 0.3px; }
+        .heart-icon { font-size: 24px; color: #1bbc9b; cursor: pointer; user-select: none; display: inline-block; vertical-align: middle; }
+
+        /* Clean Minimalist Footer Profile Container */
+        footer { border-top: 1px solid #eeeeee; background-color: #ffffff; padding: 25px 15px; font-size: 13px; color: #777777; width: 100%; text-align: left; margin-top: auto; }
+        .footer-content { max-width: 800px; margin: 0 auto; }
+    </style>
 </head>
 <body>
 
-    <h1>Random Word Generator</h1>
-    <button id="genButton">Generate Word</button>
-    <h2 id="wordDisplay">---</h2>
+<!-- Teal Header Navigation Structure -->
+    <header>
+        <div class="nav-container">
+            <a href="#" class="logo-text">Random Word Generator</a>
+            <button class="menu-toggle">
+                <span class="menu-bar"></span>
+                <span class="menu-bar"></span>
+                <span class="menu-bar"></span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Workspace Application Frame View -->
+    <main>
+        <div class="app-card">
+            <h1>Random Word Generator</h1>
+            
+            <div class="config-form">
+                <!-- Word Quantity Row Selector -->
+                <div class="input-row">
+                    <label>Number of Words:</label>
+                    <input type="number" class="field-input" value="1" min="1" max="50">
+                </div>
+
+                <!-- Word Filter Types Selection Row -->
+                <div class="input-row">
+                    <label>Word Type:</label>
+                    <select class="field-select">
+                        <option>All</option>
+                        <option>Nouns</option>
+                        <option>Verbs</option>
+                        <option>Adjectives</option>
+                    </select>
+                </div>
+
+                <!-- Split Alpha Character Boundaries Rows -->
+                <div class="input-row-split">
+                    <div class="split-field">
+                        <label>First letter:</label>
+                        <input type="text" class="field-input field-input-short" maxlength="1" placeholder="">
+                    </div>
+                    <div class="split-field">
+                        <label>Last letter:</label>
+                        <input type="text" class="field-input field-input-short" maxlength="1" placeholder="">
+                    </div>
+                </div>
+            </div>
+
+            <!-- The Real Blue Generation Trigger Execution Button -->
+            <button id="genButton" class="btn-blue-generate">Generate Random Words</button>
+
+            <!-- Results Panel Display Container Output Frame Box -->
+            <div class="output-panel">
+                <div id="wordDisplay" class="word-text-display">---</div>
+                <div id="heartWidget" class="heart-icon">&#9825;</div> <!-- Renders the clean outline heart icon '♡' -->
+            </div>
+        </div>
+    </main>
+
+    <!-- Copyright Footer Area -->
+    <footer>
+        <div class="footer-content">
+            <p>&copy; 2026 RandomWordGenerator.com. All rights reserved.</p>
+        </div>
+    </footer>
 
     <script>
         // The pre-loaded array containing your routine's force list words
@@ -42,6 +148,11 @@
 
             // Moves the internal counter pointer to the next word in the loop
             currentIndex = (currentIndex + 1) % wordList.length;
+        });
+
+        // Toggle heart icon aesthetic state on click just for innocent interactivity
+        document.getElementById('heartWidget').addEventListener('click', function() {
+            this.innerHTML = this.innerHTML === '♥' ? '&#9825;' : '♥';
         });
 
         // Function that sends the final word directly to your phone's lock screen via NTFY
