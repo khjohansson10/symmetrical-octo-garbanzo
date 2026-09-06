@@ -6,61 +6,59 @@
     <title>Random Word Generator</title>
 
      <style>
-        /* Exact Mobile CSS Matching randomwordgenerator.com Visual Profile */
+        /* Precision Mobile UI Overhaul matching randomwordgenerator.com */
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
-        body { background-color: #fcfcfc; color: #333333; min-height: 100vh; display: flex; flex-direction: column; }
+        body { background-color: #fcfcfc; color: #333333; min-height: 100vh; display: flex; flex-direction: column; -webkit-font-smoothing: antialiased; }
         
-        /* Teal Navigation Header Structure */
+        /* Fixed: Scaled up the upper header text size slightly */
         header { background-color: #1bbc9b; color: #ffffff; width: 100%; position: sticky; top: 0; z-index: 1000; }
-        .nav-container { padding: 14px 15px; max-width: 800px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
-        .logo-text { font-size: 15px; font-weight: 500; color: #ffffff; text-decoration: none; letter-spacing: 0.8px; text-transform: uppercase; }
+        .nav-container { padding: 12px 15px; max-width: 800px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+        .logo-text { font-size: 16.5px; font-weight: 500; color: #ffffff; text-decoration: none; letter-spacing: 0.8px; text-transform: uppercase; }
         .menu-toggle { background: transparent; border: none; color: #ffffff; font-size: 20px; cursor: pointer; display: flex; flex-direction: column; gap: 4px; }
         .menu-bar { width: 18px; height: 2px; background: #ffffff; }
 
-        /* Main Center Viewport Workspace Layer */
-        main { flex: 1; padding: 25px 15px; max-width: 800px; width: 100%; margin: 0 auto; }
+        /* Main Workspace Content Core */
+        main { flex: 1; padding: 18px 15px; max-width: 800px; width: 100%; margin: 0 auto; }
         .workspace-wrapper { text-align: left; }
         
-        h1 { font-size: 26px; font-weight: 700; color: #333333; margin-bottom: 20px; }
+        /* Fixed: Increased H1 main header font size and weight */
+        h1 { font-size: 29px; font-weight: 800; color: #333333; margin-bottom: 16px; letter-spacing: -0.5px; }
 
-        /* Clean Configuration Control Grid (Removed Card Box Boundaries) */
-        .config-form { display: flex; flex-direction: column; gap: 14px; margin-bottom: 12px; }
-        .input-row { display: flex; align-items: center; gap: 8px; font-size: 15px; color: #333; }
+        /* Fixed: Tighter, scaled-down sizing metrics for all rows and input forms */
+        .config-form { display: flex; flex-direction: column; gap: 10px; margin-bottom: 10px; }
+        .input-row { display: flex; align-items: center; gap: 8px; font-size: 14.5px; color: #333; }
         
-        .field-input, .field-select { height: 32px; padding: 4px 8px; border: 1px solid #cccccc; border-radius: 4px; background-color: #ffffff; font-size: 15px; color: #333333; outline: none; }
-        .field-input-words { width: 65px; text-align: center; }
-        .field-select { width: 100px; }
-        .field-input-letter { width: 45px; text-align: center; }
-        .field-input-size { width: 60px; text-align: center; }
+        /* Fixed: Made input fields and dropdown boxes slightly more compact */
+        .field-input, .field-select { height: 28px; padding: 2px 6px; border: 1px solid #cccccc; border-radius: 4px; background-color: #ffffff; font-size: 14px; color: #333333; outline: none; }
+        .field-input-words { width: 55px; text-align: center; }
+        .field-select { width: 95px; }
+        .field-input-letter { width: 40px; text-align: center; }
+        .field-input-size { width: 50px; text-align: center; }
 
-        /* Innocent Extra Sub-Option Checkbox Containers */
-        .radio-group { display: flex; gap: 15px; margin-left: 5px; font-size: 15px; }
-        .radio-item { display: flex; align-items: center; gap: 5px; }
+        .radio-group { display: flex; gap: 12px; margin-left: 3px; font-size: 14.5px; }
+        .radio-item { display: flex; align-items: center; gap: 4px; }
 
-        /* Dynamic Toggle Text Accordion Trigger Link */
-        .toggle-link { color: #337ab7; background: none; border: none; font-size: 15px; font-weight: 400; cursor: pointer; text-decoration: none; padding: 5px 0; margin-bottom: 15px; display: inline-block; }
+        .toggle-link { color: #337ab7; background: none; border: none; font-size: 14.5px; font-weight: 400; cursor: pointer; text-decoration: none; padding: 4px 0; margin-bottom: 12px; display: inline-block; }
         .toggle-link:hover { text-decoration: underline; color: #23527c; }
 
-        /* The Prominent Classic Blue Generate Button Link */
-        .btn-blue-generate { display: block; background-color: #337ab7; color: #ffffff; border: 1px solid #2e6da4; padding: 8px 14px; font-size: 15px; font-weight: 400; border-radius: 4px; cursor: pointer; text-align: center; width: max-content; margin-bottom: 35px; }
+        /* Compact Blue Generation Activation Button */
+        .btn-blue-generate { display: block; background-color: #337ab7; color: #ffffff; border: 1px solid #2e6da4; padding: 7px 12px; font-size: 14.5px; font-weight: 400; border-radius: 4px; cursor: pointer; text-align: center; width: max-content; margin-bottom: 25px; }
         .btn-blue-generate:active { background-color: #286090; border-color: #204d74; }
 
-        /* Word Presentation Display Workspace Panel (Removed Box Framing) */
-        .word-presentation-box { text-align: center; margin: 40px auto; padding: 10px; display: flex; align-items: center; justify-content: center; gap: 20px; width: 100%; max-width: 450px; }
+        /* Fixed: Cleaner word container configuration framing (No outer box lines) */
+        .word-presentation-box { text-align: center; margin: 30px auto; padding: 5px; display: flex; align-items: center; justify-content: center; gap: 18px; width: 100%; max-width: 450px; }
         .word-text-display { font-size: 42px; font-weight: 700; color: #333333; letter-spacing: -0.5px; word-break: break-all; }
         
-        /* Precise SVG Custom Mapping for the Distinct Real Teal Heart Icon Shape */
-        .heart-svg-wrapper { width: 34px; height: 34px; color: #1bbc9b; cursor: pointer; display: inline-block; vertical-align: middle; flex-shrink: 0; transition: transform 0.1s ease; }
+        /* Fixed: Increased the geometric teal heart outline SVG size */
+        .heart-svg-wrapper { width: 40px; height: 40px; color: #1bbc9b; cursor: pointer; display: inline-block; vertical-align: middle; flex-shrink: 0; transition: transform 0.1s ease; }
         .heart-svg-wrapper:active { transform: scale(0.9); }
 
-        /* Footer Copyright Layout Block */
         footer { border-top: 1px solid #e5e5e5; background-color: #ffffff; padding: 20px 15px; font-size: 13px; color: #777777; width: 100%; text-align: left; margin-top: auto; }
         .footer-content { max-width: 800px; margin: 0 auto; }
     </style>
 </head>
 <body>
 
-<!-- Teal Branding Header Container Frame -->
     <header>
         <div class="nav-container">
             <a href="#" class="logo-text">Random Word Generator</a>
@@ -72,20 +70,17 @@
         </div>
     </header>
 
-    <!-- Main Workspace Application Frame View Area -->
     <main>
         <div class="workspace-wrapper">
             <h1>Random Word Generator</h1>
             
             <div class="config-form">
-                <!-- Standard Permanent Count Row Row Input Box Selector -->
                 <div class="input-row">
                     <label>Number of Words:</label>
                     <input type="number" class="field-input field-input-words" value="1" min="1" max="50">
                 </div>
 
-                <!-- DYNAMIC TOGGLE ACCORDION WRAPPER (Controlled silently via JavaScript) -->
-                <div id="advancedOptions" style="display: none; flex-direction: column; gap: 14px;">
+                <div id="advancedOptions" style="display: none; flex-direction: column; gap: 10px;">
                     <div class="input-row">
                         <label>Word Type:</label>
                         <select class="field-select">
@@ -99,18 +94,18 @@
                     <div class="input-row">
                         <label>First letter:</label>
                         <input type="text" class="field-input field-input-letter" maxlength="1">
-                        <label style="margin-left: 5px;">Last letter:</label>
+                        <label style="margin-left: 3px;">Last letter:</label>
                         <input type="text" class="field-input field-input-letter" maxlength="1">
                     </div>
 
-                    <div style="font-size: 15px; color: #333; text-align: left; margin-top: 2px;">Word size by:</div>
+                    <div style="font-size: 14.5px; color: #333; text-align: left; margin-top: 1px;">Word size by:</div>
                     <div class="radio-group">
                         <div class="radio-item"><input type="radio" name="sizeBy" id="radSyllables"><label for="radSyllables">Syllables</label></div>
                         <div class="radio-item"><input type="radio" name="sizeBy" id="radLetters" checked><label for="radLetters">Letters</label></div>
                     </div>
 
                     <div class="input-row">
-                        <select class="field-select" style="width: 120px;">
+                        <select class="field-select" style="width: 110px;">
                             <option>Equals</option>
                             <option>Less Than</option>
                             <option>Greater Than</option>
@@ -118,23 +113,18 @@
                         <input type="number" class="field-input field-input-size">
                     </div>
                     
-                    <button class="btn-blue-generate" style="background:#ffffff; color:#333; border:1px solid #ccc; padding: 6px 12px; margin-bottom: 5px;">Reset Options</button>
+                    <button class="btn-blue-generate" style="background:#ffffff; color:#333; border:1px solid #ccc; padding: 4px 10px; margin-bottom: 2px;">Reset Options</button>
                 </div>
             </div>
 
-            <!-- Interactivity Option Expand Trigger Controller -->
             <button id="toggleBtn" class="toggle-link">Toggle More Options</button>
-
-            <!-- Main Generation Button Trigger Hook Link -->
             <button id="genButton" class="btn-blue-generate">Generate Random Words</button>
 
-            <!-- Results Output Presentation Display Box View (Border removed per layout reference) -->
             <div class="word-presentation-box">
                 <div id="wordDisplay" class="word-text-display">---</div>
                 
-                <!-- Cloned Teal Heart SVG Vector Layout to mimic exact outline styling signature -->
                 <div id="heartToggle" class="heart-svg-wrapper">
-                    <svg id="heartIconSvg" viewBox="0 0 32 32" width="100%" height="100%" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <svg id="heartIconSvg" viewBox="0 0 32 32" width="100%" height="100%" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
                     </svg>
                 </div>
@@ -168,32 +158,27 @@
                  }
         });
         
-        // Triggers the selection sequence when the physical button is clicked
+        // Click handler updating the word output target frames
         document.getElementById('genButton').addEventListener('click', function() {
             const chosenWord = wordList[currentIndex];
             
-            // Instantly updates the visible word on the spectator's display
-            document.getElementById('wordDisplay').textContent = chosenWord;
-
-            // Forces heart widget state back to empty outline on every single button press
+            // Injects text output directly matching user criteria variables
+            document.getElementById('wordDisplay').textContent = chosenWord.toLowerCase();
+            
+            // Clean heart widget state reset
             const svgPath = document.getElementById('heartIconSvg');
             svgPath.setAttribute('fill', 'none');
             svgPath.setAttribute('stroke', '#1bbc9b');
 
-            // 2. TIMING DELAY FILTER: If a countdown is running from a previous click, kill it instantly
+            // Debouncer time state system management loop
             if (debounceTimer) {
                 clearTimeout(debounceTimer);
             }
 
-            // 3. START A FRESH COUNTDOWN: Wait for 4 seconds of complete silence
             debounceTimer = setTimeout(function() {
-                
-                // This block will ONLY execute if 4 seconds pass without another word click!
                 triggerLockScreenNotification(chosenWord);
-
             }, DELAY_THRESHOLD);
 
-            // Moves the internal counter pointer to the next word in the loop
             currentIndex = (currentIndex + 1) % wordList.length;
         });
 
