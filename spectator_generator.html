@@ -5,53 +5,62 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Random Word Generator</title>
 
-    <style>
-        /* Exact Mobile CSS Architecture Matching randomwordgenerator.com */
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: "Ubuntu", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-        body { background-color: #f9f9f9; color: #333333; min-height: 100vh; display: flex; flex-direction: column; }
+     <style>
+        /* Exact Mobile CSS Matching randomwordgenerator.com Visual Profile */
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+        body { background-color: #fcfcfc; color: #333333; min-height: 100vh; display: flex; flex-direction: column; }
         
-        /* The Actual Signature Teal Top Header Navigation Bar */
-        header { background-color: #1bbc9b; color: #ffffff; width: 100%; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-        .nav-container { padding: 12px 15px; max-width: 800px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
-        .logo-text { font-size: 16px; font-weight: 700; color: #ffffff; text-decoration: none; letter-spacing: 0.5px; text-transform: uppercase; }
+        /* Teal Navigation Header Structure */
+        header { background-color: #1bbc9b; color: #ffffff; width: 100%; position: sticky; top: 0; z-index: 1000; }
+        .nav-container { padding: 14px 15px; max-width: 800px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+        .logo-text { font-size: 15px; font-weight: 500; color: #ffffff; text-decoration: none; letter-spacing: 0.8px; text-transform: uppercase; }
         .menu-toggle { background: transparent; border: none; color: #ffffff; font-size: 20px; cursor: pointer; display: flex; flex-direction: column; gap: 4px; }
-        .menu-bar { width: 20px; height: 2px; background: #ffffff; border-radius: 2px; }
+        .menu-bar { width: 18px; height: 2px; background: #ffffff; }
 
-        /* Main Workspace Content Layout */
-        main { flex: 1; padding: 20px 15px; max-width: 800px; width: 100%; margin: 0 auto; }
-        .app-card { background: #ffffff; border-radius: 4px; border: 1px solid #e3e3e3; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.02); }
+        /* Main Center Viewport Workspace Layer */
+        main { flex: 1; padding: 25px 15px; max-width: 800px; width: 100%; margin: 0 auto; }
+        .workspace-wrapper { text-align: left; }
         
-        h1 { font-size: 24px; font-weight: 700; color: #333333; margin-bottom: 20px; text-align: left; }
+        h1 { font-size: 26px; font-weight: 700; color: #333333; margin-bottom: 20px; }
 
-        /* Form Configuration Fields Control Grid */
-        .config-form { display: flex; flex-direction: column; gap: 15px; margin-bottom: 25px; }
-        .input-row { display: flex; align-items: center; justify-content: space-between; gap: 15px; text-align: left; }
-        .input-row-split { display: flex; gap: 15px; width: 100%; }
-        .split-field { flex: 1; display: flex; align-items: center; justify-content: space-between; }
+        /* Clean Configuration Control Grid (Removed Card Box Boundaries) */
+        .config-form { display: flex; flex-direction: column; gap: 14px; margin-bottom: 12px; }
+        .input-row { display: flex; align-items: center; gap: 8px; font-size: 15px; color: #333; }
         
-        label { font-size: 14px; font-weight: 500; color: #555555; white-space: nowrap; }
+        .field-input, .field-select { height: 32px; padding: 4px 8px; border: 1px solid #cccccc; border-radius: 4px; background-color: #ffffff; font-size: 15px; color: #333333; outline: none; }
+        .field-input-words { width: 65px; text-align: center; }
+        .field-select { width: 100px; }
+        .field-input-letter { width: 45px; text-align: center; }
+        .field-input-size { width: 60px; text-align: center; }
+
+        /* Innocent Extra Sub-Option Checkbox Containers */
+        .radio-group { display: flex; gap: 15px; margin-left: 5px; font-size: 15px; }
+        .radio-item { display: flex; align-items: center; gap: 5px; }
+
+        /* Dynamic Toggle Text Accordion Trigger Link */
+        .toggle-link { color: #337ab7; background: none; border: none; font-size: 15px; font-weight: 400; cursor: pointer; text-decoration: none; padding: 5px 0; margin-bottom: 15px; display: inline-block; }
+        .toggle-link:hover { text-decoration: underline; color: #23527c; }
+
+        /* The Prominent Classic Blue Generate Button Link */
+        .btn-blue-generate { display: block; background-color: #337ab7; color: #ffffff; border: 1px solid #2e6da4; padding: 8px 14px; font-size: 15px; font-weight: 400; border-radius: 4px; cursor: pointer; text-align: center; width: max-content; margin-bottom: 35px; }
+        .btn-blue-generate:active { background-color: #286090; border-color: #204d74; }
+
+        /* Word Presentation Display Workspace Panel (Removed Box Framing) */
+        .word-presentation-box { text-align: center; margin: 40px auto; padding: 10px; display: flex; align-items: center; justify-content: center; gap: 20px; width: 100%; max-width: 450px; }
+        .word-text-display { font-size: 42px; font-weight: 700; color: #333333; letter-spacing: -0.5px; word-break: break-all; }
         
-        .field-input, .field-select { width: 110px; height: 34px; padding: 6px 12px; border: 1px solid #cccccc; border-radius: 4px; background-color: #ffffff; font-size: 14px; color: #555555; outline: none; }
-        .field-select { width: 140px; }
-        .field-input-short { width: 60px; }
+        /* Precise SVG Custom Mapping for the Distinct Real Teal Heart Icon Shape */
+        .heart-svg-wrapper { width: 34px; height: 34px; color: #1bbc9b; cursor: pointer; display: inline-block; vertical-align: middle; flex-shrink: 0; transition: transform 0.1s ease; }
+        .heart-svg-wrapper:active { transform: scale(0.9); }
 
-        /* The Signature Dark Blue Action Button */
-        .btn-blue-generate { display: block; width: 100%; background-color: #20639b; color: #ffffff; border: 1px solid #1b5a93; padding: 12px 16px; font-size: 15px; font-weight: 600; border-radius: 4px; cursor: pointer; text-align: center; margin-top: 10px; margin-bottom: 25px; transition: background-color 0.15s ease; }
-        .btn-blue-generate:active { background-color: #184c78; border-color: #123b5e; }
-
-        /* Precise Cloned Mobile Word Results Shaded Container Box */
-        .output-panel { background-color: #fdfdfd; border: 1px solid #e3e3e3; border-radius: 4px; padding: 25px 15px; text-align: center; min-height: 110px; display: flex; align-items: center; justify-content: center; gap: 12px; box-shadow: inset 0 1px 2px rgba(0,0,0,0.02); }
-        .word-text-display { font-size: 32px; font-weight: 700; color: #2c3e50; letter-spacing: 0.3px; }
-        .heart-icon { font-size: 24px; color: #1bbc9b; cursor: pointer; user-select: none; display: inline-block; vertical-align: middle; }
-
-        /* Clean Minimalist Footer Profile Container */
-        footer { border-top: 1px solid #eeeeee; background-color: #ffffff; padding: 25px 15px; font-size: 13px; color: #777777; width: 100%; text-align: left; margin-top: auto; }
+        /* Footer Copyright Layout Block */
+        footer { border-top: 1px solid #e5e5e5; background-color: #ffffff; padding: 20px 15px; font-size: 13px; color: #777777; width: 100%; text-align: left; margin-top: auto; }
         .footer-content { max-width: 800px; margin: 0 auto; }
     </style>
 </head>
 <body>
 
-<!-- Teal Header Navigation Structure -->
+<!-- Teal Branding Header Container Frame -->
     <header>
         <div class="nav-container">
             <a href="#" class="logo-text">Random Word Generator</a>
@@ -63,54 +72,77 @@
         </div>
     </header>
 
-    <!-- Main Workspace Application Frame View -->
+    <!-- Main Workspace Application Frame View Area -->
     <main>
-        <div class="app-card">
+        <div class="workspace-wrapper">
             <h1>Random Word Generator</h1>
             
             <div class="config-form">
-                <!-- Word Quantity Row Selector -->
+                <!-- Standard Permanent Count Row Row Input Box Selector -->
                 <div class="input-row">
                     <label>Number of Words:</label>
-                    <input type="number" class="field-input" value="1" min="1" max="50">
+                    <input type="number" class="field-input field-input-words" value="1" min="1" max="50">
                 </div>
 
-                <!-- Word Filter Types Selection Row -->
-                <div class="input-row">
-                    <label>Word Type:</label>
-                    <select class="field-select">
-                        <option>All</option>
-                        <option>Nouns</option>
-                        <option>Verbs</option>
-                        <option>Adjectives</option>
-                    </select>
-                </div>
+                <!-- DYNAMIC TOGGLE ACCORDION WRAPPER (Controlled silently via JavaScript) -->
+                <div id="advancedOptions" style="display: none; flex-direction: column; gap: 14px;">
+                    <div class="input-row">
+                        <label>Word Type:</label>
+                        <select class="field-select">
+                            <option>All</option>
+                            <option>Nouns</option>
+                            <option>Verbs</option>
+                            <option>Adjectives</option>
+                        </select>
+                    </div>
 
-                <!-- Split Alpha Character Boundaries Rows -->
-                <div class="input-row-split">
-                    <div class="split-field">
+                    <div class="input-row">
                         <label>First letter:</label>
-                        <input type="text" class="field-input field-input-short" maxlength="1" placeholder="">
+                        <input type="text" class="field-input field-input-letter" maxlength="1">
+                        <label style="margin-left: 5px;">Last letter:</label>
+                        <input type="text" class="field-input field-input-letter" maxlength="1">
                     </div>
-                    <div class="split-field">
-                        <label>Last letter:</label>
-                        <input type="text" class="field-input field-input-short" maxlength="1" placeholder="">
+
+                    <div style="font-size: 15px; color: #333; text-align: left; margin-top: 2px;">Word size by:</div>
+                    <div class="radio-group">
+                        <div class="radio-item"><input type="radio" name="sizeBy" id="radSyllables"><label for="radSyllables">Syllables</label></div>
+                        <div class="radio-item"><input type="radio" name="sizeBy" id="radLetters" checked><label for="radLetters">Letters</label></div>
                     </div>
+
+                    <div class="input-row">
+                        <select class="field-select" style="width: 120px;">
+                            <option>Equals</option>
+                            <option>Less Than</option>
+                            <option>Greater Than</option>
+                        </select>
+                        <input type="number" class="field-input field-input-size">
+                    </div>
+                    
+                    <button class="btn-blue-generate" style="background:#ffffff; color:#333; border:1px solid #ccc; padding: 6px 12px; margin-bottom: 5px;">Reset Options</button>
                 </div>
             </div>
 
-            <!-- The Real Blue Generation Trigger Execution Button -->
+            <!-- Interactivity Option Expand Trigger Controller -->
+            <button id="toggleBtn" class="toggle-link">Toggle More Options</button>
+
+            <!-- Main Generation Button Trigger Hook Link -->
             <button id="genButton" class="btn-blue-generate">Generate Random Words</button>
 
-            <!-- Results Panel Display Container Output Frame Box -->
-            <div class="output-panel">
+            <!-- Results Output Presentation Display Box View (Border removed per layout reference) -->
+            <div class="word-presentation-box">
                 <div id="wordDisplay" class="word-text-display">---</div>
-                <div id="heartWidget" class="heart-icon">&#9825;</div> <!-- Renders the clean outline heart icon '♡' -->
+                
+                <!-- Cloned Teal Heart SVG Vector Layout to mimic exact outline styling signature -->
+                <div id="heartToggle" class="heart-svg-wrapper">
+                    <svg id="heartIconSvg" viewBox="0 0 32 32" width="100%" height="100%" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                    </svg>
+                </div>
             </div>
         </div>
     </main>
 
-    <!-- Copyright Footer Area -->
+    <!-- Copyright Footnote Area Branding Container -->
     <footer>
         <div class="footer-content">
             <p>&copy; 2026 RandomWordGenerator.com. All rights reserved.</p>
@@ -124,14 +156,29 @@
         
         // Timing state machine tracker variables
         let debounceTimer = null;
-        const DELAY_THRESHOLD = 10000; // 4 seconds in milliseconds
+        const DELAY_THRESHOLD = 10000; // 10 seconds in milliseconds
 
+        // Toggle More Options Layout Controller Click Action
+        document.getElementById('toggleBtn').addEventListener('click', function() {
+            const advancedPanel = document.getElementById('advancedOptions');
+            if (advancedPanel.style.display === 'none') {
+                advancedPanel.style.display = 'flex';
+            } 
+            else {advancedPanel.style.display = 'none';
+                 }
+        });
+        
         // Triggers the selection sequence when the physical button is clicked
         document.getElementById('genButton').addEventListener('click', function() {
             const chosenWord = wordList[currentIndex];
             
             // Instantly updates the visible word on the spectator's display
             document.getElementById('wordDisplay').textContent = chosenWord;
+
+            // Forces heart widget state back to empty outline on every single button press
+            const svgPath = document.getElementById('heartIconSvg');
+            svgPath.setAttribute('fill', 'none');
+            svgPath.setAttribute('stroke', '#1bbc9b');
 
             // 2. TIMING DELAY FILTER: If a countdown is running from a previous click, kill it instantly
             if (debounceTimer) {
@@ -150,9 +197,15 @@
             currentIndex = (currentIndex + 1) % wordList.length;
         });
 
-        // Toggle heart icon aesthetic state on click just for innocent interactivity
-        document.getElementById('heartWidget').addEventListener('click', function() {
-            this.innerHTML = this.innerHTML === '♥' ? '&#9825;' : '♥';
+        // Toggle heart widget fill state locally just for innocent spectator interactivity
+        document.getElementById('heartToggle').addEventListener('click', function() {
+            const svgPath = document.getElementById('heartIconSvg');
+            if (svgPath.getAttribute('fill') === 'none') {
+                svgPath.setAttribute('fill', '#1bbc9b');
+            } 
+            else {
+                svgPath.setAttribute('fill', 'none');
+            }
         });
 
         // Function that sends the final word directly to your phone's lock screen via NTFY
