@@ -5,51 +5,66 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Random Word Generator</title>
 
-     <style>
-        /* Precision Mobile UI Overhaul matching randomwordgenerator.com */
+<style>
+        /* Precision Layout Overhaul Matching the Real Site Metrics */
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
         body { background-color: #fcfcfc; color: #333333; min-height: 100vh; display: flex; flex-direction: column; -webkit-font-smoothing: antialiased; }
         
-        /* Fixed: Scaled up the upper header text size slightly */
+        /* Teal Banner Navigation */
         header { background-color: #1bbc9b; color: #ffffff; width: 100%; position: sticky; top: 0; z-index: 1000; }
         .nav-container { padding: 12px 15px; max-width: 800px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
         .logo-text { font-size: 16.5px; font-weight: 500; color: #ffffff; text-decoration: none; letter-spacing: 0.8px; text-transform: uppercase; }
         .menu-toggle { background: transparent; border: none; color: #ffffff; font-size: 20px; cursor: pointer; display: flex; flex-direction: column; gap: 4px; }
         .menu-bar { width: 18px; height: 2px; background: #ffffff; }
 
-        /* Main Workspace Content Core */
-        main { flex: 1; padding: 18px 15px; max-width: 800px; width: 100%; margin: 0 auto; }
+        /* Main Workspace Container Layout */
+        main { flex: 1; padding: 10px 15px; max-width: 800px; width: 100%; margin: 0 auto; }
         .workspace-wrapper { text-align: left; }
         
-        /* Fixed: Increased H1 main header font size and weight */
-        h1 { font-size: 29px; font-weight: 800; color: #333333; margin-bottom: 16px; letter-spacing: -0.5px; }
+        /* Fixed: Made title slightly smaller and pulled it closer to top banner */
+        h1 { font-size: 27px; font-weight: 700; color: #333333; margin-top: 8px; margin-bottom: 12px; letter-spacing: -0.5px; }
 
-        /* Fixed: Tighter, scaled-down sizing metrics for all rows and input forms */
-        .config-form { display: flex; flex-direction: column; gap: 10px; margin-bottom: 10px; }
+        /* Tighter configuration control stack */
+        .config-form { display: flex; flex-direction: column; gap: 10px; margin-bottom: 2px; }
         .input-row { display: flex; align-items: center; gap: 8px; font-size: 14.5px; color: #333; }
         
-        /* Fixed: Made input fields and dropdown boxes slightly more compact */
+        /* Standard permanent inputs sizing profiles */
         .field-input, .field-select { height: 28px; padding: 2px 6px; border: 1px solid #cccccc; border-radius: 4px; background-color: #ffffff; font-size: 14px; color: #333333; outline: none; }
         .field-input-words { width: 55px; text-align: center; }
         .field-select { width: 95px; }
-        .field-input-letter { width: 40px; text-align: center; }
-        .field-input-size { width: 50px; text-align: center; }
+        
+        /* Fixed: Reduced width of first/last letter inputs by 25% */
+        .field-input-letter { width: 30px; text-align: center; padding: 2px; }
 
-        .radio-group { display: flex; gap: 12px; margin-left: 3px; font-size: 14.5px; }
-        .radio-item { display: flex; align-items: center; gap: 4px; }
+        /* Fixed: Indented advanced configuration items drawer sub-elements */
+        .indented-group { display: flex; flex-direction: column; gap: 10px; padding-left: 20px; width: 100%; }
 
-        .toggle-link { color: #337ab7; background: none; border: none; font-size: 14.5px; font-weight: 400; cursor: pointer; text-decoration: none; padding: 4px 0; margin-bottom: 12px; display: inline-block; }
-        .toggle-link:hover { text-decoration: underline; color: #23527c; }
+        /* Innocent radio selector items layout alignment spacing templates */
+        .radio-group { display: flex; gap: 12px; font-size: 14.5px; align-items: center; }
+        .radio-item { display: flex; align-items: center; gap: 6px; }
+        .radio-item input[type="radio"] { width: 14px; height: 14px; cursor: pointer; }
 
-        /* Compact Blue Generation Activation Button */
+        /* Fixed: Scaled up the sizes for Equals dropdown options and its short textbox input */
+        .field-select-large { height: 32px; width: 110px; font-size: 15px; padding: 4px 8px; }
+        .field-input-large { height: 32px; width: 65px; font-size: 15px; padding: 4px 8px; }
+
+        /* Fixed: Scaled up the Reset Options button to be larger, matching original reference card metrics */
+        .btn-reset-options { background: #ffffff; color: #333; border: 1px solid #ccc; border-radius: 4px; padding: 6px 12px; font-size: 14.5px; cursor: pointer; width: max-content; }
+        .btn-reset-options:active { background-color: #e6e6e6; border-color: #adadad; }
+
+        /* Fixed: Styled the Toggle link element to look exactly like the real underlined blue anchor text */
+        .toggle-link { color: #337ab7; background: none; border: none; font-size: 14.5px; font-weight: 400; cursor: pointer; text-decoration: underline; padding: 2px 0; margin-bottom: 6px; display: inline-block; }
+        .toggle-link:hover { color: #23527c; }
+
+        /* Compact Blue Generation Action Button Link Layout */
         .btn-blue-generate { display: block; background-color: #337ab7; color: #ffffff; border: 1px solid #2e6da4; padding: 7px 12px; font-size: 14.5px; font-weight: 400; border-radius: 4px; cursor: pointer; text-align: center; width: max-content; margin-bottom: 25px; }
         .btn-blue-generate:active { background-color: #286090; border-color: #204d74; }
 
-        /* Fixed: Cleaner word container configuration framing (No outer box lines) */
+        /* Presentation display content core metrics panel */
         .word-presentation-box { text-align: center; margin: 30px auto; padding: 5px; display: flex; align-items: center; justify-content: center; gap: 18px; width: 100%; max-width: 450px; }
         .word-text-display { font-size: 42px; font-weight: 700; color: #333333; letter-spacing: -0.5px; word-break: break-all; }
         
-        /* Fixed: Increased the geometric teal heart outline SVG size */
+        /* The geometric teal heart outline SVG size layout panel components */
         .heart-svg-wrapper { width: 40px; height: 40px; color: #1bbc9b; cursor: pointer; display: inline-block; vertical-align: middle; flex-shrink: 0; transition: transform 0.1s ease; }
         .heart-svg-wrapper:active { transform: scale(0.9); }
 
@@ -80,6 +95,7 @@
                     <input type="number" class="field-input field-input-words" value="1" min="1" max="50">
                 </div>
 
+                <!-- Indented Advanced Selection Rows Menu Drawer Accordion -->
                 <div id="advancedOptions" style="display: none; flex-direction: column; gap: 10px;">
                     <div class="input-row">
                         <label>Word Type:</label>
@@ -98,25 +114,29 @@
                         <input type="text" class="field-input field-input-letter" maxlength="1">
                     </div>
 
-                    <div style="font-size: 14.5px; color: #333; text-align: left; margin-top: 1px;">Word size by:</div>
-                    <div class="radio-group">
-                        <div class="radio-item"><input type="radio" name="sizeBy" id="radSyllables"><label for="radSyllables">Syllables</label></div>
-                        <div class="radio-item"><input type="radio" name="sizeBy" id="radLetters" checked><label for="radLetters">Letters</label></div>
-                    </div>
+                    <!-- FIXED CONTAINER: Groups all indented elements cleanly via CSS padding controls -->
+                    <div class="indented-group">
+                        <div style="font-size: 14.5px; color: #333; text-align: left;">Word size by:</div>
+                        <div class="radio-group">
+                            <div class="radio-item"><input type="radio" name="sizeBy" id="radSyllables"><label for="radSyllables">Syllables</label></div>
+                            <div class="radio-item"><input type="radio" name="sizeBy" id="radLetters" checked><label for="radLetters">Letters</label></div>
+                        </div>
 
-                    <div class="input-row">
-                        <select class="field-select" style="width: 110px;">
-                            <option>Equals</option>
-                            <option>Less Than</option>
-                            <option>Greater Than</option>
-                        </select>
-                        <input type="number" class="field-input field-input-size">
+                        <div class="input-row">
+                            <select class="field-input field-select-large">
+                                <option>Equals</option>
+                                <option>Less Than</option>
+                                <option>Greater Than</option>
+                            </select>
+                            <input type="number" class="field-input field-input-large">
+                        </div>
+                        
+                        <button class="btn-reset-options">Reset Options</button>
                     </div>
-                    
-                    <button class="btn-blue-generate" style="background:#ffffff; color:#333; border:1px solid #ccc; padding: 4px 10px; margin-bottom: 2px;">Reset Options</button>
                 </div>
             </div>
 
+            <!-- Fixed: Moved toggle link right above the main generate button with tight margin settings -->
             <button id="toggleBtn" class="toggle-link">Toggle More Options</button>
             <button id="genButton" class="btn-blue-generate">Generate Random Words</button>
 
@@ -132,7 +152,6 @@
         </div>
     </main>
 
-    <!-- Copyright Footnote Area Branding Container -->
     <footer>
         <div class="footer-content">
             <p>&copy; 2026 RandomWordGenerator.com. All rights reserved.</p>
