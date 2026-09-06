@@ -5,67 +5,66 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Random Word Generator</title>
 
-<style>
-        /* Precision Layout Overhaul Matching the Real Site Metrics */
+    <style>
+        /* Precision Refined Mobile UI Matching randomwordgenerator.com Profile */
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
         body { background-color: #fcfcfc; color: #333333; min-height: 100vh; display: flex; flex-direction: column; -webkit-font-smoothing: antialiased; }
         
         /* Teal Banner Navigation */
         header { background-color: #1bbc9b; color: #ffffff; width: 100%; position: sticky; top: 0; z-index: 1000; }
-        .nav-container { padding: 12px 15px; max-width: 800px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+        
+        /* Fixed: Adjusted padding on the navbar wrapper right-side container to shift the menu icon left */
+        .nav-container { padding: 12px 18px 12px 15px; max-width: 800px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
         .logo-text { font-size: 16.5px; font-weight: 500; color: #ffffff; text-decoration: none; letter-spacing: 0.8px; text-transform: uppercase; }
-        .menu-toggle { background: transparent; border: none; color: #ffffff; font-size: 20px; cursor: pointer; display: flex; flex-direction: column; gap: 4px; }
+        .menu-toggle { background: transparent; border: none; color: #ffffff; font-size: 20px; cursor: pointer; display: flex; flex-direction: column; gap: 4px; margin-right: 2px; }
         .menu-bar { width: 18px; height: 2px; background: #ffffff; }
 
         /* Main Workspace Container Layout */
         main { flex: 1; padding: 10px 15px; max-width: 800px; width: 100%; margin: 0 auto; }
         .workspace-wrapper { text-align: left; }
         
-        /* Fixed: Made title slightly smaller and pulled it closer to top banner */
         h1 { font-size: 27px; font-weight: 700; color: #333333; margin-top: 8px; margin-bottom: 12px; letter-spacing: -0.5px; }
 
-        /* Tighter configuration control stack */
+        /* Configuration control layout stack */
         .config-form { display: flex; flex-direction: column; gap: 10px; margin-bottom: 2px; }
         .input-row { display: flex; align-items: center; gap: 8px; font-size: 14.5px; color: #333; }
         
-        /* Standard permanent inputs sizing profiles */
+        /* Standard input configurations sizing specifications */
         .field-input, .field-select { height: 28px; padding: 2px 6px; border: 1px solid #cccccc; border-radius: 4px; background-color: #ffffff; font-size: 14px; color: #333333; outline: none; }
         .field-input-words { width: 55px; text-align: center; }
         .field-select { width: 95px; }
-        
-        /* Fixed: Reduced width of first/last letter inputs by 25% */
         .field-input-letter { width: 30px; text-align: center; padding: 2px; }
 
-        /* Fixed: Indented advanced configuration items drawer sub-elements */
-        .indented-group { display: flex; flex-direction: column; gap: 10px; padding-left: 20px; width: 100%; }
+        /* Fixed: Indent container now only captures the specific lower sub-options */
+        .indented-sub-group { display: flex; flex-direction: column; gap: 10px; padding-left: 20px; width: 100%; }
 
-        /* Innocent radio selector items layout alignment spacing templates */
+        /* Innocent radio selection grid alignments */
         .radio-group { display: flex; gap: 12px; font-size: 14.5px; align-items: center; }
         .radio-item { display: flex; align-items: center; gap: 6px; }
         .radio-item input[type="radio"] { width: 14px; height: 14px; cursor: pointer; }
 
-        /* Fixed: Scaled up the sizes for Equals dropdown options and its short textbox input */
+        /* Expanded parameter values for options dropdown inputs */
         .field-select-large { height: 32px; width: 110px; font-size: 15px; padding: 4px 8px; }
         .field-input-large { height: 32px; width: 65px; font-size: 15px; padding: 4px 8px; }
 
-        /* Fixed: Scaled up the Reset Options button to be larger, matching original reference card metrics */
-        .btn-reset-options { background: #ffffff; color: #333; border: 1px solid #ccc; border-radius: 4px; padding: 6px 12px; font-size: 14.5px; cursor: pointer; width: max-content; }
+        /* Fixed: Reset button pulled out of indentation group to align with left edge elements */
+        .btn-reset-options { background: #ffffff; color: #333; border: 1px solid #ccc; border-radius: 4px; padding: 6px 12px; font-size: 14.5px; cursor: pointer; width: max-content; margin-top: 2px; }
         .btn-reset-options:active { background-color: #e6e6e6; border-color: #adadad; }
 
-        /* Fixed: Styled the Toggle link element to look exactly like the real underlined blue anchor text */
+        /* Permanent underlined blue link style anchors */
         .toggle-link { color: #337ab7; background: none; border: none; font-size: 14.5px; font-weight: 400; cursor: pointer; text-decoration: underline; padding: 2px 0; margin-bottom: 6px; display: inline-block; }
         .toggle-link:hover { color: #23527c; }
 
-        /* Compact Blue Generation Action Button Link Layout */
+        /* Blue generation submit button formatting layouts */
         .btn-blue-generate { display: block; background-color: #337ab7; color: #ffffff; border: 1px solid #2e6da4; padding: 7px 12px; font-size: 14.5px; font-weight: 400; border-radius: 4px; cursor: pointer; text-align: center; width: max-content; margin-bottom: 25px; }
         .btn-blue-generate:active { background-color: #286090; border-color: #204d74; }
 
-        /* Presentation display content core metrics panel */
-        .word-presentation-box { text-align: center; margin: 30px auto; padding: 5px; display: flex; align-items: center; justify-content: center; gap: 18px; width: 100%; max-width: 450px; }
-        .word-text-display { font-size: 42px; font-weight: 700; color: #333333; letter-spacing: -0.5px; word-break: break-all; }
+        /* Fixed: Adjusted display panel styling to match vertical base metrics flawlessly */
+        .word-presentation-box { text-align: center; margin: 40px auto; padding: 5px; display: flex; align-items: center; justify-content: center; gap: 15px; width: 100%; max-width: 500px; }
+        .word-text-display { font-size: 42px; font-weight: 700; color: #333333; letter-spacing: -0.5px; word-break: break-all; line-height: 1.1; }
         
-        /* The geometric teal heart outline SVG size layout panel components */
-        .heart-svg-wrapper { width: 40px; height: 40px; color: #1bbc9b; cursor: pointer; display: inline-block; vertical-align: middle; flex-shrink: 0; transition: transform 0.1s ease; }
+        /* Fixed: Heart scaled up and aligned flat onto the text baseline grid structure */
+        .heart-svg-wrapper { width: 44px; height: 44px; color: #1bbc9b; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; transition: transform 0.1s ease; margin-top: 2px; }
         .heart-svg-wrapper:active { transform: scale(0.9); }
 
         footer { border-top: 1px solid #e5e5e5; background-color: #ffffff; padding: 20px 15px; font-size: 13px; color: #777777; width: 100%; text-align: left; margin-top: auto; }
@@ -74,7 +73,6 @@
 </head>
 <body>
 
-    <header>
         <div class="nav-container">
             <a href="#" class="logo-text">Random Word Generator</a>
             <button class="menu-toggle">
@@ -95,7 +93,7 @@
                     <input type="number" class="field-input field-input-words" value="1" min="1" max="50">
                 </div>
 
-                <!-- Indented Advanced Selection Rows Menu Drawer Accordion -->
+                <!-- Advanced Configuration Drawer Layer Panel -->
                 <div id="advancedOptions" style="display: none; flex-direction: column; gap: 10px;">
                     <div class="input-row">
                         <label>Word Type:</label>
@@ -114,9 +112,11 @@
                         <input type="text" class="field-input field-input-letter" maxlength="1">
                     </div>
 
-                    <!-- FIXED CONTAINER: Groups all indented elements cleanly via CSS padding controls -->
-                    <div class="indented-group">
-                        <div style="font-size: 14.5px; color: #333; text-align: left;">Word size by:</div>
+                    <!-- Left Aligned Label for Size Criteria -->
+                    <div style="font-size: 14.5px; color: #333; text-align: left;">Word size by:</div>
+                    
+                    <!-- FIXED INDENT CONTAINER: Only indents the granular radio items and select inputs -->
+                    <div class="indented-sub-group">
                         <div class="radio-group">
                             <div class="radio-item"><input type="radio" name="sizeBy" id="radSyllables"><label for="radSyllables">Syllables</label></div>
                             <div class="radio-item"><input type="radio" name="sizeBy" id="radLetters" checked><label for="radLetters">Letters</label></div>
@@ -130,13 +130,13 @@
                             </select>
                             <input type="number" class="field-input field-input-large">
                         </div>
-                        
-                        <button class="btn-reset-options">Reset Options</button>
                     </div>
+                    
+                    <!-- FIXED POSITION: Reset Options button sits flush left outside the sub-indentation -->
+                    <button class="btn-reset-options">Reset Options</button>
                 </div>
             </div>
 
-            <!-- Fixed: Moved toggle link right above the main generate button with tight margin settings -->
             <button id="toggleBtn" class="toggle-link">Toggle More Options</button>
             <button id="genButton" class="btn-blue-generate">Generate Random Words</button>
 
