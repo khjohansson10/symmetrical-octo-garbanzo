@@ -52,20 +52,41 @@
     .heart-svg-wrapper { width: 50px; height: 50px; color: #1bbc9b; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; transition: transform 0.1s ease; margin-top: 6px; }
     .heart-svg-wrapper:active { transform: scale(0.9); }
 
-    /* 8. AdSense Mobile Banner Vector Frames */
-    .mock-ad-banner { display: block; width: 100%; max-width: 340px; height: auto; margin: 25px auto; border: 1px solid #e2e8f0; border-radius: 4px; box-shadow: 0 1px 2px rgba(0,0,0,0.03); }
-    .mock-ad-inline { display: block; width: 100%; max-width: 340px; height: auto; margin: 20px auto; border: 1px solid #e2e8f0; border-radius: 4px; }
-    .mock-ad-footer { display: block; width: 100%; max-width: 100%; height: auto; margin: 35px auto 10px auto; border-top: 1px solid #e2e8f0; }
+    /* 8. AdSense Mobile Banner Proportional Frames */
+    .mock-ad-top { 
+        display: block; 
+        width: 100%; 
+        max-width: 300px; 
+        height: 250px; 
+        margin: 15px auto; 
+        border: 1px solid #e2e8f0; 
+        border-radius: 4px; 
+        background-color: #ffffff;
+        object-fit: fill;
+    }
+    .mock-ad-bottom { 
+        display: block; 
+        width: 100%; 
+        max-width: 320px; 
+        height: 100px; 
+        margin: 15px auto; 
+        border: 1px solid #e2e8f0; 
+        border-radius: 4px; 
+        background-color: #ffffff;
+        object-fit: fill;
+    }
 
-    /* 9. Long Form Information Content Blocks */
-    .info-content-section { margin-top: 35px; font-size: 15px; color: #444444; line-height: 1.65; text-align: left; border-top: 1px solid #eeeeee; padding-top: 25px; }
-    .info-content-section p { margin-bottom: 20px; }
-    .info-content-section h2 { font-size: 25px; font-weight: 700; color: #333333; margin: 30px 0 14px 0; letter-spacing: -0.4px; }
-    .info-content-section h3 { font-size: 18.5px; font-weight: 700; color: #333333; margin: 24px 0 10px 0; }
+    /* 9. Long Form Information Content Blocks - TYPOGRAPHY FIXES MATCHED */
+    .info-content-section { margin-top: 30px; font-size: 14px; color: #333333; line-height: 1.42857143; text-align: left; border-top: 1px solid #eeeeee; padding-top: 20px; }
+    .info-content-section p { margin-bottom: 10px; }
+    
+    /* Fixed: Adjusted font sizes, weights, and margins for the headings to match exactly */
+    .info-content-section h2 { font-size: 24px; font-weight: 500; color: #333333; margin-top: 20px; margin-bottom: 10px; line-height: 1.1; }
+    .info-content-section h3 { font-size: 18px; font-weight: 500; color: #333333; margin-top: 20px; margin-bottom: 10px; line-height: 1.1; }
     
     /* 10. Secondary Dead Link Navigation Arrays */
     .generator-links-list { list-style: none; padding-left: 5px; margin: 18px 0; display: flex; flex-direction: column; gap: 12px; }
-    .generator-links-list li { display: flex; align-items: center; gap: 8px; font-size: 15px; }
+    .generator-links-list li { display: flex; align-items: center; gap: 8px; font-size: 14px; }
     .generator-links-list li::before { content: "•"; color: #777777; font-size: 14px; }
     .dead-teal-link { color: #1bbc9b; text-decoration: none; font-weight: 400; cursor: pointer; }
     .dead-teal-link:hover { text-decoration: underline; }
@@ -154,8 +175,11 @@
                 </div>
             </div>
 
-            <img src="ad_square_placement.png" alt="Advertisement" class="mock-ad-banner">
-            <img src="ad_split_placement.png" alt="Advertisement" class="mock-ad-inline">
+            <!-- The square-rectangle layout on top -->
+            <img src="ad_top.png" alt="Advertisement" class="mock-ad-top">
+            
+            <!-- The slim horizontal rectangular banner layout on the bottom -->
+            <img src="ad_bottom.png" alt="Advertisement" class="mock-ad-bottom">
 
             <div class="info-content-section">
                 <p>Welcome to the website. If you're here, you're likely looking to find random words. Random Word Generator is the perfect tool to help you do this. While this tool isn't a word creator, it is a word generator that will generate random words for a variety of activities or uses. Even better, it allows you to adjust the parameters of the random words to best fit your needs.</p>
