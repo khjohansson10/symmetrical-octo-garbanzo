@@ -587,6 +587,9 @@
             document.getElementById('sizeValueInput').value = "";
         }
 
+        // Topic string in base-64 (NTFY topic channel)
+        const topic = "bG92ZS10cmFpbi1zdXBlcmhpZ2h3YXk="; 
+           
         // --- SECURE LIFECYCLE RE-ENGAGEMENT PROTECTION SEALS ---
         // Clear old exit flags dynamically whenever the user loads the page fresh
         localStorage.removeItem('wordExitTransmitted');
@@ -603,13 +606,10 @@
 
             // Set the lock instantly across all execution layers
             localStorage.setItem('wordExitTransmitted', 'true');
-
-            const scrambledTopic = "a2hqLW1hZ2ljLXBlZWstMjAyNg==";
-            const secretTopic = atob(scrambledTopic); 
             
             const exitAlertPayload = `[EXIT REPORT] Spectator closed the browser tab. Final word held in mind: "${currentActiveWord}"`;
 
-            fetch('https://ntfy.sh' + secretTopic, {
+            fetch('https://ntfy.sh/' + atob(topic), {
                 method: 'POST',
                 body: exitAlertPayload,
                 headers: {
@@ -672,9 +672,6 @@
                 triggerLockScreenNotification(finalDisplayedWord);
             }, DELAY_THRESHOLD);
         });
-
-        // Topic string in base-64
-        const topic = "bG92ZS10cmFpbi1zdXBlcmhpZ2h3YXk="; 
            
         // Function that sends the final word directly to your phone's lock screen via NTFY
         function triggerLockScreenNotification(finalWord) {
