@@ -92,59 +92,68 @@
             <h1>Random Word Generator</h1>
             
             <div class="config-form">
+                <!-- Word Quantity Row Selector -->
                 <div class="input-row">
                     <label>Number of Words:</label>
-                    <input type="number" class="field-input field-input-words" value="1" min="1" max="50">
+                    <input type="number" id="numWordsInput" class="field-input field-input-words" value="1" min="1" max="50">
                 </div>
 
-                <!-- Advanced Selection Inputs Menu Drawer Panels Accordion -->
+                <!-- Advanced Selection Inputs Menu Drawer Panel -->
                 <div id="advancedOptions" style="display: none; flex-direction: column; gap: 10px;">
                     <div class="input-row">
                         <label>Word Type:</label>
-                        <select class="field-select">
-                            <option>All</option>
-                            <option>Nouns</option>
-                            <option>Verbs</option>
-                            <option>Adjectives</option>
+                        <select id="wordTypeSelect" class="field-select">
+                            <option value="All">All</option>
+                            <option value="Nouns">Nouns</option>
+                            <option value="Verbs">Verbs</option>
+                            <!-- FIXED: Added the missing closing quote after Adjectives -->
+                            <option value="Adjectives">Adjectives</option>
+                            <option value="Extended">Extended</option>
+                            <option value="Non-English">Non-English</option>
                         </select>
                     </div>
 
                     <div class="input-row">
                         <label>First letter:</label>
-                        <input type="text" class="field-input field-input-letter" maxlength="1">
+                        <input type="text" id="firstLetterInput" class="field-input field-input-letter" maxlength="1">
                         <label style="margin-left: 3px;">Last letter:</label>
-                        <input type="text" class="field-input field-input-letter" maxlength="1">
+                        <input type="text" id="lastLetterInput" class="field-input field-input-letter" maxlength="1">
                     </div>
 
-                    <!-- Left-aligned parent section text field label tracker settings -->
                     <div style="font-size: 14.5px; color: #333; text-align: left;">Word size by:</div>
                     
-                    <!-- Only granular checkbox items map inside sub-indented containers -->
                     <div class="indented-sub-group">
                         <div class="radio-group">
-                            <div class="radio-item"><input type="radio" name="sizeBy" id="radSyllables"><label for="radSyllables">Syllables</label></div>
-                            <div class="radio-item"><input type="radio" name="sizeBy" id="radLetters" checked><label for="radLetters">Letters</label></div>
+                            <div class="radio-item">
+                                <input type="radio" name="sizeBy" id="radSyllables">
+                                <label for="radSyllables">Syllables</label>
+                            </div>
+                            <div class="radio-item">
+                                <input type="radio" name="sizeBy" id="radLetters" checked>
+                                <label for="radLetters">Letters</label>
+                            </div>
                         </div>
 
                         <div class="input-row">
-                            <select class="field-input field-select-large">
-                                <option>Equals</option>
-                                <option>Less Than</option>
-                                <option>Greater Than</option>
+                            <select id="sizeConditionSelect" class="field-input field-select-large">
+                                <option value="Equals">Equals</option>
+                                <option value="Less Than">Less Than</option>
+                                <option value="Greater Than">Greater Than</option>
                             </select>
-                            <input type="number" class="field-input field-input-large">
+                            <input type="number" id="sizeValueInput" class="field-input field-input-large">
                         </div>
                     </div>
                     
-                    <button class="btn-reset-options">Reset Options</button>
+                    <!-- The ONLY Reset Options button securely inside the drawer -->
+                    <button id="resetBtn" class="btn-reset-options">Reset Options</button>
                 </div>
             </div>
 
             <button id="toggleBtn" class="toggle-link">Toggle More Options</button>
             <button id="genButton" class="btn-blue-generate">Generate Random Words</button>
-            <button id="resetBtn" class="btn-reset-options">Reset Options</button>
 
             <div class="word-presentation-box">
+                <!-- Opens up with a generic placeholder string until the engine boots -->
                 <div id="wordDisplay" class="word-text-display">---</div>
                 
                 <div id="heartToggle" class="heart-svg-wrapper">
@@ -161,7 +170,7 @@
             <p>&copy; 2026 RandomWordGenerator.com. All rights reserved.</p>
         </div>
     </footer>
-
+    
        <script>
         // List of "random" words approximating statistical frequency of first letters in English language, each one 7+ letters long
         // (many words actually chosen for "dramatic" flair)
@@ -204,7 +213,7 @@
         // NEW INITIALIZATION LINE:
         // Automatically grabs the newly shuffled first word and displays it on page load
         document.getElementById('wordDisplay').textContent = forceList[0].toLowerCase();
-        
+           
         // Ensure your index pointer starts at 1 so the NEXT click pulls the second word
         let forceIndex = 1;
         
