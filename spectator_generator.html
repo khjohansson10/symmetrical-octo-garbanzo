@@ -56,9 +56,16 @@
     .heart-svg-wrapper:active { transform: scale(0.9); }
 
     /* 9. AdSense Mobile Banner Proportional Frames */
-    .mock-ad-top { display: block; width: 100%; max-width: 300px; height: 250px; margin: 15px auto; border: 1px solid #e2e8f0; border-radius: 4px; background-color: #ffffff; object-fit: fill; }
-    .mock-ad-bottom { display: block; width: 100%; max-width: 320px; height: 100px; margin: 15px auto; border: 1px solid #e2e8f0; border-radius: 4px; background-color: #ffffff; object-fit: fill; }
-
+    .mock-ad-top, .mock-ad-bottom { 
+        display: none; /* Starts completely hidden from the layout flow */
+        margin: 15px auto; 
+        border: none; 
+        background-color: transparent; 
+        object-fit: fill; 
+    }
+    .mock-ad-top { width: 100%; max-width: 300px; height: 250px; }
+    .mock-ad-bottom { width: 100%; max-width: 320px; height: 100px; }
+    
     /* 10. Long Form Information Content Blocks - PRECISION WEIGHT ALIGNED */
     .info-content-section { margin-top: 25px; font-size: 15px; color: #555555; line-height: 1.6; text-align: left; padding-top: 10px; font-weight: 400; }
     .info-content-section p { margin-bottom: 14px; }
@@ -68,9 +75,30 @@
     .info-content-section h3 { font-size: 21px !important; font-weight: 700 !important; color: #333333; margin-top: 26px; margin-bottom: 14px; line-height: 1.1; }
     
     /* 11. Secondary Navigation Arrays */
-    .generator-links-list { list-style: none; padding-left: 5px; margin: 18px 0; display: flex; flex-direction: column; gap: 12px; }
-    .generator-links-list li { display: flex; align-items: center; gap: 8px; font-size: 15px; color: #555555; }
-    .generator-links-list li::before { content: "•"; color: #777777; font-size: 14px; }
+    .generator-links-list { 
+        list-style: none; 
+        padding-left: 20px; /* Indents the entire bulleted block rightward */
+        margin: 14px 0; 
+        display: flex; 
+        flex-direction: column; 
+        gap: 12px; 
+    }
+    .generator-links-list li { 
+        display: flex; 
+        align-items: center; 
+        gap: 10px; 
+        font-size: 15px; 
+        color: #555555; 
+        line-height: 1.4;
+    }
+    /* Creates the bolder, darker custom bullet points */
+    .generator-links-list li::before { 
+        content: "•"; 
+        color: #333333; 
+        font-weight: 900; /* Forces maximum bold rendering on the bullet symbol */
+        font-size: 16px; 
+        line-height: 1;
+    }
     .dead-teal-link { color: #1bbc9b; text-decoration: none; font-weight: 400; cursor: pointer; }
     .dead-teal-link:hover { text-decoration: underline; }
 
@@ -257,8 +285,8 @@
         const TOTAL_TOP_ADS = 8;    // e.g., ad_top_1.png, ad_top_2.png, etc.
         const TOTAL_BOTTOM_ADS = 6; // e.g., ad_bottom_1.png, ad_bottom_2.png, etc.
 
-        (function randomizeAdvertisements() {
-            // Generate distinct random choices for your two square ad frames
+        (function prepareAndPopInAds() {
+            // Calculate random index files instantly in background memory on page load
             const randomTopIndex = Math.floor(Math.random() * TOTAL_TOP_ADS) + 1;
             const randomMidIndex = Math.floor(Math.random() * TOTAL_TOP_ADS) + 1;
             const randomBottomIndex = Math.floor(Math.random() * TOTAL_BOTTOM_ADS) + 1;
@@ -267,10 +295,29 @@
             const midAdEl = document.getElementById('dynamicAdMidList');
             const bottomAdEl = document.getElementById('dynamicAdBottom');
 
-            // Force dynamic path configurations out to the local image frames
-            if (topAdEl) topAdEl.src = "./ad_top_" + randomTopIndex + ".png";
-            if (midAdEl) midAdEl.src = "./ad_top_" + randomMidIndex + ".png";
-            if (bottomAdEl) bottomAdEl.src = "./ad_bottom_" + randomBottomIndex + ".png";
+            // 1. Top Ad pops into layout after 2.5 seconds
+            setTimeout(function() {
+                if (topAdEl) {
+                    topAdEl.src = "./ad_top_" + randomTopIndex + ".png";
+                    topAdEl.style.display = "block"; // Instantly pops in
+                }
+            }, 2500);
+
+            // 2. Mid List Ad pops into layout 1 second later (3.5 seconds total)
+            setTimeout(function() {
+                if (midAdEl) {
+                    midAdEl.src = "./ad_top_" + randomMidIndex + ".png";
+                    midAdEl.style.display = "block";
+                }
+            }, 3500);
+
+            // 3. Bottom Footer Banner pops into layout another second later (4.5 seconds total)
+            setTimeout(function() {
+                if (bottomAdEl) {
+                    bottomAdEl.src = "./ad_bottom_" + randomBottomIndex + ".png";
+                    bottomAdEl.style.display = "block";
+                }
+            }, 4500);
         })();
            
         // List of "random" words approximating statistical frequency of first letters in English language, each one 7+ letters long
