@@ -391,81 +391,78 @@
     </footer>
     
        <script>
-        // --- SCALABLE AD RANDOMIZATION ENGINE ---
+        // --- MULTI-TRACK CYCLING AD ENGINE WITH TIMED RANDOM RESETS ---
         // Change these numbers whenever you upload more images to GitHub!
         const TOTAL_TOP_ADS = 9;    // e.g., ad_top_1.png, ad_top_2.png, etc.
         const TOTAL_BOTTOM_ADS = 5; // e.g., ad_bottom_1.png, ad_bottom_2.png, etc.
-
-        // --- MULTI-TRACK CYCLING AD ENGINE WITH TIMED RANDOM RESETS ---
-        const TOTAL_TOP_ADS = 4;    // Matches your square graphic assets total count
-        const TOTAL_BOTTOM_ADS = 3; // Matches your thin banner assets total count
-
-        // Keep track of the active square ad index to prevent instant layout repetition
-        let currentTopIndex = Math.floor(Math.random() * TOTAL_TOP_ADS) + 1;
 
         (function initializeAndCycleAds() {
             const topAdEl = document.getElementById('dynamicAdTop');
             const midAdEl = document.getElementById('dynamicAdMidList');
             const bottomAdEl = document.getElementById('dynamicAdBottom');
 
-            // Helper function to pick a completely fresh square ad index
-            function getNextRandomTopIndex(currentIndex) {
-                if (TOTAL_TOP_ADS <= 1) return currentIndex;
-                let nextIndex;
-                do {
-                    nextIndex = Math.floor(Math.random() * TOTAL_TOP_ADS) + 1;
-                } while (nextIndex === currentIndex);
-                return nextIndex;
+            // Track state updates for the Synchronized Large Square Ads
+            function updateLargeAdsState() {
+                if (!topAdEl || !midAdEl) return;
+                
+                // 1. Visibly blink out instantly to indicate an ad slot refresh cycle
+                topAdEl.style.visibility = "hidden";
+                midAdEl.style.visibility = "hidden";
+
+                // Small micro-timeout lets the layout frame process the clear block before popping back
+                setTimeout(function() {
+                    // 20% chance to remain completely blank/transparent for this cycle
+                    const shouldBeBlank = Math.random() < 0.20;
+                    
+                    if (!shouldBeBlank) {
+                        const randomTopIndex = Math.floor(Math.random() * TOTAL_TOP_ADS) + 1;
+                        const path = "./ad_top_" + randomTopIndex + ".png";
+                        topAdEl.src = path;
+                        midAdEl.src = path;
+                        
+                        topAdEl.style.visibility = "visible";
+                        midAdEl.style.visibility = "visible";
+                    }
+                }, 50);
             }
 
-            // Helper function to process the footer banner states dynamically
+            // Track state updates for the Bottom Footer Banner
             function updateFooterAdState() {
                 if (!bottomAdEl) return;
                 
-                // 1-in-4 chance (25% probability) to render the ad spot completely transparent
-                const shouldBeBlank = Math.floor(Math.random() * 4) === 0;
-                
-                if (shouldBeBlank) {
-                    bottomAdEl.style.visibility = "hidden";
-                } else {
-                    const randomBottomIndex = Math.floor(Math.random() * TOTAL_BOTTOM_ADS) + 1;
-                    bottomAdEl.src = "./ad_bottom_" + randomBottomIndex + ".png";
-                    bottomAdEl.style.visibility = "visible";
-                }
+                // 1. Visibly blink out instantly
+                bottomAdEl.style.visibility = "hidden";
+
+                setTimeout(function() {
+                    // 50% chance to remain completely blank/transparent for this cycle
+                    const shouldBeBlank = Math.random() < 0.50;
+                    
+                    if (!shouldBeBlank) {
+                        const randomBottomIndex = Math.floor(Math.random() * TOTAL_BOTTOM_ADS) + 1;
+                        bottomAdEl.src = "./ad_bottom_" + randomBottomIndex + ".png";
+                        bottomAdEl.style.visibility = "visible";
+                    }
+                }, 50);
             }
 
-            // --- PHASE 1: STAGGERED POP-IN ARRIVAL ON LAUNCH ---
-            // 1. Synchronized Top & Mid-List Ads pop into layout after 2.5 seconds
+            // --- PHASE 1: STAGGERED INITIAL POP-IN ON LAUNCH ---
+            // Large square ads arrive after 2.5 seconds
             setTimeout(function() {
-                if (topAdEl && midAdEl) {
-                    const path = "./ad_top_" + currentTopIndex + ".png";
-                    topAdEl.src = path;
-                    midAdEl.src = path;
-                    topAdEl.style.visibility = "visible";
-                    midAdEl.style.visibility = "visible";
-                }
+                updateLargeAdsState();
             }, 2500);
 
-            // 2. Thin Footer Banner pops into layout after 4.5 seconds
+            // Bottom banner arrives after 4.5 seconds
             setTimeout(function() {
                 updateFooterAdState();
             }, 4500);
 
-            // --- PHASE 2: CONTINUOUS CLOCK BACKGROUND CYCLING RESETS ---
-            // Independent 20-Second Loop for Non-Repeating Synchronized Square Banners
+            // --- PHASE 2: CONTINUOUS CYCLE BACKGROUND RESETS ---
+            // 20-Second Loop track for Synchronized Square Banners (Includes blink, repetitions, and 20% blanks)
             setInterval(function() {
-                currentTopIndex = getNextRandomTopIndex(currentTopIndex);
-                const nextTopPath = "./ad_top_" + currentTopIndex + ".png";
-                
-                if (topAdEl && midAdEl) {
-                    topAdEl.src = nextTopPath;
-                    midAdEl.src = nextTopPath;
-                    topAdEl.style.visibility = "visible";
-                    midAdEl.style.visibility = "visible";
-                }
+                updateLargeAdsState();
             }, 20000); 
 
-            // Independent 30-Second Loop for the Thin Footer Banner (Allows duplicates and blanks)
+            // 30-Second Loop track for the Footer Banner (Includes blink, repetitions, and 50% blanks)
             setInterval(function() {
                 updateFooterAdState();
             }, 30000);
