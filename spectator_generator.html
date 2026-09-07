@@ -86,12 +86,13 @@
     .mock-ad-top { width: 100%; max-width: 300px; height: 250px; }
     .mock-ad-bottom { width: 100%; max-width: 320px; height: 100px; }
 
-    /* Precision Wide-Split Flex Layout for the Bottom Twins Slot */
+    /* Precision Vertical Spacing for the Bottom Ads on Mobile Viewports */
     .ad-split-row-wrapper {
         display: flex;
-        flex-direction: column; /* Stacks vertically on phone viewports to prevent layout break */
+        flex-direction: column; 
         align-items: center;
-        gap: 15px; 
+        /* FIXED: Forces the vertical spacing gap on mobile to equal a large ad + small ad dimension */
+        gap: 340px !important; 
         width: 100%;
         margin: 20px auto;
     }
