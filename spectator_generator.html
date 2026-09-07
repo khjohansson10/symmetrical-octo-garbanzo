@@ -142,9 +142,10 @@
 
             <button id="toggleBtn" class="toggle-link">Toggle More Options</button>
             <button id="genButton" class="btn-blue-generate">Generate Random Words</button>
+            <button id="resetBtn" class="btn-reset-options">Reset Options</button>
 
             <div class="word-presentation-box">
-                <div id="wordDisplay" class="word-text-display">midnight</div>
+                <div id="wordDisplay" class="word-text-display">---</div>
                 
                 <div id="heartToggle" class="heart-svg-wrapper">
                     <svg id="heartIconSvg" viewBox="0 0 32 32" width="100%" height="100%" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
@@ -179,7 +180,7 @@
             "cuisine", "culinary", "culminate", "culpable", "cultivate", "culture", "cyclopean",
             "cataract", "catastrophic", "catechism", "chrysalis", "cerulean",  
             "czarism", "caliphate", "cenotaph",
-            // MONEY WORDS--MILK THEM FOR ALL THEY'RE WORTH
+            // MONEY WORDS
             "caravanserai", "cazique", "catafalque",
             
             "package", "pageant", "palette", "pancake", "panther", "paradox", "paragon", "parallel", "parasol", "particle",
@@ -200,7 +201,12 @@
             }
         })(forceList);
            
-        let forceIndex = 0;
+        // NEW INITIALIZATION LINE:
+        // Automatically grabs the newly shuffled first word and displays it on page load
+        document.getElementById('wordDisplay').textContent = forceList[0].toLowerCase();
+        
+        // Ensure your index pointer starts at 1 so the NEXT click pulls the second word
+        let forceIndex = 1;
         
         // Timing state machine tracker variables
         let debounceTimer = null;
