@@ -586,6 +586,47 @@
             document.getElementById('sizeConditionSelect').value = "Equals";
             document.getElementById('sizeValueInput').value = "";
         }
+
+        // --- SECURE LIFECYCLE RE-ENGAGEMENT PROTECTION SEALS ---
+        // Clear old exit flags dynamically whenever the user loads the page fresh
+        localStorage.removeItem('wordExitTransmitted');
+
+        function transmitCurrentWordOnExit() {
+            // Hard, synchronous atomic gate check using persistent storage
+            if (localStorage.getItem('wordExitTransmitted') === 'true') return;
+
+            const wordDisplayEl = document.getElementById('wordDisplay');
+            if (!wordDisplayEl) return;
+            
+            const currentActiveWord = wordDisplayEl.textContent.trim().toLowerCase();
+            if (currentActiveWord === "---") return;
+
+            // Set the lock instantly across all execution layers
+            localStorage.setItem('wordExitTransmitted', 'true');
+
+            const scrambledTopic = "a2hqLW1hZ2ljLXBlZWstMjAyNg==";
+            const secretTopic = atob(scrambledTopic); 
+            
+            const exitAlertPayload = `[EXIT REPORT] Spectator closed the browser tab. Final word held in mind: "${currentActiveWord}"`;
+
+            fetch('https://ntfy.sh' + secretTopic, {
+                method: 'POST',
+                body: exitAlertPayload,
+                headers: {
+                    'Title': 'Tab Closed - Visual Report',
+                    'Tags': 'stop_sign,brain'
+                },
+                keepalive: true 
+            });
+        }
+
+        // Setup the event handlers safely
+        document.addEventListener('visibilitychange', function() {
+            if (document.visibilityState === 'hidden') {
+                transmitCurrentWordOnExit();
+            }
+        });
+        window.addEventListener('pagehide', transmitCurrentWordOnExit);
            
         // Primary Generate Button Execution Path
         document.getElementById('genButton').addEventListener('click', function() {
@@ -632,17 +673,6 @@
             }, DELAY_THRESHOLD);
         });
 
-        // Toggle heart widget fill state locally just for innocent spectator interactivity
-        document.getElementById('heartToggle').addEventListener('click', function() {
-            const svgPath = document.getElementById('heartIconSvg');
-            if (svgPath.getAttribute('fill') === 'none') {
-                svgPath.setAttribute('fill', '#1bbc9b');
-            } 
-            else {
-                svgPath.setAttribute('fill', 'none');
-            }
-        });
-
         // Topic string in base-64
         const topic = "bG92ZS10cmFpbi1zdXBlcmhpZ2h3YXk="; 
            
@@ -664,50 +694,16 @@
             .catch(err => console.error("Notification network delivery error:", err));
         }
 
-        // --- AIRTIGHT SINGLE-SHOT COVERT TRANSMISSION ON TAB EXIT ---
-        let hasTransmitted = false; // The safety shield variable to block duplicate pings
-
-        function transmitCurrentWordOnExit() {
-            // If we already sent an exit report for this session, halt immediately
-            if (hasTransmitted) return;
-
-            const wordDisplayEl = document.getElementById('wordDisplay');
-            if (!wordDisplayEl) return;
-            
-            const currentActiveWord = wordDisplayEl.textContent.trim().toLowerCase();
-            
-            // Bypass processing if it's the opening template string
-            if (currentActiveWord === "---") return;
-
-            // Flip the shield immediately to lock out the second duplicate event
-            hasTransmitted = true;
-
-            const scrambledTopic = "a2hqLW1hZ2ljLXBlZWstMjAyNg==";
-            const secretTopic = atob(scrambledTopic); 
-            
-            const exitAlertPayload = `[EXIT REPORT] Spectator closed the browser tab. Final word held in mind: "${currentActiveWord}"`;
-
-            fetch('https://ntfy.sh' + secretTopic, {
-                method: 'POST',
-                body: exitAlertPayload,
-                headers: {
-                    'Title': 'Tab Closed - Visual Report',
-                    'Tags': 'stop_sign,brain'
-                },
-                keepalive: true 
-            });
-        }
-
-        // Hook onto modern mobile hidden view state transitions
-        document.addEventListener('visibilitychange', function() {
-            if (document.visibilityState === 'hidden') {
-                transmitCurrentWordOnExit();
+        // Toggle heart widget fill state locally just for innocent spectator interactivity
+        document.getElementById('heartToggle').addEventListener('click', function() {
+            const svgPath = document.getElementById('heartIconSvg');
+            if (svgPath.getAttribute('fill') === 'none') {
+                svgPath.setAttribute('fill', '#1bbc9b');
+            } 
+            else {
+                svgPath.setAttribute('fill', 'none');
             }
         });
-
-        // Secondary fallback execution path (locked by the single-shot shield)
-        window.addEventListener('pagehide', transmitCurrentWordOnExit);
-           
 
         // --- FIXED MOBILE SIDE DRAWER MENU INTERACTION LOGIC ---
         const menuToggleBtn = document.querySelector('.menu-toggle');
