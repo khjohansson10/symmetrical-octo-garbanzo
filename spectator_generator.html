@@ -426,16 +426,15 @@
                 }, 50);
             }
 
-            // Track state updates for the Bottom Footer Banner
-            function updateFooterAdState() {
+            // Central processing method for the Footer Banner states using dynamic custom overrides
+            function updateFooterAdState(blankProbability) {
                 if (!bottomAdEl) return;
                 
-                // 1. Visibly blink out instantly
                 bottomAdEl.style.visibility = "hidden";
 
                 setTimeout(function() {
-                    // 50% chance to remain completely blank/transparent for this cycle
-                    const shouldBeBlank = Math.random() < 0.50;
+                    // Uses whatever percentage rule we feed into the parameter field
+                    const shouldBeBlank = Math.random() < blankProbability;
                     
                     if (!shouldBeBlank) {
                         const randomBottomIndex = Math.floor(Math.random() * TOTAL_BOTTOM_ADS) + 1;
@@ -451,9 +450,9 @@
                 updateLargeAdsState();
             }, 2500);
 
-            // Bottom banner arrives after 4.5 seconds
+            // FIXED: Initial launch roll hits exactly at 4.5 seconds with a custom 30% blank path target
             setTimeout(function() {
-                updateFooterAdState();
+                updateFooterAdState(0.30); // 30% Initial Blanking Probability
             }, 4500);
 
             // --- PHASE 2: CONTINUOUS CYCLE BACKGROUND RESETS ---
@@ -464,7 +463,7 @@
 
             // 30-Second Loop track for the Footer Banner (Includes blink, repetitions, and 50% blanks)
             setInterval(function() {
-                updateFooterAdState();
+                updateFooterAdState(0.50); // 50% Ongoing Background Loop Probability
             }, 30000);
         })();
 
