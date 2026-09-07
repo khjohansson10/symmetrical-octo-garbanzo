@@ -123,24 +123,22 @@
     .mobile-side-nav-drawer {
         position: fixed;
         top: 50px; /* Sits perfectly right underneath the sticky header bar */
-        right: -250px; /* Hidden off-screen right by default baseline dimensions */
-        width: 200px; /* Precise visual column footprint matching the screenshot */
+        right: -250px; 
+        width: 145px; /* Fixed: Narrowed the width to match the skinny real banner profile */
         height: calc(100vh - 50px);
         background-color: #1bbc9b !important; /* Locks onto the master header teal exactly */
         z-index: 9999;
         display: flex;
         flex-direction: column;
-        padding-top: 15px;
-        transition: right 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); /* Quick elastic slide animation */
-        box-shadow: -2px 0 5px rgba(0,0,0,0.08);
+        padding-top: 8px; /* Tighter spacing at the top */
+        transition: right 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        box-shadow: -2px 0 5px rgba(0,0,0,0.05);
     }
     
-    /* The active state class that slides the container into view */
     .mobile-side-nav-drawer.drawer-active {
-        right: 0; /* Snaps flat to the right edge of the viewport canvas */
+        right: 0; 
     }
 
-    /* Navigation Drawer Items List Typography formatting */
     .drawer-nav-list {
         list-style: none;
         width: 100%;
@@ -150,18 +148,20 @@
     .drawer-nav-list li {
         width: 100%;
         text-align: right;
-        padding: 14px 22px;
+        padding: 6px 16px; /* Fixed: Drastically reduced padding to bring the words closer together */
     }
     .drawer-nav-link-item {
-        color: rgba(255, 255, 255, 0.9);
+        /* Fixed: Matched color transparency, size, and weight to the "MORE..." option */
+        color: rgba(255, 255, 255, 0.75); 
         text-decoration: none;
-        font-size: 15.5px;
-        font-weight: 500;
+        font-size: 13.5px;
+        font-weight: 400;
         text-transform: uppercase;
-        letter-spacing: 0.8px;
+        letter-spacing: 0.5px;
         cursor: pointer;
         display: inline-block;
     }
+
     
 </style>
 
@@ -190,7 +190,7 @@
             <li><span class="drawer-nav-link-item">PHRASE</span></li>
             <li><span class="drawer-nav-link-item">NUMBER</span></li>
             <li><span class="drawer-nav-link-item">LETTER</span></li>
-            <li style="padding-top: 10px;"><span class="drawer-nav-link-item" style="opacity: 0.7; font-size: 14px;">MORE...</span></li>
+            <li><span class="drawer-nav-link-item">MORE...</span></li>
         </ul>
     </nav>
 
