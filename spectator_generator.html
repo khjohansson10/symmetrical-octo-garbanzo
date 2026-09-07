@@ -162,28 +162,29 @@
     </footer>
 
        <script>
-        // Over 140 unique, randomized words covering the entire alphabet (all strictly 7+ letters long)
+        // List of "random" words approximating statistical frequency of first letters in English language, each one 7+ letters long
+        // (many words actually chosen for "dramatic" flair)
         const forceList = [
-            "fabulous", "undergo", "guardian", "tactics", "laundry", "knapsack", "quarrel", "capsule", 
-            "variable", "charity", "scenery", "national", "january", "journey", "maggot", "sculpture", 
-            "uniform", "patience", "yardstick", "magistrate", "blanket", "fabulous", "ultimate", "knuckle", 
-            "umbrella", "jealousy", "quantum", "dazzling", "unaware", "vaccine", "teacher", "neutral", 
-            "notebook", "negative", "victory", "lantern", "narrative", "history", "chemical", "charcoal", 
-            "judgment", "obvious", "panther", "tomorrow", "village", "zeroing", "gravity", "garrison", 
-            "citizen", "universe", "calendar", "valuable", "cabinet", "biscuit", "magnetic", "quarter", 
-            "diamond", "yesterday", "valiant", "campaign", "scandal", "absolute", "guardian", "blanket", 
-            "capacity", "necklace", "industry", "vaguely", "xylophone", "breathe", "carriage", "warrior", 
-            "biscuit", "backpack", "beautiful", "wardrobe", "upgraded", "weather", "teaspoon", "leopard", 
-            "laughter", "academic", "quantity", "ordinary", "delivery", "fabulous", "glamour", "opinion", 
-            "quadrant", "sculpture", "notebook", "dinosaur", "juvenile", "kickoff", "keyboard", "palace", 
-            "garment", "whisper", "package", "shadow", "anchor", "paradox", "labyrinth", "midnight",
-            "zealous", "zipper", "zodiac", "zoology", "zeroing", "zenith", "zigzag", "yearbook", 
-            "youngster", "yearning", "yellow", "walnut", "wallet", "warning", "warrant", "wealthy", 
-            "variety", "vanilla", "vanish", "vacuum", "vacancy", "upgrade", "urgency", "utility", 
-            "tangled", "tapestry", "teacher", "technical", "technique", "talent", "target", "tariff", 
-            "schedule", "science", "seaside", "satisfy", "sanctuary", "satellite", "readiness", "reality", 
-            "routine", "radiant", "radical", "railroad", "rainbow", "question", "quiver", "quietly", 
-            "parallel", "parasol", "particle", "pageant", "paragon"
+            "calcium", "calculate", "calligraphy", "campaign", "cancerous", "candidate", "candlelight", "cannonade", "capricious", "capitalism", "captivate", "catholic", "camaraderie",
+            "celestial", "celebrate", "celibacy", "cellular", "cemetery", "censorship", "centrifugal", "centurion", "ceramic", "cerebral", "ceremonious", "certificate", "cessation",
+            "chalice", "champion", "chancellor", "chandelier", "chivalry", "chronicle", "circular", "clairvoyant", "clandestine", "clarify", "classic",
+            "claustrophobic", "clemency", "clergyman", "closure", "coagulate", "coalition", "cobblestone", "cognitive", "coherent", "coincidence",
+            "colloquial", "collusion", "colossal", "commandment", "commemorate", "commissary", "committee", "commonwealth", "commotion", "community",
+            "companion", "compassionate", "compatible", "competitive", "competent", "compilation", "complacency", "compliment",
+            "compliance", "compose", "comprehend", "compressible", "compromise", "compulsion", "computation", "comrade", "conceal",
+            "concoct", "concrete", "concussion", "condemn", "condense", "condescend", "condition", "condone", "conducive",
+            "conduct", "conduit", "confectionery", "confederate", "conference", "confess",
+            "cranberry", "craniotomy", "cravenly", "crawfish", "credence", "credulous", "crimson", "cringeworthy",
+            "crucifixion", "crusade", "crustacean", "cryptography", "crystal", 
+            "cuisine", "culinary", "culminate", "culpable", "cultivate", "culture",
+            "cataract", "catastrophic", "catechism", "chlamydia",  "chrysalis", "cerulean",
+            "czarism", "cyclopean", "caliphate", 
+            "caravanserai", "cazique", "catafalque", "cenotaph", "chapparal", "clerihew", "clyster", 
+            
+            "package", "pageant", "palette", "pancake", "panther", "paradox", "paragon", "parallel", "parasol", "particle",
+
+            "paladin", "palatable", "palindrome", "palladium", "palpable", "palpitation"
+    
         ];
 
         // THE INLINE MICRO-RANDOMIZATION ENGINE
