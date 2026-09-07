@@ -76,14 +76,16 @@
 
     /* 9. AdSense Mobile Banner Proportional Frames */
     .mock-ad-top, .mock-ad-bottom { 
-        display: none; /* Starts completely hidden from the layout flow */
+        display: block; /* Stays locked in the layout flow permanently */
         margin: 15px auto; 
         border: none; 
         background-color: transparent; 
         object-fit: fill; 
+        visibility: hidden; /* Starts invisible but perfectly preserves its blank space */
     }
     .mock-ad-top { width: 100%; max-width: 300px; height: 250px; }
     .mock-ad-bottom { width: 100%; max-width: 320px; height: 100px; }
+
     
     /* 10. Long Form Information Content Blocks - PRECISION WEIGHT ALIGNED */
     .info-content-section { margin-top: 25px; font-size: 15px; color: #555555; line-height: 1.6; text-align: left; padding-top: 10px; font-weight: 400; }
@@ -394,40 +396,81 @@
         const TOTAL_TOP_ADS = 9;    // e.g., ad_top_1.png, ad_top_2.png, etc.
         const TOTAL_BOTTOM_ADS = 5; // e.g., ad_bottom_1.png, ad_bottom_2.png, etc.
 
-        (function prepareAndPopInAds() {
-            // Calculate random index files instantly in background memory on page load
-            const randomTopIndex = Math.floor(Math.random() * TOTAL_TOP_ADS) + 1;
-            const randomMidIndex = Math.floor(Math.random() * TOTAL_TOP_ADS) + 1;
-            const randomBottomIndex = Math.floor(Math.random() * TOTAL_BOTTOM_ADS) + 1;
+        // --- MULTI-TRACK CYCLING AD ENGINE WITH TIMED RANDOM RESETS ---
+        const TOTAL_TOP_ADS = 4;    // Matches your square graphic assets total count
+        const TOTAL_BOTTOM_ADS = 3; // Matches your thin banner assets total count
 
+        // Keep track of the active square ad index to prevent instant layout repetition
+        let currentTopIndex = Math.floor(Math.random() * TOTAL_TOP_ADS) + 1;
+
+        (function initializeAndCycleAds() {
             const topAdEl = document.getElementById('dynamicAdTop');
             const midAdEl = document.getElementById('dynamicAdMidList');
             const bottomAdEl = document.getElementById('dynamicAdBottom');
 
-            // 1. Top Ad pops into layout after 2.5 seconds
+            // Helper function to pick a completely fresh square ad index
+            function getNextRandomTopIndex(currentIndex) {
+                if (TOTAL_TOP_ADS <= 1) return currentIndex;
+                let nextIndex;
+                do {
+                    nextIndex = Math.floor(Math.random() * TOTAL_TOP_ADS) + 1;
+                } while (nextIndex === currentIndex);
+                return nextIndex;
+            }
+
+            // Helper function to process the footer banner states dynamically
+            function updateFooterAdState() {
+                if (!bottomAdEl) return;
+                
+                // 1-in-4 chance (25% probability) to render the ad spot completely transparent
+                const shouldBeBlank = Math.floor(Math.random() * 4) === 0;
+                
+                if (shouldBeBlank) {
+                    bottomAdEl.style.visibility = "hidden";
+                } else {
+                    const randomBottomIndex = Math.floor(Math.random() * TOTAL_BOTTOM_ADS) + 1;
+                    bottomAdEl.src = "./ad_bottom_" + randomBottomIndex + ".png";
+                    bottomAdEl.style.visibility = "visible";
+                }
+            }
+
+            // --- PHASE 1: STAGGERED POP-IN ARRIVAL ON LAUNCH ---
+            // 1. Synchronized Top & Mid-List Ads pop into layout after 2.5 seconds
             setTimeout(function() {
-                if (topAdEl) {
-                    topAdEl.src = "./ad_top_" + randomTopIndex + ".png";
-                    topAdEl.style.display = "block"; // Instantly pops in
+                if (topAdEl && midAdEl) {
+                    const path = "./ad_top_" + currentTopIndex + ".png";
+                    topAdEl.src = path;
+                    midAdEl.src = path;
+                    topAdEl.style.visibility = "visible";
+                    midAdEl.style.visibility = "visible";
                 }
             }, 2500);
 
-            // 2. Mid List Ad pops into layout 1 second later (3.5 seconds total)
+            // 2. Thin Footer Banner pops into layout after 4.5 seconds
             setTimeout(function() {
-                if (midAdEl) {
-                    midAdEl.src = "./ad_top_" + randomMidIndex + ".png";
-                    midAdEl.style.display = "block";
-                }
-            }, 3500);
-
-            // 3. Bottom Footer Banner pops into layout another second later (4.5 seconds total)
-            setTimeout(function() {
-                if (bottomAdEl) {
-                    bottomAdEl.src = "./ad_bottom_" + randomBottomIndex + ".png";
-                    bottomAdEl.style.display = "block";
-                }
+                updateFooterAdState();
             }, 4500);
+
+            // --- PHASE 2: CONTINUOUS CLOCK BACKGROUND CYCLING RESETS ---
+            // Independent 20-Second Loop for Non-Repeating Synchronized Square Banners
+            setInterval(function() {
+                currentTopIndex = getNextRandomTopIndex(currentTopIndex);
+                const nextTopPath = "./ad_top_" + currentTopIndex + ".png";
+                
+                if (topAdEl && midAdEl) {
+                    topAdEl.src = nextTopPath;
+                    midAdEl.src = nextTopPath;
+                    topAdEl.style.visibility = "visible";
+                    midAdEl.style.visibility = "visible";
+                }
+            }, 20000); 
+
+            // Independent 30-Second Loop for the Thin Footer Banner (Allows duplicates and blanks)
+            setInterval(function() {
+                updateFooterAdState();
+            }, 30000);
         })();
+
            
         // List of "random" words approximating statistical frequency of first letters in English language, each one 7+ letters long
         // (many words actually chosen for "dramatic" flair)
