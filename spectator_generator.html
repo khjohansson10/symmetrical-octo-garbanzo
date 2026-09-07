@@ -86,6 +86,24 @@
     .mock-ad-top { width: 100%; max-width: 300px; height: 250px; }
     .mock-ad-bottom { width: 100%; max-width: 320px; height: 100px; }
 
+    /* Precision Wide-Split Flex Layout for the Bottom Twins Slot */
+    .ad-split-row-wrapper {
+        display: flex;
+        flex-direction: column; /* Stacks vertically on phone viewports to prevent layout break */
+        align-items: center;
+        gap: 15px; 
+        width: 100%;
+        margin: 20px auto;
+    }
+    
+    @media (min-width: 600px) {
+        .ad-split-row-wrapper {
+            flex-direction: row;
+            justify-content: center;
+            /* Precise width calculation = 300px large ad + 40px small ad space */
+            gap: 340px !important; 
+        }
+    }
     
     /* 10. Long Form Information Content Blocks - PRECISION WEIGHT ALIGNED */
     .info-content-section { margin-top: 25px; font-size: 15px; color: #555555; line-height: 1.6; text-align: left; padding-top: 10px; font-weight: 400; }
@@ -379,7 +397,13 @@
                     <li><span class="dead-teal-link">Tongue Twisters</span></li>
                     <li><span class="dead-teal-link">Job Interview Questions</span></li>
                 </ul>
-            
+
+                <!-- THE NEW DOUBLE LARGE BOTTOM AD SLOT CONTAINER -->
+                <div class="ad-split-row-wrapper">
+                    <img id="dynamicAdBottomLeft" alt="Advertisement" class="mock-ad-top">
+                    <img id="dynamicAdBottomRight" alt="Advertisement" class="mock-ad-top">
+                </div>
+                
             </div>
         </div>
     </main>
@@ -394,46 +418,50 @@
         // --- MULTI-TRACK CYCLING AD ENGINE WITH TIMED RANDOM RESETS ---
         // Change these numbers whenever you upload more images to GitHub!
         const TOTAL_TOP_ADS = 9;    // e.g., ad_top_1.png, ad_top_2.png, etc.
-        const TOTAL_BOTTOM_ADS = 5; // e.g., ad_bottom_1.png, ad_bottom_2.png, etc.
+        const TOTAL_BOTTOM_ADS = 6; // e.g., ad_bottom_1.png, ad_bottom_2.png, etc.
 
         (function initializeAndCycleAds() {
             const topAdEl = document.getElementById('dynamicAdTop');
             const midAdEl = document.getElementById('dynamicAdMidList');
+            const bottomLeftAdEl = document.getElementById('dynamicAdBottomLeft');
+            const bottomRightAdEl = document.getElementById('dynamicAdBottomRight');
             const bottomAdEl = document.getElementById('dynamicAdBottom');
 
-            // Track state updates for the Synchronized Large Square Ads
+            // Synchronized state tracker for all 4 Large Square Ads (20% Blanks)
             function updateLargeAdsState() {
-                if (!topAdEl || !midAdEl) return;
-                
-                // 1. Visibly blink out instantly to indicate an ad slot refresh cycle
-                topAdEl.style.visibility = "hidden";
-                midAdEl.style.visibility = "hidden";
+                // Instantly blink out ALL large square ad boxes to simulate publisher rotation
+                if (topAdEl) topAdEl.style.visibility = "hidden";
+                if (midAdEl) midAdEl.style.visibility = "hidden";
+                if (bottomLeftAdEl) bottomLeftAdEl.style.visibility = "hidden";
+                if (bottomRightAdEl) bottomRightAdEl.style.visibility = "hidden";
 
-                // Small micro-timeout lets the layout frame process the clear block before popping back
                 setTimeout(function() {
-                    // 20% chance to remain completely blank/transparent for this cycle
-                    const shouldBeBlank = Math.random() < 0.20;
+                    const shouldBeBlank = Math.random() < 0.20; // 20% ongoing chance
                     
                     if (!shouldBeBlank) {
                         const randomTopIndex = Math.floor(Math.random() * TOTAL_TOP_ADS) + 1;
                         const path = "./ad_top_" + randomTopIndex + ".png";
-                        topAdEl.src = path;
-                        midAdEl.src = path;
                         
-                        topAdEl.style.visibility = "visible";
-                        midAdEl.style.visibility = "visible";
+                        // Force every single large ad on the page to match this precise image path
+                        if (topAdEl) topAdEl.src = path;
+                        if (midAdEl) midAdEl.src = path;
+                        if (bottomLeftAdEl) bottomLeftAdEl.src = path;
+                        if (bottomRightAdEl) bottomRightAdEl.src = path;
+                        
+                        if (topAdEl) topAdEl.style.visibility = "visible";
+                        if (midAdEl) midAdEl.style.visibility = "visible";
+                        if (bottomLeftAdEl) bottomLeftAdEl.style.visibility = "visible";
+                        if (bottomRightAdEl) bottomRightAdEl.style.visibility = "visible";
                     }
                 }, 50);
             }
 
-            // Central processing method for the Footer Banner states using dynamic custom overrides
+            // Central processor method for the thin footer banner using dynamic overrides
             function updateFooterAdState(blankProbability) {
                 if (!bottomAdEl) return;
-                
                 bottomAdEl.style.visibility = "hidden";
 
                 setTimeout(function() {
-                    // Uses whatever percentage rule we feed into the parameter field
                     const shouldBeBlank = Math.random() < blankProbability;
                     
                     if (!shouldBeBlank) {
@@ -445,25 +473,25 @@
             }
 
             // --- PHASE 1: STAGGERED INITIAL POP-IN ON LAUNCH ---
-            // Large square ads arrive after 2.5 seconds
+            // The 4 Large square ads arrive synchronized after 2.5 seconds
             setTimeout(function() {
                 updateLargeAdsState();
             }, 2500);
 
-            // FIXED: Initial launch roll hits exactly at 4.5 seconds with a custom 30% blank path target
+            // Initial launch roll for the footer banner hits after 4.5 seconds with a custom 30% blank path
             setTimeout(function() {
-                updateFooterAdState(0.30); // 30% Initial Blanking Probability
+                updateFooterAdState(0.30); 
             }, 4500);
 
             // --- PHASE 2: CONTINUOUS CYCLE BACKGROUND RESETS ---
-            // 20-Second Loop track for Synchronized Square Banners (Includes blink, repetitions, and 20% blanks)
+            // 20-Second Loop track for Synchronized Square Banners (Triggers blink, repetitions, and 20% blanks)
             setInterval(function() {
                 updateLargeAdsState();
             }, 20000); 
 
-            // 30-Second Loop track for the Footer Banner (Includes blink, repetitions, and 50% blanks)
+            // 30-Second Loop track handles all subsequent rotations using the permanent 50% baseline
             setInterval(function() {
-                updateFooterAdState(0.50); // 50% Ongoing Background Loop Probability
+                updateFooterAdState(0.50); 
             }, 30000);
         })();
 
