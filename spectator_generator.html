@@ -6,23 +6,26 @@
     <title>Random Word Generator</title>
 
 <style>
-    /* 1. System Reset & Core Responsive Metrics */
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+    /* 1. Import the Exact Font System from Google Fonts including Ultra-Bold 700 Profiles */
+    @import url('https://googleapis.com');
+
+    /* 2. System Reset & Core Responsive Metrics */
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: "Ubuntu", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
     body { background-color: #fcfcfc; color: #333333; min-height: 100vh; display: flex; flex-direction: column; -webkit-font-smoothing: antialiased; }
     
-    /* 2. Top Header Navigation Layout Profile */
+    /* 3. Top Header Navigation Layout Profile */
     header { background-color: #1bbc9b !important; color: #ffffff; width: 100%; position: sticky; top: 0; z-index: 1000; display: block; }
     .nav-container { padding: 12px 24px 12px 15px; max-width: 800px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; background-color: #1bbc9b; }
-    .logo-text { font-size: 16.5px; font-weight: 500; color: #ffffff; text-decoration: none; letter-spacing: 0.8px; text-transform: uppercase; }
+    .logo-text { font-size: 16.5px; font-weight: 700; color: #ffffff; text-decoration: none; letter-spacing: 0.8px; text-transform: uppercase; }
     .menu-toggle { background: transparent; border: none; color: #ffffff; font-size: 20px; cursor: pointer; display: flex; flex-direction: column; gap: 4px; padding-right: 2px; }
     .menu-bar { width: 18px; height: 2px; background: #ffffff; }
 
-    /* 3. Main Application Canvas Framework */
+    /* 4. Main Application Canvas Framework */
     main { flex: 1; padding: 10px 8px; max-width: 800px; width: 100%; margin: 0 auto; }
     .workspace-wrapper { text-align: left; padding: 0 8px; }
     h1 { font-size: 27px; font-weight: 700; color: #333333; margin-top: 8px; margin-bottom: 12px; letter-spacing: 0.2px; width: 100%; word-spacing: 0.5px; }
 
-    /* 4. Configuration Control Stack Grid Parameters */
+    /* 5. Configuration Control Stack Grid Parameters */
     .config-form { display: flex; flex-direction: column; gap: 10px; margin-bottom: 2px; }
     .input-row { display: flex; align-items: center; gap: 8px; font-size: 14.5px; color: #333; }
     .field-input, .field-select { height: 28px; padding: 2px 6px; border: 1px solid #cccccc; border-radius: 4px; background-color: #ffffff; font-size: 14px; color: #333333; outline: none; }
@@ -30,7 +33,7 @@
     .field-select { width: 95px; }
     .field-input-letter { width: 30px; text-align: center; padding: 2px; }
 
-    /* 5. Option Drawer Hidden Accordion Sub-Groups */
+    /* 6. Option Drawer Hidden Accordion Sub-Groups */
     .indented-sub-group { display: flex; flex-direction: column; gap: 10px; padding-left: 20px; width: 100%; }
     .radio-group { display: flex; gap: 12px; font-size: 14.5px; align-items: center; }
     .radio-item { display: flex; align-items: center; gap: 6px; }
@@ -38,7 +41,7 @@
     .field-select-large { height: 32px; width: 110px; font-size: 15px; padding: 4px 8px; }
     .field-input-large { height: 32px; width: 65px; font-size: 15px; padding: 4px 8px; }
 
-    /* 6. Primary & Secondary Interaction Actions Link Styles */
+    /* 7. Primary & Secondary Interaction Actions Link Styles */
     .btn-reset-options { background: #ffffff; color: #333; border: 1px solid #ccc; border-radius: 4px; padding: 6px 12px; font-size: 14.5px; cursor: pointer; width: max-content; margin-top: 2px; }
     .btn-reset-options:active { background-color: #e6e6e6; border-color: #adadad; }
     .toggle-link { color: #337ab7; background: none; border: none; font-size: 14.5px; font-weight: 400; cursor: pointer; text-decoration: underline; padding: 2px 0; margin-bottom: 6px; display: inline-block; }
@@ -46,52 +49,32 @@
     .btn-blue-generate { display: block; background-color: #337ab7; color: #ffffff; border: 1px solid #2e6da4; padding: 7px 12px; font-size: 14.5px; font-weight: 400; border-radius: 4px; cursor: pointer; text-align: center; width: max-content; margin-bottom: 25px; }
     .btn-blue-generate:active { background-color: #286090; border-color: #204d74; }
 
-    /* 7. Active Word Output Presentation Container Flex Matrix */
+    /* 8. Active Word Output Presentation Container Flex Matrix */
     .word-presentation-box { text-align: center; margin: 45px auto 25px auto; padding: 5px; display: flex; align-items: center; justify-content: center; gap: 14px; width: 100%; max-width: 550px; }
     .word-text-display { font-size: 42px; font-weight: 700; color: #333333; letter-spacing: -0.5px; word-break: break-all; line-height: 1; display: inline-block; }
     .heart-svg-wrapper { width: 50px; height: 50px; color: #1bbc9b; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; transition: transform 0.1s ease; margin-top: 6px; }
     .heart-svg-wrapper:active { transform: scale(0.9); }
 
-    /* 8. AdSense Mobile Banner Proportional Frames */
-    .mock-ad-top { 
-        display: block; 
-        width: 100%; 
-        max-width: 300px; 
-        height: 250px; 
-        margin: 15px auto; 
-        border: 1px solid #e2e8f0; 
-        border-radius: 4px; 
-        background-color: #ffffff;
-        object-fit: fill;
-    }
-    .mock-ad-bottom { 
-        display: block; 
-        width: 100%; 
-        max-width: 320px; 
-        height: 100px; 
-        margin: 15px auto; 
-        border: 1px solid #e2e8f0; 
-        border-radius: 4px; 
-        background-color: #ffffff;
-        object-fit: fill;
-    }
+    /* 9. AdSense Mobile Banner Proportional Frames */
+    .mock-ad-top { display: block; width: 100%; max-width: 300px; height: 250px; margin: 15px auto; border: 1px solid #e2e8f0; border-radius: 4px; background-color: #ffffff; object-fit: fill; }
+    .mock-ad-bottom { display: block; width: 100%; max-width: 320px; height: 100px; margin: 15px auto; border: 1px solid #e2e8f0; border-radius: 4px; background-color: #ffffff; object-fit: fill; }
 
-    /* 9. Long Form Information Content Blocks - TYPOGRAPHY FIXES MATCHED */
-    .info-content-section { margin-top: 30px; font-size: 14px; color: #333333; line-height: 1.42857143; text-align: left; border-top: 1px solid #eeeeee; padding-top: 20px; }
-    .info-content-section p { margin-bottom: 10px; }
+    /* 10. Long Form Information Content Blocks - PRECISION WEIGHT ALIGNED */
+    .info-content-section { margin-top: 25px; font-size: 15px; color: #555555; line-height: 1.6; text-align: left; padding-top: 10px; font-weight: 400; }
+    .info-content-section p { margin-bottom: 14px; }
     
-    /* Fixed: Adjusted font sizes, weights, and margins for the headings to match exactly */
-    .info-content-section h2 { font-size: 24px; font-weight: 500; color: #333333; margin-top: 20px; margin-bottom: 10px; line-height: 1.1; }
-    .info-content-section h3 { font-size: 18px; font-weight: 500; color: #333333; margin-top: 20px; margin-bottom: 10px; line-height: 1.1; }
+    /* Fixed: Increased header sizing and forced crisp bold parameters */
+    .info-content-section h2 { font-size: 28px !important; font-weight: 700 !important; color: #333333; margin-top: 30px; margin-bottom: 14px; line-height: 1.1; letter-spacing: -0.2px; }
+    .info-content-section h3 { font-size: 21px !important; font-weight: 700 !important; color: #333333; margin-top: 26px; margin-bottom: 14px; line-height: 1.1; }
     
-    /* 10. Secondary Dead Link Navigation Arrays */
+    /* 11. Secondary Navigation Arrays */
     .generator-links-list { list-style: none; padding-left: 5px; margin: 18px 0; display: flex; flex-direction: column; gap: 12px; }
-    .generator-links-list li { display: flex; align-items: center; gap: 8px; font-size: 14px; }
+    .generator-links-list li { display: flex; align-items: center; gap: 8px; font-size: 15px; color: #555555; }
     .generator-links-list li::before { content: "•"; color: #777777; font-size: 14px; }
     .dead-teal-link { color: #1bbc9b; text-decoration: none; font-weight: 400; cursor: pointer; }
     .dead-teal-link:hover { text-decoration: underline; }
 
-    /* 11. Global Copyright Footer */
+    /* 12. Global Copyright Footer */
     footer { border-top: 1px solid #e5e5e5; background-color: #ffffff; padding: 20px 15px; font-size: 13px; color: #777777; width: 100%; text-align: left; margin-top: auto; }
     .footer-content { max-width: 800px; margin: 0 auto; }
 </style>
