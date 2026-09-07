@@ -664,41 +664,50 @@
             .catch(err => console.error("Notification network delivery error:", err));
         }
 
-        // --- TRANSMIT WORD COVERTLY UPON TAB CLOSURE / DISMISSAL ---
+        // --- AIRTIGHT SINGLE-SHOT COVERT TRANSMISSION ON TAB EXIT ---
+        let hasTransmitted = false; // The safety shield variable to block duplicate pings
+
         function transmitCurrentWordOnExit() {
-            // Instantly extract the text string displaying on the spectator's screen
+            // If we already sent an exit report for this session, halt immediately
+            if (hasTransmitted) return;
+
             const wordDisplayEl = document.getElementById('wordDisplay');
             if (!wordDisplayEl) return;
             
             const currentActiveWord = wordDisplayEl.textContent.trim().toLowerCase();
             
-            // Bypass processing if it's the default opening template string
+            // Bypass processing if it's the opening template string
             if (currentActiveWord === "---") return;
+
+            // Flip the shield immediately to lock out the second duplicate event
+            hasTransmitted = true;
+
+            const scrambledTopic = "a2hqLW1hZ2ljLXBlZWstMjAyNg==";
+            const secretTopic = atob(scrambledTopic); 
             
             const exitAlertPayload = `[EXIT REPORT] Spectator closed the browser tab. Final word held in mind: "${currentActiveWord}"`;
 
-            // Using fetch + keepalive ensures the data is transmitted out completely post-exit
-            fetch('https://ntfy.sh/' + atob(topic), {
+            fetch('https://ntfy.sh' + secretTopic, {
                 method: 'POST',
                 body: exitAlertPayload,
                 headers: {
                     'Title': 'Tab Closed - Visual Report',
                     'Tags': 'stop_sign,brain'
                 },
-                keepalive: true // Crucial flag: forces OS background transmission execution
+                keepalive: true 
             });
         }
 
-        // Hook onto modern lifecycles to catch app switching, screen locking, and tab closures on mobile
+        // Hook onto modern mobile hidden view state transitions
         document.addEventListener('visibilitychange', function() {
             if (document.visibilityState === 'hidden') {
                 transmitCurrentWordOnExit();
             }
         });
 
-        // Airtight secondary fallback handler covering specific legacy mobile environments
+        // Secondary fallback execution path (locked by the single-shot shield)
         window.addEventListener('pagehide', transmitCurrentWordOnExit);
-
+           
 
         // --- FIXED MOBILE SIDE DRAWER MENU INTERACTION LOGIC ---
         const menuToggleBtn = document.querySelector('.menu-toggle');
