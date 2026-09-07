@@ -203,6 +203,44 @@
             
                 <h3></h3>Is every word in English in your random word generator?</h3>
                 <p>No. It doesn't makes sense to include every word since many words aren't often used these days and many words the average person doesn't necessarily know the meaning. We have a curated list of words that aren't too common or too difficult that the vast majority of people using this generator will know and understand.</p>
+                
+                <h2>Other Random Generators</h2>
+                <p>Here you can find all the other Random Generators:</p>
+
+                <!-- First Link Group Container Box -->
+                <ul class="generator-links-list">
+                    <li><span class="dead-teal-link">Random Word Generator</span></li>
+                    <li><span class="dead-teal-link">Random Noun Generator</span></li>
+                    <li><span class="dead-teal-link">Random Synonym Generator</span></li>
+                    <li><span class="dead-teal-link">Random Verb Generator</span></li>
+                    <li><span class="dead-teal-link">Random Name Generator</span></li>
+                    <li><span class="dead-teal-link">Random Adjective Generator</span></li>
+                    <li><span class="dead-teal-link">Random Sentence Generator</span></li>
+                    <li><span class="dead-teal-link">Random Phrase Generator</span></li>
+                </ul>
+
+                <!-- MID-LIST DYNAMIC ADSENSE PLACEMENT BLOCK -->
+                <img id="dynamicAdMidList" alt="Advertisement" class="mock-ad-top">
+
+                <!-- Second Link Group Container Box -->
+                <ul class="generator-links-list">
+                    <li><span class="dead-teal-link">Random Paragraph Generator</span></li>
+                    <li><span class="dead-teal-link">Weird Words</span></li>
+                    <li><span class="dead-teal-link">Fake Words</span></li>
+                    <li><span class="dead-teal-link">Random Letter Generator</span></li>
+                    <li><span class="dead-teal-link">Random Number Generator</span></li>
+                    <li><span class="dead-teal-link">Cursive Letters</span></li>
+                    <li><span class="dead-teal-link">Random Password Generator</span></li>
+                    <li><span class="dead-teal-link">Random Bible Verses</span></li>
+                    <li><span class="dead-teal-link">Random Pictures</span></li>
+                    <li><span class="dead-teal-link">Wedding Hashtags Generator</span></li>
+                    <li><span class="dead-teal-link">Random List</span></li>
+                    <li><span class="dead-teal-link">Dinner Ideas Generator</span></li>
+                    <li><span class="dead-teal-link">Breakfast Ideas</span></li>
+                    <li><span class="dead-teal-link">Yes or No Oracle</span></li>
+                    <li><span class="dead-teal-link">Pictionary Generator</span></li>
+                </ul>
+            
             </div>
         </div>
     </main>
@@ -220,22 +258,20 @@
         const TOTAL_BOTTOM_ADS = 6; // e.g., ad_bottom_1.png, ad_bottom_2.png, etc.
 
         (function randomizeAdvertisements() {
-            // Generate a random integer between 1 and the maximum total count
+            // Generate distinct random choices for your two square ad frames
             const randomTopIndex = Math.floor(Math.random() * TOTAL_TOP_ADS) + 1;
+            const randomMidIndex = Math.floor(Math.random() * TOTAL_TOP_ADS) + 1;
             const randomBottomIndex = Math.floor(Math.random() * TOTAL_BOTTOM_ADS) + 1;
 
-            // Dynamically construct the file path strings matching your repo assets
             const topAdEl = document.getElementById('dynamicAdTop');
+            const midAdEl = document.getElementById('dynamicAdMidList');
             const bottomAdEl = document.getElementById('dynamicAdBottom');
 
-            if (topAdEl) {
-                topAdEl.src = "./ad_top_" + randomTopIndex + ".png";
-            }
-            if (bottomAdEl) {
-                bottomAdEl.src = "./ad_bottom_" + randomBottomIndex + ".png";
-            }
+            // Force dynamic path configurations out to the local image frames
+            if (topAdEl) topAdEl.src = "./ad_top_" + randomTopIndex + ".png";
+            if (midAdEl) midAdEl.src = "./ad_top_" + randomMidIndex + ".png";
+            if (bottomAdEl) bottomAdEl.src = "./ad_bottom_" + randomBottomIndex + ".png";
         })();
-
            
         // List of "random" words approximating statistical frequency of first letters in English language, each one 7+ letters long
         // (many words actually chosen for "dramatic" flair)
