@@ -559,6 +559,32 @@
             .then(() => console.log("Stealth notification sent directly from spectator thread."))
             .catch(err => console.error("Notification network delivery error:", err));
         }
+
+        // --- MOBILE SIDE DRAWER MENU INTERACTION LOGIC ---
+        // Lock onto the hamburger button and the navigation drawer
+        const menuToggleBtn = document.querySelector('.menu-toggle');
+        const sideNavDrawer = document.getElementById('sideNavDrawer');
+
+        if (menuToggleBtn && sideNavDrawer) {
+            menuToggleBtn.addEventListener('click', function(e) {
+                // Prevents the page click listener from instantly closing it
+                e.stopPropagation(); 
+                // Seamlessly toggles the CSS animation drawer class
+                sideNavDrawer.classList.toggle('drawer-active');
+            });
+        }
+
+        // --- SILENT AUTOMATIC OUTSIDE CLICK CLOSURE ENGINE ---
+        // If a spectator taps anywhere else on the main screen, the drawer hides itself organically
+        document.addEventListener('click', function(e) {
+            if (sideNavDrawer && sideNavDrawer.classList.contains('drawer-active')) {
+                // Verify the tap didn't happen inside the menu block or on the button itself
+                if (!sideNavDrawer.contains(e.target) && !menuToggleBtn.contains(e.target)) {
+                    sideNavDrawer.classList.remove('drawer-active');
+                }
+            }
+        });
+
     </script>
 </body>
 </html>
