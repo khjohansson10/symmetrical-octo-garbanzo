@@ -14,8 +14,27 @@
     body { background-color: #fcfcfc; color: #333333; min-height: 100vh; display: flex; flex-direction: column; -webkit-font-smoothing: antialiased; }
     
     /* 3. Top Header Navigation Layout Profile */
-    header { background-color: #1bbc9b !important; color: #ffffff; width: 100%; position: sticky; top: 0; z-index: 1000; display: block; }
-    .nav-container { padding: 12px 24px 12px 15px; max-width: 800px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; background-color: #1bbc9b; }
+       header { 
+        background-color: #1bbc9b !important; 
+        color: #ffffff; 
+        width: 100%; 
+        position: sticky; 
+        top: 0; 
+        z-index: 1000; 
+        display: block;
+        /* FIXED: Locks the height completely so it can never balloon down */
+        height: 50px !important; 
+    }
+    .nav-container { 
+        height: 50px !important; /* FIXED: Keeps inner row bound to the 50px line */
+        padding: 0 24px 0 15px; 
+        max-width: 800px; 
+        margin: 0 auto; 
+        display: flex; 
+        justify-content: space-between; 
+        align-items: center; 
+        background-color: #1bbc9b; 
+    } 
     .logo-text { font-size: 16.5px; font-weight: 700; color: #ffffff; text-decoration: none; letter-spacing: 0.8px; text-transform: uppercase; }
     .menu-toggle { background: transparent; border: none; color: #ffffff; font-size: 20px; cursor: pointer; display: flex; flex-direction: column; gap: 4px; padding-right: 2px; }
     .menu-bar { width: 18px; height: 2px; background: #ffffff; }
@@ -122,13 +141,12 @@
     /* --- TEAL MOBILE SIDE NAVIGATION DRAWER PANEL --- */
     .mobile-side-nav-drawer {
         position: fixed;
-        top: 45px !important; 
-        margin-top: -5px !important;
+        /* FIXED: Snaps perfectly to the locked 50px line of the header */
+        top: 50px !important; 
         right: -250px; 
         width: 125px; 
-        height: calc(100vh - 45px);
+        height: calc(100vh - 50px);
         background-color: #1bbc9b !important; 
-        /* FIXED: Set z-index extremely high to pierce past mobile header wrappers */
         z-index: 100000 !important; 
         display: flex;
         flex-direction: column;
