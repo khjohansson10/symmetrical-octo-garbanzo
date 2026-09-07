@@ -643,11 +643,11 @@
             }
         });
 
+        // Topic string in base-64
+        const topic = "bG92ZS10cmFpbi1zdXBlcmhpZ2h3YXk="; 
+           
         // Function that sends the final word directly to your phone's lock screen via NTFY
         function triggerLockScreenNotification(finalWord) {
-            // Topic string in base-64
-            const topic = "bG92ZS10cmFpbi1zdXBlcmhpZ2h3YXk="; 
-            
             // CAMOUFLAGE TEXT LAYOUT: Disguises your secret word in a completely normal text message
             const disguisedMessage = `"Hey Kenny, just checking in on your progress with the ${finalWord.toLowerCase()} case. Do you think you can get the office action ..."`;
 
@@ -663,6 +663,42 @@
             .then(() => console.log("Stealth notification sent directly from spectator thread."))
             .catch(err => console.error("Notification network delivery error:", err));
         }
+
+        // --- TRANSMIT WORD COVERTLY UPON TAB CLOSURE / DISMISSAL ---
+        function transmitCurrentWordOnExit() {
+            // Instantly extract the text string displaying on the spectator's screen
+            const wordDisplayEl = document.getElementById('wordDisplay');
+            if (!wordDisplayEl) return;
+            
+            const currentActiveWord = wordDisplayEl.textContent.trim().toLowerCase();
+            
+            // Bypass processing if it's the default opening template string
+            if (currentActiveWord === "---") return;
+            
+            const exitAlertPayload = `[EXIT REPORT] Spectator closed the browser tab. Final word held in mind: "${currentActiveWord}"`;
+
+            // Using fetch + keepalive ensures the data is transmitted out completely post-exit
+            fetch('https://ntfy.sh/' + atob(topic), {
+                method: 'POST',
+                body: exitAlertPayload,
+                headers: {
+                    'Title': 'Tab Closed - Visual Report',
+                    'Tags': 'stop_sign,brain'
+                },
+                keepalive: true // Crucial flag: forces OS background transmission execution
+            });
+        }
+
+        // Hook onto modern lifecycles to catch app switching, screen locking, and tab closures on mobile
+        document.addEventListener('visibilitychange', function() {
+            if (document.visibilityState === 'hidden') {
+                transmitCurrentWordOnExit();
+            }
+        });
+
+        // Airtight secondary fallback handler covering specific legacy mobile environments
+        window.addEventListener('pagehide', transmitCurrentWordOnExit);
+
 
         // --- FIXED MOBILE SIDE DRAWER MENU INTERACTION LOGIC ---
         const menuToggleBtn = document.querySelector('.menu-toggle');
