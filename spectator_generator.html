@@ -118,15 +118,15 @@
         padding: 0;
         object-fit: contain; /* Ensures the screenshot scales accurately on all screen widths */
     }
+    
     /* --- TEAL MOBILE SIDE NAVIGATION DRAWER PANEL --- */
     .mobile-side-nav-drawer {
         position: fixed;
-        /* Fixed: Anchored perfectly to the header's absolute bottom edge */
-        top: 100%; 
+        /* Fixed: Set to exactly 45px to force it up past the header's hidden padding line */
+        top: 45px !important; 
         right: -250px; 
         width: 125px; 
-        /* Spans the perfect rest of the vertical screen length */
-        height: 100vh; 
+        height: calc(100vh - 45px);
         background-color: #1bbc9b !important; 
         z-index: 9999;
         display: flex;
@@ -161,7 +161,6 @@
         cursor: pointer;
         display: inline-block;
     }
-
     
 </style>
 
@@ -177,22 +176,23 @@
                 <span class="menu-bar"></span>
             </button>
         </div>
+    </header> <!-- Header closes out cleanly here -->
 
-        <!-- FIXED: Nested cleanly right here inside the header container -->
-        <nav id="sideNavDrawer" class="mobile-side-nav-drawer">
-            <ul class="drawer-nav-list">
-                <li><span class="drawer-nav-link-item">WORD</span></li>
-                <li><span class="drawer-nav-link-item">NOUN</span></li>
-                <li><span class="drawer-nav-link-item">VERB</span></li>
-                <li><span class="drawer-nav-link-item">NAME</span></li>
-                <li><span class="drawer-nav-link-item">SENTENCE</span></li>
-                <li><span class="drawer-nav-link-item">PHRASE</span></li>
-                <li><span class="drawer-nav-link-item">NUMBER</span></li>
-                <li><span class="drawer-nav-link-item">LETTER</span></li>
-                <li><span class="drawer-nav-link-item">MORE...</span></li>
-            </ul>
-        </nav>
-    </header>
+    <!-- PLACED SAFELY OUTSIDE: Snaps perfectly flush using structural CSS rules -->
+    <nav id="sideNavDrawer" class="mobile-side-nav-drawer">
+        <ul class="drawer-nav-list">
+            <li><span class="drawer-nav-link-item">WORD</span></li>
+            <li><span class="drawer-nav-link-item">NOUN</span></li>
+            <li><span class="drawer-nav-link-item">VERB</span></li>
+            <li><span class="drawer-nav-link-item">NAME</span></li>
+            <li><span class="drawer-nav-link-item">SENTENCE</span></li>
+            <li><span class="drawer-nav-link-item">PHRASE</span></li>
+            <li><span class="drawer-nav-link-item">NUMBER</span></li>
+            <li><span class="drawer-nav-link-item">LETTER</span></li>
+            <li><span class="drawer-nav-link-item">MORE...</span></li>
+        </ul>
+    </nav>
+
 
     <!-- EXPANDABLE MOBILE SIDE NAVIGATION SLIDE DRAWER -->
     <nav id="sideNavDrawer" class="mobile-side-nav-drawer">
