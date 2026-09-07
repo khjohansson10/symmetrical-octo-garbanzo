@@ -102,9 +102,23 @@
     .dead-teal-link { color: #1bbc9b; text-decoration: none; font-weight: 400; cursor: pointer; }
     .dead-teal-link:hover { text-decoration: underline; }
 
-    /* 12. Global Copyright Footer */
-    footer { border-top: 1px solid #e5e5e5; background-color: #ffffff; padding: 20px 15px; font-size: 13px; color: #777777; width: 100%; text-align: left; margin-top: auto; }
-    .footer-content { max-width: 800px; margin: 0 auto; }
+    /* 11. Complete Edge-to-Edge Visual Footer Container */
+    footer { 
+        width: 100%; 
+        margin-top: auto; 
+        padding: 0 !important; /* Forces edge-to-edge layout width bounds */
+        background-color: #222222; /* Matches the dark background color string exactly */
+        border: none !important;
+    }
+    .mock-footer-image { 
+        display: block; 
+        width: 100%; 
+        height: auto; 
+        margin: 0; 
+        padding: 0;
+        object-fit: contain; /* Ensures the screenshot scales accurately on all screen widths */
+    }
+
 </style>
 
 </head>
@@ -291,10 +305,10 @@
         </div>
     </main>
 
+    <!-- THE RECONFIGURED GRAPHIC FOOTER -->
     <footer>
-        <div class="footer-content">
-            <p>&copy; 2026 RandomWordGenerator.com. All rights reserved.</p>
-        </div>
+        <!-- Simply save your cropped screenshot into your GitHub repository as footer_banner.png -->
+        <img src="footer_banner.png" alt="Website Information" class="mock-footer-image">
     </footer>
     
        <script>
