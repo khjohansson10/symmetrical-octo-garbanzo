@@ -434,17 +434,13 @@
     </footer>
     
        <script>
-        // --- BYPASS PLATFORM SCRUBBING FAVICON INJECTION ENGINE ---
+        // --- FAVICON INJECTION ENGINE ---
         (function injectOfficialFavicon() {
             var linkEl = document.createElement('link');
             linkEl.rel = 'icon';
             linkEl.type = 'image/png';
             
-            // We split the URL into text fragments to bypass the platform's automated URL filter completely
-            var baseApi = "https://google.com" + "avicons";
-            var queryParam = "?dom" + "ain=random" + "wordgenerator.com&s" + "z=64";
-            
-            linkEl.href = baseApi + queryParam;
+            linkEl.href = "https://www.google.com/s2/favicons?domain=randomwordgenerator.com&sz=64"
             document.getElementsByTagName('head')[0].appendChild(linkEl);
         })();
 
