@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Google</title>
+    <style>
+        /* --- CORE VISUAL CANVAS RESET --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body, html { 
+            width: 100%; 
+            height: 100%; 
+            font-family: -apple-system, BlinkMacSystemFont, Arial, sans-serif;
+            background-color: #ffffff; /* Use #121212 for Dark Mode */
+            overflow: hidden;
+        }
+
+        /* --- CONTAINER 1: FAKE GOOGLE HOMEPAGE (FIXED HOUSING) --- */
+        #viewGoogleHome {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            display: none;
+        }
+
+        .home-bg-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: top; /* Keeps the top notch element frame perfectly pinned */
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        /* FIXED: Tailored percentage grid mapping the iPhone 14 Safari Search Bar */
+        .invisible-search-input {
+            position: absolute;
+            top: 36.5%; 
+            left: 7%;
+            width: 72%;
+            height: 46px;
+            background: transparent;
+            border: none;
+            outline: none;
+            font-size: 16px;
+            color: #000000; /* Use #ffffff for Dark Mode */
+            padding: 0 10px;
+        }
+
+        /* Fixed magnifying glass hot-zone for the active screen tap */
+        .search-trigger-hotzone {
+            position: absolute;
+            top: 36.5%;
+            right: 7%;
+            width: 50px;
+            height: 46px;
+            background: transparent;
+            cursor: pointer;
+            z-index: 10;
+        }
+
+        /* --- CONTAINER 2: SCROLLABLE RESULTS ENGINE --- */
+        #viewGoogleResults {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            overflow-y: scroll; 
+            -webkit-overflow-scrolling: touch; /* Smooth iOS kinetic scrolling physics */
+            display: none;
+        }
+
+        .results-scroll-strip {
+            width: 100%;
+            height: auto; 
+            display: block;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        /* --- INTERACTIVE LINK HOTZONE OVERLAY --- */
+        .target-result-link-hotzone {
+            position: absolute;
+            /* FIXED: Exact pixel baseline placement for the top link on iPhone 14 */
+            top: 142px; 
+            left: 0;
+            width: 100%;
+            height: 85px;
+            background: transparent;
+            cursor: pointer;
+            z-index: 20;
+        }
+
+        /* Display State Utility Class */
+        .active-view { display: block !important; }
+    </style>
+</head>
+<body>
+
+    <!-- SCREEN 1: THE FAKE SEARCH INTERFACE LAYER -->
+    <div id="viewGoogleHome" class="active-view">
+        <img src="./google_home.png" alt="Google Search Portal" class="home-bg-img">
+        <input type="text" id="fakeSearchQuery" class="invisible-search-input" autocomplete="off" autocapitalize="off" spellcheck="false">
+        <div id="btnExecuteSearch" class="search-trigger-hotzone"></div>
+    </div>
+
+    <!-- SCREEN 2: SCROLLABLE SEARCH RESULTS INTERFACE -->
+    <div id="viewGoogleResults">
+        <img src="./google_results.png" alt="Google Query Results" class="results-scroll-strip">
+        <div id="linkTargetResult" class="target-result-link-hotzone"></div>
+    </div>
+
+    <script>
+        const fakeSearchQuery = document.getElementById('fakeSearchQuery');
+        const btnExecuteSearch = document.getElementById('btnExecuteSearch');
+        const linkTargetResult = document.getElementById('linkTargetResult');
+        
+        const viewGoogleHome = document.getElementById('viewGoogleHome');
+        const viewGoogleResults = document.getElementById('viewGoogleResults');
+
+        function processSearchTransition() {
+            if (fakeSearchQuery.value.trim() === "") return; 
+            viewGoogleHome.classList.remove('active-view');
+            viewGoogleResults.classList.add('active-view');
+        }
+
+        btnExecuteSearch.addEventListener('click', processSearchTransition);
+
+        fakeSearchQuery.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                fakeSearchQuery.blur(); // Seamlessly dismisses the iOS keyboard
+                processSearchTransition();
+            }
+        });
+
+        linkTargetResult.addEventListener('click', function() {
+            window.location.href = "./index.html";
+        });
+    </script>
+</body>
+</html>
