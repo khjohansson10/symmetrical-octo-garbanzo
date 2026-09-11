@@ -36,34 +36,31 @@
             left: 0;
         }
 
-        /* FIXED: Maxed out z-index and forced pointer visibility to guarantee clickability */
-        .home-center-search-button {
-            position: absolute;
-            top: 36.5%; 
-            left: 0;        
-            width: 100%;    
-            height: 46px;
-            background: rgba(255, 0, 0, 0.4); /* Keep red for testing, switch back to transparent for the trick */
-            cursor: pointer;
-            z-index: 99999; /* Higher than everything else on the canvas */
-            pointer-events: auto !important;
-        }
-
-        /* FIXED: Added display: none here so it doesn't run interference on load */
+        /* --- DYNAMIC TRANSITION INPUT BOX SYSTEM --- */
+        /* DEFAULT STATE: Stretched completely across the screen over the google_home search bar */
         .invisible-search-input {
             position: absolute;
-            top: 60px; /* Adjust this value up or down slightly to match your dynamic screenshot bar perfectly */
-            left: 14%;
-            width: 65%;
+            top: 36.5%; 
+            left: 0;
+            width: 100%;
             height: 46px;
             background: transparent;
             border: none;
             outline: none;
             font-size: 17px;
-            color: #000000; /* Use #ffffff for Dark Mode */
-            padding: 0 10px;
-            z-index: 30;
-            display: none; /* Stays locked away until the home button is clicked */
+            color: transparent; /* Hides the typing cursor/caret before they tap */
+            padding: 0 20px;
+            z-index: 9999;
+            cursor: pointer;
+        }
+
+        /* TYPING STATE: Snaps instantly up to the top search bar when focused */
+        .invisible-search-input.typing-active {
+            top: 60px; /* Adjust this value up or down slightly to match your dynamic screenshot bar perfectly */
+            left: 14%;
+            width: 65%;
+            color: #000000; /* Reveals the typing text clearly */
+            cursor: text;
         }
 
         /* Hidden magnifying glass trigger hotzone (shifted up to match the top bar right side) */
@@ -76,7 +73,7 @@
             background: transparent;
             cursor: pointer;
             z-index: 40;
-            display: none; /* Stays locked away until the home button is clicked */
+            display: none; /* Only reveals when typing starts */
         }
 
         /* Invisible overlay zone matching the target autocomplete prediction row */
@@ -132,10 +129,7 @@
     <div id="viewGoogleHome" class="active-view">
         <img id="googleHomeBg" src="./images/google_home.png" alt="Google Search Portal" class="home-bg-img">
         
-        <!-- Pure button zone over the original layout's center search bar -->
-        <div id="homeCenterSearchBtn" class="home-center-search-button"></div>
-        
-        <!-- The top-aligned input box for the typing workflow state -->
+        <!-- Single Input: Starts at center, switches seamlessly to top alignment -->
         <input type="text" id="fakeSearchQuery" class="invisible-search-input" autocomplete="off" autocapitalize="off" spellcheck="false">
         <div id="btnExecuteSearch" class="search-trigger-hotzone"></div>
         
@@ -149,7 +143,6 @@
     </div>
 
     <script>
-        const homeCenterSearchBtn = document.getElementById('homeCenterSearchBtn');
         const fakeSearchQuery = document.getElementById('fakeSearchQuery');
         const googleHomeBg = document.getElementById('googleHomeBg');
         const autocompleteHotzone = document.getElementById('autocompleteHotzone');
@@ -161,26 +154,19 @@
         const viewGoogleResults = document.getElementById('viewGoogleResults');
 
         // --- TRANSITION FROM HOME BUTTON TO TYPING STATE ---
-        homeCenterSearchBtn.addEventListener('click', function() {
-            // Hide the center trigger button layout zone completely
-            homeCenterSearchBtn.style.display = 'none';
-            
-            // Swap background image instantly to the blank layout page state
-            googleHomeBg.src = "./images/blank.png";
-            
-            // Reveal the top input box and search magnifying glass trigger zones
-            fakeSearchQuery.style.display = 'block';
+        fakeSearchQuery.addEventListener('focus', function() {
+            // Instantly transition the input frame coordinates to the top layout bar style
+            fakeSearchQuery.classList.add('typing-active');
             btnExecuteSearch.style.display = 'block';
-            
-            // Programmatically focus the text field so the virtual keyboard glides open seamlessly
-            fakeSearchQuery.focus();
+
+            if (fakeSearchQuery.value === "") {
+                googleHomeBg.src = "./images/blank.png";
+            }
         });
 
         // --- DYNAMIC SEARCH INTERACTION MAPPING ENGINE ---
         fakeSearchQuery.addEventListener('input', function() {
             const currentString = fakeSearchQuery.value.toLowerCase().trim();
-
-            homeCenterSearchBtn.style.display = 'none';
 
             if (currentString === "") {
                 googleHomeBg.src = "./images/blank.png";
@@ -214,10 +200,10 @@
 
         fakeSearchQuery.addEventListener('blur', function() {
             if (fakeSearchQuery.value.trim() === "") {
-                fakeSearchQuery.style.display = 'none';
+                // Revert completely back to centered layout button coordinates
+                fakeSearchQuery.classList.remove('typing-active');
                 btnExecuteSearch.style.display = 'none';
                 autocompleteHotzone.style.display = "none";
-                homeCenterSearchBtn.style.display = 'block'; 
                 googleHomeBg.src = "./images/google_home.png";
             }
         });
@@ -225,7 +211,6 @@
         // --- VIEWPORT TRANSITION CONTROLLERS ---
         function processSearchTransition() {
             if (fakeSearchQuery.value.trim() === "") return; 
-            homeCenterSearchBtn.style.display = 'none'; 
             viewGoogleHome.classList.remove('active-view');
             viewGoogleResults.classList.add('active-view');
         }
@@ -253,9 +238,14 @@
             window.visualViewport.addEventListener('resize', () => {
                 const container = document.getElementById('viewGoogleHome');
                 const currentContainerTop = container.getBoundingClientRect().top;
+                
                 if (currentContainerTop < 0) {
-                    googleHomeBg.style.top = ${Math.abs(currentContainerTop)}px;
+                    googleHomeBg.style.top = `${Math.abs(currentContainerTop)}px`;
                 } else {
                     googleHomeBg.style.top = '0px';
                 }
-            });}
+            });
+        }
+    </script>
+</body>
+</html>
