@@ -210,22 +210,26 @@
             window.location.href = "./index.html";
         });
 
-        // --- CLEAN BRUTE-FORCE IMAGE ONLY RESIZE LISTENER ---
+        // --- DYNAMIC VIEWPORT COUNTERACTION (UNIVERSAL IPHONE FIX) ---
         if (window.visualViewport) {
-            const initialHeight = window.visualViewport.height;
-
             window.visualViewport.addEventListener('resize', () => {
-                const currentHeight = window.visualViewport.height;
+                const container = document.getElementById('viewGoogleHome');
                 
-                // Only touch the background image element, leaving inputs/hotzones working natively
-                if (currentHeight < initialHeight) {
-                    const shiftAmount = initialHeight - currentHeight;
-                    googleHomeBg.style.top = `${shiftAmount}px`;
+                // Find exactly where the top of the view container is currently sitting relative to the screen edge
+                const currentContainerTop = container.getBoundingClientRect().top;
+                
+                if (currentContainerTop < 0) {
+                    // The browser shifted the container up by an absolute number of pixels.
+                    // Convert that negative shift distance to an absolute positive distance 
+                    // and move the background image down by that exact amount to lock it in place.
+                    googleHomeBg.style.top = `${Math.abs(currentContainerTop)}px`;
                 } else {
+                    // Viewport is completely resting normally
                     googleHomeBg.style.top = '0px';
                 }
             });
         }
+
     </script>
 </body>
 </html>
