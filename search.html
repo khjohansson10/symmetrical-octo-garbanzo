@@ -2,97 +2,102 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, interactive-widget=resizes-content">
     <title>Google</title>
     <style>
-        /* --- UNIVERSAL CANVAS RESET --- */
+        /* --- CORE VISUAL CANVAS RESET --- */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
         body, html { 
-            width: 100%; 
-            height: 100%; 
+            width: 100vw; 
+            height: 100vh; 
             font-family: -apple-system, BlinkMacSystemFont, Arial, sans-serif;
             background-color: #ffffff; /* Use #121212 for Dark Mode */
-            overflow: hidden; /* Demolishes native page scrolling completely */
-            position: fixed;  /* Locks viewport to crush device layout bounciness */
+            overflow: hidden; /* Blocks all manual page scrolling completely */
+            position: fixed;  /* Anchors viewport structure securely */
         }
 
-        /* --- THE CROSS-DEVICE ASPECT RATIO LOCKED CONTAINER --- */
+        /* --- STAGE COMPONENT CONTAINERS --- */
         .stage-view-viewport {
-            position: relative;
-            /* Dynamically sizes itself based on the height of the spectator's physical screen */
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
             height: 100vh;
-            /* Automatically calculates the mathematically perfect width to prevent distortion */
-            aspect-ratio: 393 / 852; 
-            margin: 0 auto; /* Centers the interface flawlessly if their screen is slightly wider */
             overflow: hidden;
             display: none;
         }
         .active-view { display: block !important; }
 
+        /* FIXED: Forces the screenshot to perfectly match the iPhone Safari address bars */
         .home-bg-img {
             width: 100%;
             height: 100%;
-            object-fit: cover; /* Guarantees full-screen bleed coverage with zero warping */
-            object-position: top;
+            object-fit: fill; /* Restores the original fullscreen overlay alignment */
             user-select: none;
             -webkit-user-select: none;
         }
 
-        /* FIXED: Universal percentage mapping to ensure input scales on any screen model */
+        /* FIXED: Positioned directly over the search input tray on your "ran" screenshots */
         .invisible-search-input {
             position: absolute;
-            top: 10.5%; 
+            top: 9.8%; /* FIXED: Aligned to line up perfectly inside the white tray */
             left: 14%;  
-            width: 70%;
-            height: 5.2%; /* Scaled relatively to the container height */
+            width: 68%;
+            height: 40px;
             background: transparent;
             border: none;
             outline: none;
             font-size: 16px;
-            color: #000000; /* Use #ffffff for Dark Mode */
+            color: #202124; /* Google's official off-black font hex */
             padding: 0;
             z-index: 30;
+            -webkit-appearance: none;
+            appearance: none;
+            caret-color: #1a73e8; /* Google's native royal blue flashing text cursor */
         }
 
-        /* Scaled magnifying glass trigger zone */
+        /* Hidden magnifying glass trigger zone */
         .search-trigger-hotzone {
             position: absolute;
-            top: 10.5%;
+            top: 9.8%;
             right: 4%;
             width: 12%;
-            height: 5.2%;
+            height: 40px;
             background: transparent;
             cursor: pointer;
             z-index: 40;
         }
 
-        /* FIXED: Interactive suggestion hot-zone scaled to the dropdown text row percentage */
+        /* FIXED: Sized to align perfectly over the target autocomplete prediction link row */
         .autocomplete-suggestion-hotzone {
             position: absolute;
-            top: 25.5%; 
+            /* Adjust this percentage down slightly if you want it to hit a lower suggestion line item row */
+            top: 24.2%; 
             left: 0;
             width: 100%;
-            height: 5.6%;
+            height: 46px;
             background: transparent;
             cursor: pointer;
             z-index: 50;
             display: none;
         }
 
-        /* --- CONTAINER 2: SCROLLABLE RESULTS PORTAL --- */
+        /* --- CONTAINER 2: SCROLLABLE RESULTS ENGINE --- */
         #viewGoogleResults {
-            position: relative;
-            width: 100%;
-            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
             overflow-y: scroll; /* Allows vertical scrolling for search result pages */
-            -webkit-overflow-scrolling: touch; /* Keeps smooth iOS kinetic physics */
+            -webkit-overflow-scrolling: touch;
             display: none;
         }
 
         .results-scroll-strip {
             width: 100%;
-            height: auto; /* Lets the long stitched image stretch downwards naturally */
+            height: auto; 
             display: block;
             user-select: none;
             -webkit-user-select: none;
@@ -101,10 +106,10 @@
         /* INTERACTIVE TARGET LINK OVERLAY ZONE */
         .target-result-link-hotzone {
             position: absolute;
-            top: 16.6%; /* Scaled dynamically over the top search result link item */
+            top: 142px; 
             left: 0;
             width: 100%;
-            height: 10%;
+            height: 85px;
             background: transparent;
             cursor: pointer;
             z-index: 20;
