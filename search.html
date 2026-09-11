@@ -40,13 +40,14 @@
         .home-center-search-button {
             position: absolute;
             top: 36.5%; 
-            left: 7%;
-            width: 86%;
+            left: 0;        /* Changed from 7% to 0 to align with the left edge */
+            width: 100%;    /* Changed from 86% to 100% to fill both sides completely */
             height: 46px;
             background: transparent;
             cursor: pointer;
-            z-index: 60; /* Layered on top initially so it captures the first tap */
+            z-index: 60; 
         }
+
 
         /* FIXED: Dynamic top search text box that is active during the typing sequence */
         .invisible-search-input {
