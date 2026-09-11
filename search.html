@@ -5,66 +5,51 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Google</title>
     <style>
-        /* --- ORIGINAL VISUAL CANVAS RESET --- */
+        /* --- CORE VISUAL CANVAS RESET --- */
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        
         body, html { 
             width: 100%; 
             height: 100%; 
             font-family: -apple-system, BlinkMacSystemFont, Arial, sans-serif;
-            background-color: #ffffff;
+            background-color: #ffffff; /* Use #121212 for Dark Mode */
             overflow: hidden;
-            position: fixed;
         }
 
-        /* --- THE ORIGINAL WORKING STAGE CONTAINERS --- */
-        .stage-view-viewport {
-            position: absolute;
-            top: 0;
-            left: 0;
+        /* --- CONTAINER 1: FAKE GOOGLE HOMEPAGE & AUTOCOMPLETE TIER --- */
+        #viewGoogleHome {
+            position: relative;
             width: 100%;
             height: 100%;
             overflow: hidden;
             display: none;
         }
-        .active-view { display: block !important; }
 
-        /* THE ORIGINAL SCALING LOGIC: Restored to full screen bleed coverage */
         .home-bg-img {
             width: 100%;
             height: 100%;
             object-fit: cover;
+            object-position: top;
             user-select: none;
             -webkit-user-select: none;
         }
 
-        /* --- FULL SCREEN GLASS PANE INPUT CONTROLLER --- */
+        /* The transparent typing input container layered over the screenshot search bar */
         .invisible-search-input {
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            top: 36.5%; 
+            left: 7%;
+            width: 72%;
+            height: 46px;
             background: transparent;
             border: none;
             outline: none;
-            -webkit-appearance: none;
-            appearance: none;
-            
-            /* TYPOGRAPHY OVERLAY CODES */
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             font-size: 16px;
-            font-weight: 400;
-            color: #202124; 
-            caret-color: #1a73e8; /* Google's official royal blue text cursor */
+            color: #000000; /* Use #ffffff for Dark Mode */
+            padding: 0 10px;
             z-index: 30;
-
-            /* INITIAL ACCIDENTAL PLACEHOLDER PADDING TO KEEP IT FUNCTIONAL */
-            padding-top: 10vh;
-            padding-left: 10vw;
         }
 
-        /* Standard search icon trigger button */
+        /* Hidden magnifying glass trigger hotzone */
         .search-trigger-hotzone {
             position: absolute;
             top: 36.5%;
@@ -76,9 +61,10 @@
             z-index: 40;
         }
 
-        /* Autocomplete suggestions dropdown row target hotzone */
+        /* NEW: Invisible overlay zone matching the target autocomplete prediction row */
         .autocomplete-suggestion-hotzone {
             position: absolute;
+            /* Adjust these geometric dimensions to sit precisely over the "random word generator" text line in your screenshot overlay */
             top: 44%; 
             left: 0;
             width: 100%;
@@ -86,7 +72,7 @@
             background: transparent;
             cursor: pointer;
             z-index: 50;
-            display: none;
+            display: none; /* Only active once they start typing the autocomplete path */
         }
 
         /* --- CONTAINER 2: SCROLLABLE RESULTS ENGINE --- */
@@ -94,20 +80,20 @@
             position: relative;
             width: 100%;
             height: 100%;
-            overflow-y: scroll;
+            overflow-y: scroll; 
             -webkit-overflow-scrolling: touch;
             display: none;
         }
 
         .results-scroll-strip {
             width: 100%;
-            height: auto;
+            height: auto; 
             display: block;
             user-select: none;
             -webkit-user-select: none;
         }
 
-        /* TARGET ROOT INTERACTIVE OVERLAY BOX */
+        /* INTERACTIVE TARGET LINK OVERLAY ZONE */
         .target-result-link-hotzone {
             position: absolute;
             top: 142px; 
@@ -118,22 +104,27 @@
             cursor: pointer;
             z-index: 20;
         }
+
+        /* Display State Utility Class */
+        .active-view { display: block !important; }
     </style>
 </head>
 <body>
 
-    <!-- SCREEN 1: THE REVERTED ORIGINAL GOOGLE HOME LAYER -->
-    <div id="viewGoogleHome" class="stage-view-viewport active-view">
+    <!-- SCREEN 1: THE FAKE SEARCH INTERFACE LAYER -->
+    <div id="viewGoogleHome" class="active-view">
+        <!-- The source image will change dynamically via JavaScript -->
         <img id="googleHomeBg" src="./images/google_home.png" alt="Google Search Portal" class="home-bg-img">
         
         <input type="text" id="fakeSearchQuery" class="invisible-search-input" autocomplete="off" autocapitalize="off" spellcheck="false">
         <div id="btnExecuteSearch" class="search-trigger-hotzone"></div>
         
+        <!-- NEW: Invisible target link layer covering the autocomplete suggestion list row item -->
         <div id="autocompleteHotzone" class="autocomplete-suggestion-hotzone"></div>
     </div>
 
-    <!-- SCREEN 2: REVERTED ORIGINAL RESULTS LAYER -->
-    <div id="viewGoogleResults" class="stage-view-viewport">
+    <!-- SCREEN 2: SCROLLABLE SEARCH RESULTS INTERFACE -->
+    <div id="viewGoogleResults">
         <img src="./images/google_results.png" alt="Google Query Results" class="results-scroll-strip">
         <div id="linkTargetResult" class="target-result-link-hotzone"></div>
     </div>
