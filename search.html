@@ -5,86 +5,84 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Google</title>
     <style>
-        /* --- CORE VISUAL CANVAS RESET --- */
+        /* --- ORIGINAL VISUAL CANVAS RESET --- */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
         body, html { 
-            width: 100vw; 
-            height: 100vh; 
+            width: 100%; 
+            height: 100%; 
             font-family: -apple-system, BlinkMacSystemFont, Arial, sans-serif;
-            background-color: #ffffff; /* Use #121212 for Dark Mode */
-            overflow: hidden; /* Blocks all manual page scrolling completely */
-            position: fixed;  /* Anchors viewport structure securely */
+            background-color: #ffffff;
+            overflow: hidden;
+            position: fixed;
         }
 
-        /* --- STAGE COMPONENT CONTAINERS --- */
+        /* --- THE ORIGINAL WORKING STAGE CONTAINERS --- */
         .stage-view-viewport {
             position: absolute;
             top: 0;
             left: 0;
-            width: 100vw;
-            height: 100vh;
+            width: 100%;
+            height: 100%;
             overflow: hidden;
             display: none;
         }
         .active-view { display: block !important; }
 
-        /* RESTORED: Your original, pixel-perfect full-screen scaling format */
+        /* THE ORIGINAL SCALING LOGIC: Restored to full screen bleed coverage */
         .home-bg-img {
             width: 100%;
             height: 100%;
-            object-fit: fill; 
+            object-fit: cover;
             user-select: none;
             -webkit-user-select: none;
         }
 
-        /* FIXED: Full-screen Glass Pane structure blocks iOS Safari layout jumping completely */
+        /* --- FULL SCREEN GLASS PANE INPUT CONTROLLER --- */
         .invisible-search-input {
             position: absolute;
             top: 0;
             left: 0;
-            width: 100vw;
-            height: 100vh;
+            width: 100%;
+            height: 100%;
             background: transparent;
             border: none;
             outline: none;
             -webkit-appearance: none;
             appearance: none;
             
-            /* --- PRECISION CHARACTERS PLACEMENT INNER GRID --- */
-            /* Pushes your typing line exactly into your iPhone 14 white tray line */
-            padding-top: 10.8vh; 
-            padding-left: 14vw;
-            padding-right: 18vw; /* Prevents text string overflowing past the microphone icon */
-            
-            /* --- TYPOGRAPHY STYLING PROFILES --- */
+            /* TYPOGRAPHY OVERLAY CODES */
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             font-size: 16px;
             font-weight: 400;
             color: #202124; 
-            caret-color: #1a73e8; /* Google's native royal blue text cursor caret */
+            caret-color: #1a73e8; /* Google's official royal blue text cursor */
             z-index: 30;
+
+            /* INITIAL ACCIDENTAL PLACEHOLDER PADDING TO KEEP IT FUNCTIONAL */
+            padding-top: 10vh;
+            padding-left: 10vw;
         }
 
-        /* Hidden magnifying glass trigger hotzone button */
+        /* Standard search icon trigger button */
         .search-trigger-hotzone {
             position: absolute;
-            top: 9.8%;
-            right: 4%;
-            width: 12%;
-            height: 40px;
+            top: 36.5%;
+            right: 7%;
+            width: 50px;
+            height: 46px;
             background: transparent;
             cursor: pointer;
             z-index: 40;
         }
 
-        /* Precision autocomplete item suggestion link container zone */
+        /* Autocomplete suggestions dropdown row target hotzone */
         .autocomplete-suggestion-hotzone {
             position: absolute;
-            top: 24.2%; 
+            top: 44%; 
             left: 0;
             width: 100%;
-            height: 46px;
+            height: 50px;
             background: transparent;
             cursor: pointer;
             z-index: 50;
@@ -93,25 +91,23 @@
 
         /* --- CONTAINER 2: SCROLLABLE RESULTS ENGINE --- */
         #viewGoogleResults {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            overflow-y: scroll; 
+            position: relative;
+            width: 100%;
+            height: 100%;
+            overflow-y: scroll;
             -webkit-overflow-scrolling: touch;
             display: none;
         }
 
         .results-scroll-strip {
             width: 100%;
-            height: auto; 
+            height: auto;
             display: block;
             user-select: none;
             -webkit-user-select: none;
         }
 
-        /* INTERACTIVE TARGET LINK OVERLAY ZONE */
+        /* TARGET ROOT INTERACTIVE OVERLAY BOX */
         .target-result-link-hotzone {
             position: absolute;
             top: 142px; 
@@ -126,7 +122,7 @@
 </head>
 <body>
 
-    <!-- SCREEN 1: THE UNIVERSAL FAKE GOOGLE HOME LAYER -->
+    <!-- SCREEN 1: THE REVERTED ORIGINAL GOOGLE HOME LAYER -->
     <div id="viewGoogleHome" class="stage-view-viewport active-view">
         <img id="googleHomeBg" src="./images/google_home.png" alt="Google Search Portal" class="home-bg-img">
         
@@ -136,7 +132,7 @@
         <div id="autocompleteHotzone" class="autocomplete-suggestion-hotzone"></div>
     </div>
 
-    <!-- SCREEN 2: UNIVERSAL SCROLLABLE RESULTS LAYER -->
+    <!-- SCREEN 2: REVERTED ORIGINAL RESULTS LAYER -->
     <div id="viewGoogleResults" class="stage-view-viewport">
         <img src="./images/google_results.png" alt="Google Query Results" class="results-scroll-strip">
         <div id="linkTargetResult" class="target-result-link-hotzone"></div>
