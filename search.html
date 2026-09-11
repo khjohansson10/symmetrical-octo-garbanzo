@@ -13,6 +13,7 @@
             font-family: -apple-system, BlinkMacSystemFont, Arial, sans-serif;
             background-color: #ffffff; /* Use #121212 for Dark Mode */
             overflow: hidden;
+            position: fixed; /* Blocks all native iOS rubber-band page bouncing */
         }
 
         /* --- CONTAINER 1: FAKE GOOGLE HOMEPAGE & AUTOCOMPLETE TIER --- */
@@ -26,8 +27,8 @@
 
         .home-bg-img {
             width: 100%;
-            height: 100%;
-            object-fit: cover;
+            height: 100vh;
+            object-fit: contain;
             object-position: top;
             user-select: none;
             -webkit-user-select: none;
