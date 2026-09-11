@@ -31,53 +31,64 @@
             object-position: top;
             user-select: none;
             -webkit-user-select: none;
-            
-            /* BRUTE FORCE: Keeps the image physically locked down when shifted */
             position: absolute;
             top: 0;
             left: 0;
         }
 
-        /* The transparent typing input container layered over the screenshot search bar */
-        .invisible-search-input {
+        /* NEW: Invisible trigger button sitting over the original center home screen search bar layout */
+        .home-center-search-button {
             position: absolute;
             top: 36.5%; 
             left: 7%;
-            width: 72%;
+            width: 86%;
+            height: 46px;
+            background: transparent;
+            cursor: pointer;
+            z-index: 60; /* Layered on top initially so it captures the first tap */
+        }
+
+        /* FIXED: Dynamic top search text box that is active during the typing sequence */
+        .invisible-search-input {
+            position: absolute;
+            top: 60px; /* Adjust this value up or down slightly to match your dynamic screenshot bar perfectly */
+            left: 14%;
+            width: 65%;
             height: 46px;
             background: transparent;
             border: none;
             outline: none;
-            font-size: 16px;
+            font-size: 17px;
             color: #000000; /* Use #ffffff for Dark Mode */
             padding: 0 10px;
             z-index: 30;
+            display: none; /* Hidden until the user triggers the home search button */
         }
 
-        /* Hidden magnifying glass trigger hotzone */
+        /* Hidden magnifying glass trigger hotzone (shifted up to match the top bar right side) */
         .search-trigger-hotzone {
             position: absolute;
-            top: 36.5%;
-            right: 7%;
+            top: 60px;
+            right: 5%;
             width: 50px;
             height: 46px;
             background: transparent;
             cursor: pointer;
             z-index: 40;
+            display: none; /* Hidden until typing state begins */
         }
 
-        /* NEW: Invisible overlay zone matching the target autocomplete prediction row */
+        /* Invisible overlay zone matching the target autocomplete prediction row */
         .autocomplete-suggestion-hotzone {
             position: absolute;
-            /* Adjust these geometric dimensions to sit precisely over the "random word generator" text line in your screenshot overlay */
-            top: 44%; 
+            top: 130px; /* Sitting right over the target row below the top input */
             left: 0;
             width: 100%;
-            height: 50px;
+            height: 55px;
             background: transparent;
             cursor: pointer;
             z-index: 50;
-            display: none; /* Only active once they start typing the autocomplete path */
+            display: none; 
         }
 
         /* --- CONTAINER 2: SCROLLABLE RESULTS ENGINE --- */
@@ -118,13 +129,15 @@
 
     <!-- SCREEN 1: THE FAKE SEARCH INTERFACE LAYER -->
     <div id="viewGoogleHome" class="active-view">
-        <!-- The source image will change dynamically via JavaScript -->
         <img id="googleHomeBg" src="./images/google_home.png" alt="Google Search Portal" class="home-bg-img">
         
+        <!-- NEW: Pure button zone over the original layout's center search bar -->
+        <div id="homeCenterSearchBtn" class="home-center-search-button"></div>
+        
+        <!-- The top-aligned input box for the typing workflow state -->
         <input type="text" id="fakeSearchQuery" class="invisible-search-input" autocomplete="off" autocapitalize="off" spellcheck="false">
         <div id="btnExecuteSearch" class="search-trigger-hotzone"></div>
         
-        <!-- NEW: Invisible target link layer covering the autocomplete suggestion list row item -->
         <div id="autocompleteHotzone" class="autocomplete-suggestion-hotzone"></div>
     </div>
 
@@ -135,6 +148,7 @@
     </div>
 
     <script>
+        const homeCenterSearchBtn = document.getElementById('homeCenterSearchBtn');
         const fakeSearchQuery = document.getElementById('fakeSearchQuery');
         const googleHomeBg = document.getElementById('googleHomeBg');
         const autocompleteHotzone = document.getElementById('autocompleteHotzone');
@@ -144,6 +158,22 @@
         
         const viewGoogleHome = document.getElementById('viewGoogleHome');
         const viewGoogleResults = document.getElementById('viewGoogleResults');
+
+        // --- NEW: INITIAL TRANSITION FROM HOME BUTTON TO TYPING STATE ---
+        homeCenterSearchBtn.addEventListener('click', function() {
+            // Hide the center trigger button layout zone
+            homeCenterSearchBtn.style.display = 'none';
+            
+            // Swap background image instantly to the blank layout page state
+            googleHomeBg.src = "./images/blank.png";
+            
+            // Reveal the top input box and search magnifying glass trigger zones
+            fakeSearchQuery.style.display = 'block';
+            btnExecuteSearch.style.display = 'block';
+            
+            // Programmatically focus the text field so the virtual keyboard glides open seamlessly
+            fakeSearchQuery.focus();
+        });
 
         // --- DYNAMIC SEARCH INTERACTION MAPPING ENGINE ---
         fakeSearchQuery.addEventListener('input', function() {
@@ -179,9 +209,14 @@
             }
         });
 
-        fakeSearchQuery.addEventListener('focus', function() {
-            if (fakeSearchQuery.value === "") {
-                googleHomeBg.src = "./images/blank.png";
+        fakeSearchQuery.addEventListener('blur', function() {
+            // Revert completely back to pristine home setup if they back out or close the keyboard empty
+            if (fakeSearchQuery.value.trim() === "") {
+                fakeSearchQuery.style.display = 'none';
+                btnExecuteSearch.style.display = 'none';
+                autocompleteHotzone.style.display = "none";
+                homeCenterSearchBtn.style.display = 'block';
+                googleHomeBg.src = "./images/google_home.png";
             }
         });
 
@@ -196,7 +231,7 @@
 
         fakeSearchQuery.addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
-                fakeSearchQuery.blur(); // Seamlessly retracts mobile keyboards out of the viewport path
+                fakeSearchQuery.blur(); 
                 processSearchTransition();
             }
         });
@@ -210,26 +245,15 @@
             window.location.href = "./index.html";
         });
 
-        // --- DYNAMIC VIEWPORT COUNTERACTION (UNIVERSAL IPHONE FIX) ---
+        // --- PERFECTED DYNAMIC VIEWPORT COUNTERACTION ---
         if (window.visualViewport) {
             window.visualViewport.addEventListener('resize', () => {
                 const container = document.getElementById('viewGoogleHome');
-                
-                // Find exactly where the top of the view container is currently sitting relative to the screen edge
                 const currentContainerTop = container.getBoundingClientRect().top;
-                
                 if (currentContainerTop < 0) {
-                    // The browser shifted the container up by an absolute number of pixels.
-                    // Convert that negative shift distance to an absolute positive distance 
-                    // and move the background image down by that exact amount to lock it in place.
-                    googleHomeBg.style.top = `${Math.abs(currentContainerTop)}px`;
+                    googleHomeBg.style.top = ${
+                        Math.abs(currentContainerTop)}px;
                 } else {
-                    // Viewport is completely resting normally
                     googleHomeBg.style.top = '0px';
                 }
-            });
-        }
-
-    </script>
-</body>
-</html>
+            });}
