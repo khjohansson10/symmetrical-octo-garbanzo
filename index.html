@@ -431,7 +431,7 @@
     <!-- THE RECONFIGURED GRAPHIC FOOTER -->
     <footer>
         <!-- Simply save your cropped screenshot into your GitHub repository as footer_banner.png -->
-        <img src="footer_banner.png" alt="Website Information" class="mock-footer-image">
+        <img src="images/footer_banner.png" alt="Website Information" class="mock-footer-image">
     </footer>
     
        <script>
@@ -470,7 +470,7 @@
                     
                     if (!shouldBeBlank) {
                         const randomTopIndex = Math.floor(Math.random() * TOTAL_TOP_ADS) + 1;
-                        const path = "./ad_top_" + randomTopIndex + ".png";
+                        const path = "./images/ad_top_" + randomTopIndex + ".png";
                         
                         // Force every single large ad on the page to match this precise image path
                         if (topAdEl) topAdEl.src = path;
@@ -496,7 +496,7 @@
                     
                     if (!shouldBeBlank) {
                         const randomBottomIndex = Math.floor(Math.random() * TOTAL_BOTTOM_ADS) + 1;
-                        bottomAdEl.src = "./ad_bottom_" + randomBottomIndex + ".png";
+                        bottomAdEl.src = "./images/ad_bottom_" + randomBottomIndex + ".png";
                         bottomAdEl.style.visibility = "visible";
                     }
                 }, 50);
