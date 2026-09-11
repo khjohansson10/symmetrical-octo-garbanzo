@@ -15,7 +15,7 @@
             overflow: hidden;
         }
 
-        /* --- CONTAINER 1: FAKE GOOGLE HOMEPAGE (FIXED HOUSING) --- */
+        /* --- CONTAINER 1: FAKE GOOGLE HOMEPAGE & AUTOCOMPLETE TIER --- */
         #viewGoogleHome {
             position: relative;
             width: 100%;
@@ -28,12 +28,12 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            object-position: top; /* Keeps the top notch element frame perfectly pinned */
+            object-position: top;
             user-select: none;
             -webkit-user-select: none;
         }
 
-        /* FIXED: Tailored percentage grid mapping the iPhone 14 Safari Search Bar */
+        /* The transparent typing input container layered over the screenshot search bar */
         .invisible-search-input {
             position: absolute;
             top: 36.5%; 
@@ -46,9 +46,10 @@
             font-size: 16px;
             color: #000000; /* Use #ffffff for Dark Mode */
             padding: 0 10px;
+            z-index: 30;
         }
 
-        /* Fixed magnifying glass hot-zone for the active screen tap */
+        /* Hidden magnifying glass trigger hotzone */
         .search-trigger-hotzone {
             position: absolute;
             top: 36.5%;
@@ -57,7 +58,21 @@
             height: 46px;
             background: transparent;
             cursor: pointer;
-            z-index: 10;
+            z-index: 40;
+        }
+
+        /* NEW: Invisible overlay zone matching the target autocomplete prediction row */
+        .autocomplete-suggestion-hotzone {
+            position: absolute;
+            /* Adjust these geometric dimensions to sit precisely over the "random word generator" text line in your screenshot overlay */
+            top: 44%; 
+            left: 0;
+            width: 100%;
+            height: 50px;
+            background: transparent;
+            cursor: pointer;
+            z-index: 50;
+            display: none; /* Only active once they start typing the autocomplete path */
         }
 
         /* --- CONTAINER 2: SCROLLABLE RESULTS ENGINE --- */
@@ -66,7 +81,7 @@
             width: 100%;
             height: 100%;
             overflow-y: scroll; 
-            -webkit-overflow-scrolling: touch; /* Smooth iOS kinetic scrolling physics */
+            -webkit-overflow-scrolling: touch;
             display: none;
         }
 
@@ -78,10 +93,9 @@
             -webkit-user-select: none;
         }
 
-        /* --- INTERACTIVE LINK HOTZONE OVERLAY --- */
+        /* INTERACTIVE TARGET LINK OVERLAY ZONE */
         .target-result-link-hotzone {
             position: absolute;
-            /* FIXED: Exact pixel baseline placement for the top link on iPhone 14 */
             top: 142px; 
             left: 0;
             width: 100%;
@@ -99,9 +113,14 @@
 
     <!-- SCREEN 1: THE FAKE SEARCH INTERFACE LAYER -->
     <div id="viewGoogleHome" class="active-view">
-        <img src="./images/google_home.png" alt="Google Search Portal" class="home-bg-img">
+        <!-- The source image will change dynamically via JavaScript -->
+        <img id="googleHomeBg" src="./images/google_home.png" alt="Google Search Portal" class="home-bg-img">
+        
         <input type="text" id="fakeSearchQuery" class="invisible-search-input" autocomplete="off" autocapitalize="off" spellcheck="false">
         <div id="btnExecuteSearch" class="search-trigger-hotzone"></div>
+        
+        <!-- NEW: Invisible target link layer covering the autocomplete suggestion list row item -->
+        <div id="autocompleteHotzone" class="autocomplete-suggestion-hotzone"></div>
     </div>
 
     <!-- SCREEN 2: SCROLLABLE SEARCH RESULTS INTERFACE -->
@@ -112,27 +131,81 @@
 
     <script>
         const fakeSearchQuery = document.getElementById('fakeSearchQuery');
+        const googleHomeBg = document.getElementById('googleHomeBg');
+        const autocompleteHotzone = document.getElementById('autocompleteHotzone');
+        
         const btnExecuteSearch = document.getElementById('btnExecuteSearch');
         const linkTargetResult = document.getElementById('linkTargetResult');
         
         const viewGoogleHome = document.getElementById('viewGoogleHome');
         const viewGoogleResults = document.getElementById('viewGoogleResults');
 
+        // --- NEW: DYNAMIC SEARCH INTERACTION MAPPING LOGIC ---
+        // Swaps background images instantly to mirror autocomplete selections as they type
+        fakeSearchQuery.addEventListener('input', function() {
+            const currentString = fakeSearchQuery.value.toLowerCase().trim();
+
+            if (currentString === "") {
+                // If they clear the search bar entirely, show the active blank tray option
+                googleHomeBg.src = "./images/blank.png";
+                autocompleteHotzone.style.display = "none";
+            } else if (currentString === "r") {
+                googleHomeBg.src = "./images/r.png";
+                autocompleteHotzone.style.display = "block"; // Turn on the invisible target overlay row
+            } else if (currentString === "ra") {
+                googleHomeBg.src = "./images/ra.png";
+                autocompleteHotzone.style.display = "block";
+            } else if (currentString === "ran") {
+                googleHomeBg.src = "./images/ran.png";
+                autocompleteHotzone.style.display = "block";
+            } else if (currentString === "rand") {
+                googleHomeBg.src = "./images/rand.png";
+                autocompleteHotzone.style.display = "block";
+            } else if (currentString === "rando") {
+                googleHomeBg.src = "./images/rando.png";
+                autocompleteHotzone.style.display = "block";
+            } else if (currentString === "random" || currentString === "random ") {
+                googleHomeBg.src = "./images/random.png";
+                autocompleteHotzone.style.display = "block";
+            } else {
+                // Catch-all: If they continue typing further, fallback gracefully to your terminal word graphic choice
+                googleHomeBg.src = "./images/random.png";
+                autocompleteHotzone.style.display = "block";
+            }
+        });
+
+        // Trigger the active autocomplete dropdown swap if they tap the search field to start
+        fakeSearchQuery.addEventListener('focus', function() {
+            if (fakeSearchQuery.value === "") {
+                googleHomeBg.src = "./images/blank.png";
+            }
+        });
+
+        // --- VIEWPORT TRANSITION CONTROLLERS ---
         function processSearchTransition() {
             if (fakeSearchQuery.value.trim() === "") return; 
             viewGoogleHome.classList.remove('active-view');
             viewGoogleResults.classList.add('active-view');
         }
 
+        // Action 1: Tapping the standard magnifying glass search icon button
         btnExecuteSearch.addEventListener('click', processSearchTransition);
 
+        // Action 2: Hitting native "Go / Enter" keys directly on the iOS device keyboard tray
         fakeSearchQuery.addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
-                fakeSearchQuery.blur(); // Seamlessly dismisses the iOS keyboard
+                fakeSearchQuery.blur(); 
                 processSearchTransition();
             }
         });
 
+        // Action 3: NEW – Clicking directly on the invisible predictive suggestion list row layout
+        autocompleteHotzone.addEventListener('click', function() {
+            fakeSearchQuery.blur();
+            processSearchTransition();
+        });
+
+        // Action 4: Tapping the top link search results target row maps back into your master utility file
         linkTargetResult.addEventListener('click', function() {
             window.location.href = "./index.html";
         });
