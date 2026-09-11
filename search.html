@@ -13,17 +13,6 @@
             font-family: -apple-system, BlinkMacSystemFont, Arial, sans-serif;
             background-color: #ffffff; /* Use #121212 for Dark Mode */
             overflow: hidden;
-            position: fixed; /* Prevents unexpected bounce scaling */
-        }
-
-        /* NEW MASTER BRUTE-FORCE COUNTER-SHIFT LAYOUT WRAPPER */
-        #magic-app-wrapper {
-            width: 100%;
-            height: 100%;
-            position: relative;
-            transform: translateY(0px);
-            will-change: transform;
-            transition: transform 0.12s cubic-bezier(0.25, 1, 0.5, 1); /* Keeps smooth tracking behind keyboard animation */
         }
 
         /* --- CONTAINER 1: FAKE GOOGLE HOMEPAGE & AUTOCOMPLETE TIER --- */
@@ -42,6 +31,11 @@
             object-position: top;
             user-select: none;
             -webkit-user-select: none;
+            
+            /* BRUTE FORCE: Keeps the image physically locked down when shifted */
+            position: absolute;
+            top: 0;
+            left: 0;
         }
 
         /* The transparent typing input container layered over the screenshot search bar */
@@ -122,27 +116,22 @@
 </head>
 <body>
 
-    <!-- MASTER WRAPPER TARGETED FOR KEYBOARD COUNTER-BALANCING -->
-    <div id="magic-app-wrapper">
+    <!-- SCREEN 1: THE FAKE SEARCH INTERFACE LAYER -->
+    <div id="viewGoogleHome" class="active-view">
+        <!-- The source image will change dynamically via JavaScript -->
+        <img id="googleHomeBg" src="./images/google_home.png" alt="Google Search Portal" class="home-bg-img">
+        
+        <input type="text" id="fakeSearchQuery" class="invisible-search-input" autocomplete="off" autocapitalize="off" spellcheck="false">
+        <div id="btnExecuteSearch" class="search-trigger-hotzone"></div>
+        
+        <!-- NEW: Invisible target link layer covering the autocomplete suggestion list row item -->
+        <div id="autocompleteHotzone" class="autocomplete-suggestion-hotzone"></div>
+    </div>
 
-        <!-- SCREEN 1: THE FAKE SEARCH INTERFACE LAYER -->
-        <div id="viewGoogleHome" class="active-view">
-            <!-- The source image will change dynamically via JavaScript -->
-            <img id="googleHomeBg" src="./images/google_home.png" alt="Google Search Portal" class="home-bg-img">
-            
-            <input type="text" id="fakeSearchQuery" class="invisible-search-input" autocomplete="off" autocapitalize="off" spellcheck="false">
-            <div id="btnExecuteSearch" class="search-trigger-hotzone"></div>
-            
-            <!-- NEW: Invisible target link layer covering the autocomplete suggestion list row item -->
-            <div id="autocompleteHotzone" class="autocomplete-suggestion-hotzone"></div>
-        </div>
-
-        <!-- SCREEN 2: SCROLLABLE SEARCH RESULTS INTERFACE -->
-        <div id="viewGoogleResults">
-            <img src="./images/google_results.png" alt="Google Query Results" class="results-scroll-strip">
-            <div id="linkTargetResult" class="target-result-link-hotzone"></div>
-        </div>
-
+    <!-- SCREEN 2: SCROLLABLE SEARCH RESULTS INTERFACE -->
+    <div id="viewGoogleResults">
+        <img src="./images/google_results.png" alt="Google Query Results" class="results-scroll-strip">
+        <div id="linkTargetResult" class="target-result-link-hotzone"></div>
     </div>
 
     <script>
@@ -155,7 +144,6 @@
         
         const viewGoogleHome = document.getElementById('viewGoogleHome');
         const viewGoogleResults = document.getElementById('viewGoogleResults');
-        const appWrapper = document.getElementById('magic-app-wrapper');
 
         // --- DYNAMIC SEARCH INTERACTION MAPPING ENGINE ---
         fakeSearchQuery.addEventListener('input', function() {
@@ -197,21 +185,9 @@
             }
         });
 
-        fakeSearchQuery.addEventListener('blur', function() {
-            // If they clear the text and close the keyboard, reset back to the pristine homepage image
-            if (fakeSearchQuery.value.trim() === "") {
-                googleHomeBg.src = "./images/google_home.png";
-                autocompleteHotzone.style.display = "none";
-            }
-        });
-
         // --- VIEWPORT TRANSITION CONTROLLERS ---
         function processSearchTransition() {
             if (fakeSearchQuery.value.trim() === "") return; 
-            
-            // Clean up transformations immediately before loading the results view
-            appWrapper.style.transform = 'translateY(0px)';
-            
             viewGoogleHome.classList.remove('active-view');
             viewGoogleResults.classList.add('active-view');
         }
@@ -234,25 +210,22 @@
             window.location.href = "./index.html";
         });
 
-        // --- JAVASCRIPT BRUTE-FORCE COUNTER-SHIFT INTERACTION ENGINE ---
+        // --- CLEAN BRUTE-FORCE IMAGE ONLY RESIZE LISTENER ---
         if (window.visualViewport) {
-            // Store baseline structural height when keyboard is tucked away
-            const initialViewportHeight = window.visualViewport.height;
+            const initialHeight = window.visualViewport.height;
 
             window.visualViewport.addEventListener('resize', () => {
-                // Read current dimensions in real-time
-                const currentViewportHeight = window.visualViewport.height;
+                const currentHeight = window.visualViewport.height;
                 
-                // Only process layout offsets if Screen 1 (Home Page) is actively displayed to the user
-                if (viewGoogleHome.classList.contains('active-view')) {
-                    if (currentViewportHeight < initialViewportHeight) {
-                        // The keyboard popped open. Determine shift gap layout deficit
-                        const keyboardOffsetDelta = initialViewportHeight - currentViewportHeight;
-                        
-                        // Physically yank the layout canvas down to cleanly lock structural assets in space
-                        appWrapper.style.transform = `translateY(${keyboardOffsetDelta}px)`;
-                    } else {// Keyboard disappeared: restore clean absolute coordinates
-                        appWrapper.style.transform = 'translateY(0px)';
-                    }
+                // Only touch the background image element, leaving inputs/hotzones working natively
+                if (currentHeight < initialHeight) {
+                    const shiftAmount = initialHeight - currentHeight;
+                    googleHomeBg.style.top = `${shiftAmount}px`;
+                } else {
+                    googleHomeBg.style.top = '0px';
                 }
-            });}
+            });
+        }
+    </script>
+</body>
+</html>
