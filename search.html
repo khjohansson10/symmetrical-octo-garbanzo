@@ -56,24 +56,24 @@
 
         /* TYPING STATE: Snaps instantly up to the top search bar when focused */
         .invisible-search-input.typing-active {
-            top: 60px; /* Adjust this value up or down slightly to match your dynamic screenshot bar perfectly */
-            left: 14%;
-            width: 65%;
+            top: 14px;      /* Changed from 60px to 14px to slide the text up into the real search bar line */
+            left: 16%;      /* Adjusted to line up perfectly right after the search bar icons */
+            width: 70%;
             color: #000000; /* Reveals the typing text clearly */
             cursor: text;
         }
 
-        /* Hidden magnifying glass trigger hotzone (shifted up to match the top bar right side) */
+        /* Hidden magnifying glass trigger hotzone (shifted to align with the top search bar line) */
         .search-trigger-hotzone {
             position: absolute;
-            top: 60px;
+            top: 14px;      /* Changed from 60px to 14px to match the new text row height */
             right: 5%;
             width: 50px;
             height: 46px;
             background: transparent;
             cursor: pointer;
             z-index: 40;
-            display: none; /* Only reveals when typing starts */
+            display: none; 
         }
 
         /* Invisible overlay zone matching the target autocomplete prediction row */
