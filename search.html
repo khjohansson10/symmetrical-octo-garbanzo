@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, interactive-widget=resizes-content">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Google</title>
     <style>
         /* --- CORE VISUAL CANVAS RESET --- */
@@ -29,35 +29,44 @@
         }
         .active-view { display: block !important; }
 
-        /* FIXED: Forces the screenshot to perfectly match the iPhone Safari address bars */
+        /* RESTORED: Your original, pixel-perfect full-screen scaling format */
         .home-bg-img {
             width: 100%;
             height: 100%;
-            object-fit: fill; /* Restores the original fullscreen overlay alignment */
+            object-fit: fill; 
             user-select: none;
             -webkit-user-select: none;
         }
 
-        /* FIXED: Positioned directly over the search input tray on your "ran" screenshots */
+        /* FIXED: Full-screen Glass Pane structure blocks iOS Safari layout jumping completely */
         .invisible-search-input {
             position: absolute;
-            top: 9.8%; /* FIXED: Aligned to line up perfectly inside the white tray */
-            left: 14%;  
-            width: 68%;
-            height: 40px;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
             background: transparent;
             border: none;
             outline: none;
-            font-size: 16px;
-            color: #202124; /* Google's official off-black font hex */
-            padding: 0;
-            z-index: 30;
             -webkit-appearance: none;
             appearance: none;
-            caret-color: #1a73e8; /* Google's native royal blue flashing text cursor */
+            
+            /* --- PRECISION CHARACTERS PLACEMENT INNER GRID --- */
+            /* Pushes your typing line exactly into your iPhone 14 white tray line */
+            padding-top: 10.8vh; 
+            padding-left: 14vw;
+            padding-right: 18vw; /* Prevents text string overflowing past the microphone icon */
+            
+            /* --- TYPOGRAPHY STYLING PROFILES --- */
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            font-size: 16px;
+            font-weight: 400;
+            color: #202124; 
+            caret-color: #1a73e8; /* Google's native royal blue text cursor caret */
+            z-index: 30;
         }
 
-        /* Hidden magnifying glass trigger zone */
+        /* Hidden magnifying glass trigger hotzone button */
         .search-trigger-hotzone {
             position: absolute;
             top: 9.8%;
@@ -69,10 +78,9 @@
             z-index: 40;
         }
 
-        /* FIXED: Sized to align perfectly over the target autocomplete prediction link row */
+        /* Precision autocomplete item suggestion link container zone */
         .autocomplete-suggestion-hotzone {
             position: absolute;
-            /* Adjust this percentage down slightly if you want it to hit a lower suggestion line item row */
             top: 24.2%; 
             left: 0;
             width: 100%;
@@ -90,7 +98,7 @@
             left: 0;
             width: 100vw;
             height: 100vh;
-            overflow-y: scroll; /* Allows vertical scrolling for search result pages */
+            overflow-y: scroll; 
             -webkit-overflow-scrolling: touch;
             display: none;
         }
