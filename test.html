@@ -243,20 +243,23 @@
             processSearchTransition();
         });
 
-        // --- SEAMLESS LINK CLICK FLASH ANIMATION ---
+        // --- SEAMLESS LINK CLICK FLASH ANIMATION WITH NETWORK DELAY ---
         linkTargetResult.addEventListener('click', function() {
-            // 1. Instantly trigger the grey background color overlay state
+            // 1. Instantly trigger the grey selection highlight
             linkTargetResult.classList.add('flash-active');
 
-            // 2. Pause execution for 180 milliseconds so the spectator sees the tap selection
+            // 2. Snappy 120ms window for the tap flash to disappear
             setTimeout(() => {
-                // ADD THIS LINE BELOW: It removes the gray class, making it disappear right here
                 linkTargetResult.classList.remove('flash-active');
                 
-                // 3. Clear the view states and route clean to destination
-                window.location.href = "./index.html";
-            }, 180); 
+                // 3. NEW: Artificial network pause (500ms) after it disappears before the load begins
+                setTimeout(() => {
+                    window.location.href = "./index.html";
+                }, 500); /* 500ms pause simulating a realistic data-fetching delay */
+                
+            }, 120); 
         });
+
 
         // --- PERFECTED CROSS-IPHONE DYNAMIC VIEWPORT COUNTERACTION ---
         if (window.visualViewport) {
