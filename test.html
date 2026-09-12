@@ -200,6 +200,8 @@
             // Automatically reveal the autocomplete hotzone layer for any active input state
             if (currentLength >= 6) {
                 autocompleteHotzone.style.display = "block";
+            } else {
+                autocompleteHotzone.style.display = "none";
             }
 
             switch (currentLength) {
