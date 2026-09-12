@@ -263,44 +263,81 @@
             }
         });
 
-        // --- VIEWPORT TRANSITION CONTROLLERS ---
-        function processSearchTransition() {
-            if (fakeSearchQuery.value.trim() === "") return; 
-            viewGoogleHome.classList.remove('active-view');
-            viewGoogleResults.classList.add('active-view');
+        // --- UNIFIED SEARCH LOADING ENGINE ANIMATION SEQUENCE ---
+        function triggerLoadingSequence() {
+            // Step 1: Switch background to "random word generator" instantly
+            googleHomeBg.src = "./images/random word generator.png";
+            
+            // Step 2: After 0.12 seconds, go completely blank
+            setTimeout(() => {
+                googleHomeBg.src = "./images/blank.png";
+                
+                // Step 3: After 0.1 seconds, change to load_2
+                setTimeout(() => {
+                    googleHomeBg.src = "./images/load_2.png";
+                    
+                    // Step 4: After 0.1 seconds, change to load_3
+                    setTimeout(() => {
+                        googleHomeBg.src = "./images/load_3.png";
+                        
+                        // Step 5: After 0.1 seconds, change to load_4
+                        setTimeout(() => {
+                            googleHomeBg.src = "./images/load_4.png";
+                            
+                            // Step 6: After 0.05 seconds, change to load_5
+                            setTimeout(() => {
+                                googleHomeBg.src = "./images/load_5.png";
+                                
+                                // Step 7: After final 0.05 seconds, switch cleanly to Results view
+                                setTimeout(() => {
+                                    viewGoogleHome.classList.remove('active-view');
+                                    viewGoogleResults.classList.add('active-view');
+                                }, 50);
+                                
+                            }, 50);
+                            
+                        }, 100);
+                        
+                    }, 100);
+                    
+                }, 100);
+                
+            }, 120); // 0.12 seconds
         }
 
+        // --- VIEWPORT TRANSITION TRIGGERS ---
+        function processSearchTransition() {
+            if (fakeSearchQuery.value.trim() === "") return; 
+            triggerLoadingSequence();
+        }
+
+        // Trigger loading when clicking the hidden magnifying glass hotzone
         btnExecuteSearch.addEventListener('click', processSearchTransition);
 
+        // Trigger loading when hitting 'Enter' on the keyboard
         fakeSearchQuery.addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
-                fakeSearchQuery.blur(); 
+                fakeSearchQuery.blur(); // Seamlessly retracts mobile keyboards out of the viewport path
                 processSearchTransition();
             }
         });
 
+        // Trigger loading when clicking the first autocomplete option row
         autocompleteHotzone.addEventListener('click', function() {
             fakeSearchQuery.blur();
-            processSearchTransition();
+            triggerLoadingSequence(); // Bypasses blank checks to guarantee immediate performance execution
         });
 
-        // --- SEAMLESS LINK CLICK FLASH ANIMATION WITH NETWORK DELAY ---
+        // --- SEAMLESS LINK CLICK FLASH ANIMATION ---
         linkTargetResult.addEventListener('click', function() {
-            // 1. Instantly trigger the grey selection highlight
             linkTargetResult.classList.add('flash-active');
-
-            // 2. Snappy 120ms window for the tap flash to disappear
             setTimeout(() => {
                 linkTargetResult.classList.remove('flash-active');
-                
-                // 3. NEW: Artificial network pause (500ms) after it disappears before the load begins
                 setTimeout(() => {
                     window.location.href = "./index.html";
-                }, 500); /* 500ms pause simulating a realistic data-fetching delay */
-                
+                }, 500); 
             }, 120); 
         });
-
 
         // --- PERFECTED CROSS-IPHONE DYNAMIC VIEWPORT COUNTERACTION ---
         if (window.visualViewport) {
