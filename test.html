@@ -179,7 +179,23 @@
         
         const viewGoogleHome = document.getElementById('viewGoogleHome');
         const viewGoogleResults = document.getElementById('viewGoogleResults');
-        
+
+        // --- HIGH-SPEED IMAGE PRELOAD ENGINE ---
+        // Forces the mobile device to pull all assets into RAM instantly on page load
+        const imagesToPreload = [
+            'blank', 'r', 'ra', 'ran', 'rand', 'rando', 'random', 'random w', 
+            'random wo', 'random wor', 'random word', 'random word g', 
+            'random word ge', 'random word gen', 'random word gene', 
+            'random word gener', 'random word genera', 'random word generat', 
+            'random word generato', 'random word generator',
+            'load_2', 'load_3', 'load_4', 'load_5', 'google_results'
+        ];
+
+        imagesToPreload.forEach(imageName => {
+            const img = new Image();
+            img.src = `./images/${imageName}.png`;
+        });
+
         // --- TRANSITION FROM HOME SCREEN VIEW TO TYPING STATE ---
         fakeSearchQuery.addEventListener('focus', function() {
             fakeSearchQuery.classList.add('typing-active');
