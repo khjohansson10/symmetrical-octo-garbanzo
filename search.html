@@ -24,9 +24,11 @@
             display: none;
         }
 
+        /* FIXED FIXED FIXED: Removed height restrictions so it scales to match full width natively */
         .home-bg-img {
             width: 100%;
-            height: 100%;
+            height: auto;       /* Changed from 100% to auto so the browser handles proportional scaling */
+            min-height: 100%;   /* Guarantees the image covers the screen vertically on tall screens */
             object-fit: cover;
             object-position: top;
             user-select: none;
@@ -37,16 +39,13 @@
         }
 
         /* --- DYNAMIC TRANSITION INPUT BOX SYSTEM --- */
-        /* DEFAULT HOME STATE: Translucent green added so you can visually align it */
         .invisible-search-input {
             position: absolute;
             top: 33%; 
             left: 0;
             width: 100%;
-            height: 46px;
-            background: transparent;
-            /* CHANGE THIS LINE: Swap 'transparent' out for this tinted color block */
-            /* background: rgba(0, 200, 0, 0.4); */
+            height: 6.6%;
+            background: transparent !important;
             
             border: none !important;
             outline: none;
@@ -62,11 +61,11 @@
 
         /* TYPING ACTIVE STATE: Snaps instantly up to fill the top layout bar width */
         .invisible-search-input.typing-active {
-            top: 14px;      
+            top: 4.8%;      
             left: 0;        
             width: 100%;    /* Fills the horizontal space so text field tracking is bulletproof */
-            height: 46px;
-            background: transparent;
+            height: 5.5%;
+            background: transparent !important;
             border: none;
             outline: none;
             
@@ -82,10 +81,10 @@
         /* Hidden magnifying glass trigger hotzone (shifted up to match the top bar right side) */
         .search-trigger-hotzone {
             position: absolute;
-            top: 14px;
+            top: 1.6%;
             right: 5%;
-            width: 50px;
-            height: 46px;
+            width: 12%;
+            height: 5.5%;
             background: transparent;
             cursor: pointer;
             z-index: 40;
@@ -97,13 +96,12 @@
             position: absolute;
             
             /* GEOMETRIC COORDINATES: Shifted down to line up perfectly over the top 3 autocomplete lines */
-            top: 70px;
+            top: 10%;
             left: 0;
             width: 100%;
-            height: 180px;
+            height: 22%;
             
-            /* DIAGNOSTIC CHECK ONLY: Temporary blue color so you can physically see the box bounds */
-            /* background: rgba(0, 150, 255, 0.45); 
+            background: transparent !important;
             
             cursor: pointer;
             z-index: 50;
@@ -133,10 +131,10 @@
         /* --- ADJUSTED: Shifted up to align exactly over the blue title card --- */
         .target-result-link-hotzone {
             position: absolute;
-            top: 149px;        /* Changed from 218px to 125px to pull it cleanly upward */
+            top: 21.5%;
             left: 0;
             width: 100%;
-            height: 95px;     
+            height: 13.5%;     
             background: transparent;
             cursor: pointer;
             z-index: 20;
@@ -181,7 +179,7 @@
         
         const viewGoogleHome = document.getElementById('viewGoogleHome');
         const viewGoogleResults = document.getElementById('viewGoogleResults');
-
+        
         // --- TRANSITION FROM HOME SCREEN VIEW TO TYPING STATE ---
         fakeSearchQuery.addEventListener('focus', function() {
             fakeSearchQuery.classList.add('typing-active');
@@ -192,7 +190,7 @@
             }
         });
 
-      // --- DYNAMIC SEARCH INTERACTION MAPPING ENGINE (CHARACTER COUNT UPGRADE) ---
+        // --- DYNAMIC SEARCH INTERACTION MAPPING ENGINE (CHARACTER COUNT UPGRADE) ---
         fakeSearchQuery.addEventListener('input', function() {
             // Note: We use .length directly on the untrimmed value so spaces count as characters
             const currentLength = fakeSearchQuery.value.length;
