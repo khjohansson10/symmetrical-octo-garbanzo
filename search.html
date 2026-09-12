@@ -24,7 +24,6 @@
             display: none;
         }
 
-        /* DEFAULT HOME STATE IMAGE STYLING */
         .home-bg-img {
             width: 100%;
             height: 100%;
@@ -35,17 +34,6 @@
             position: absolute;
             top: 0;
             left: 0;
-        }
-
-        /* --- TARGETED IMAGE CLIPPING STATE --- */
-        /* This class only auto-applies to your dynamic typing assets ("blank", "r", "ra", etc.) */
-        .home-bg-img.cropped-state {
-            height: 105%; /* Scaled up slightly to prevent a white gap at the bottom */
-            object-fit: cover;
-            
-            /* ADJUST THIS PIXEL VALUE TO FINE-TUNE YOUR CROP FACTOR:
-               Increasing the negative value pulls the asset up, slicing more off the top. */
-            object-position: center -12px; 
         }
 
         /* --- DYNAMIC TRANSITION INPUT BOX SYSTEM --- */
@@ -132,13 +120,19 @@
         /* INTERACTIVE TARGET LINK OVERLAY ZONE */
         .target-result-link-hotzone {
             position: absolute;
-            top: 142px; 
+            top: 250px; /* Adjust this value down so it aligns right over the top header link in your screenshot */
             left: 0;
             width: 100%;
-            height: 85px;
+            height: 110px; /* Height covers the blue text and the URL block */
             background: transparent;
             cursor: pointer;
             z-index: 20;
+            transition: background-color 0.1s ease; /* Snappy transition matching Safari's link overlay */
+        }
+
+        /* Triggered via JS: Flashes a transparent grey block over the target area */
+        .target-result-link-hotzone.flash-active {
+            background-color: rgba(0, 0, 0, 0.1); 
         }
 
         /* Display State Utility Class */
@@ -160,8 +154,9 @@
 
     <!-- SCREEN 2: SCROLLABLE SEARCH RESULTS INTERFACE -->
     <div id="viewGoogleResults">
-        <img src="./images/google_results.png" alt="Google Query Results" class="results-scroll-strip">
+        <!-- Overlay link hotzone sits directly above the image in the DOM stack -->
         <div id="linkTargetResult" class="target-result-link-hotzone"></div>
+        <img src="./images/google_results.png" alt="Google Query Results" class="results-scroll-strip">
     </div>
 
     <script>
@@ -175,24 +170,13 @@
         const viewGoogleHome = document.getElementById('viewGoogleHome');
         const viewGoogleResults = document.getElementById('viewGoogleResults');
 
-        // Helper utility to safely manage the dynamic crop template toggle
-        function setTargetImage(srcName, shouldCrop) {
-            googleHomeBg.src = `./images/${srcName}.png`;
-            if (shouldCrop) {
-                googleHomeBg.classList.add('cropped-state');
-            } else {
-                googleHomeBg.classList.remove('cropped-state');
-            }
-        }
-
         // --- TRANSITION FROM HOME SCREEN VIEW TO TYPING STATE ---
         fakeSearchQuery.addEventListener('focus', function() {
             fakeSearchQuery.classList.add('typing-active');
             btnExecuteSearch.style.display = 'block';
 
             if (fakeSearchQuery.value === "") {
-                // Focus triggers the blank template page - turn on the crop state layout rule
-                setTargetImage('blank', true);
+                googleHomeBg.src = "./images/blank.png";
             }
         });
 
@@ -201,31 +185,31 @@
             const currentString = fakeSearchQuery.value.toLowerCase().trim();
 
             if (currentString === "") {
-                setTargetImage('blank', true);
+                googleHomeBg.src = "./images/blank.png";
                 autocompleteHotzone.style.display = "none";
             } else if (currentString === "r") {
-                setTargetImage('r', true);
+                googleHomeBg.src = "./images/r.png";
                 autocompleteHotzone.style.display = "block"; 
             } else if (currentString === "ra") {
-                setTargetImage('ra', true);
+                googleHomeBg.src = "./images/ra.png";
                 autocompleteHotzone.style.display = "block";
             } else if (currentString === "ran") {
-                setTargetImage('ran', true);
+                googleHomeBg.src = "./images/ran.png";
                 autocompleteHotzone.style.display = "block";
             } else if (currentString === "rand") {
-                setTargetImage('rand', true);
+                googleHomeBg.src = "./images/rand.png";
                 autocompleteHotzone.style.display = "block";
             } else if (currentString === "rando") {
-                setTargetImage('rando', true);
+                googleHomeBg.src = "./images/rando.png";
                 autocompleteHotzone.style.display = "block";
             } else if (currentString === "random") {
-                setTargetImage('random', true);
+                googleHomeBg.src = "./images/random.png";
                 autocompleteHotzone.style.display = "block";
             } else if (currentString === "random w") {
-                setTargetImage('random w', true);
+                googleHomeBg.src = "./images/random w.png";
                 autocompleteHotzone.style.display = "block";
             } else {
-                setTargetImage('random w', true);
+                googleHomeBg.src = "./images/random w.png";
                 autocompleteHotzone.style.display = "block";
             }
         });
@@ -235,9 +219,7 @@
                 fakeSearchQuery.classList.remove('typing-active');
                 btnExecuteSearch.style.display = 'none';
                 autocompleteHotzone.style.display = "none";
-                
-                // Reverting back to clean home screen - strip off the crop state completely!
-                setTargetImage('google_home', false);
+                googleHomeBg.src = "./images/google_home.png";
             }
         });
 
@@ -256,13 +238,22 @@
                 processSearchTransition();
             }
         });
+
         autocompleteHotzone.addEventListener('click', function() {
             fakeSearchQuery.blur();
             processSearchTransition();
         });
+
+        // --- SEAMLESS LINK CLICK FLASH ANIMATION ---
         linkTargetResult.addEventListener('click', function() {
-            window.location.href = "./index.html";
+            // Apply the grey overlay highlight
+            linkTargetResult.classList.add('flash-active');
+
+            // Hold it visible briefly to replicate Safari's touch feedback, then route to destination
+            setTimeout(() => {
+            window.location.href = "./index.html";}, 180);
         });
+        
         // --- PERFECTED CROSS-IPHONE DYNAMIC VIEWPORT COUNTERACTION ---
         if (window.visualViewport) {
             window.visualViewport.addEventListener('resize', () => {
