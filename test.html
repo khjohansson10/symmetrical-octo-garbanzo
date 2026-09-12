@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, interactive-widget=overlays-content">
-    <title>Google Test</title>
+    <title>Google</title>
     <style>
         /* --- CORE VISUAL CANVAS RESET --- */
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -120,17 +120,18 @@
         /* INTERACTIVE TARGET LINK OVERLAY ZONE */
         .target-result-link-hotzone {
             position: absolute;
-            top: 142px; /* Sits right over the "Random Word Generator" text line area */
+            top: 142px; 
             left: 0;
             width: 100%;
-            height: 110px; /* Height spans the blue title down through the green URL */
+            height: 85px;
             background: transparent;
             cursor: pointer;
             z-index: 20;
-            -webkit-tap-highlight-color: transparent; /* Removes default Safari box tint */
+            transition: background-color 0.1s ease; /* Injected: Allows smooth flash fade out */
+            -webkit-tap-highlight-color: transparent; /* Injected: Removes generic webkit touch shadow */
         }
 
-        /* NEW PURE-CSS FLASH: Flashes a transparent grey block the EXACT split-second it is tapped */
+        /* Injected: Native gray selection box overlay that highlights ONLY when actively pressed down */
         .target-result-link-hotzone:active {
             background-color: rgba(0, 0, 0, 0.08); 
         }
@@ -154,8 +155,8 @@
 
     <!-- SCREEN 2: SCROLLABLE SEARCH RESULTS INTERFACE -->
     <div id="viewGoogleResults">
-        <div id="linkTargetResult" class="target-result-link-hotzone"></div>
         <img src="./images/google_results.png" alt="Google Query Results" class="results-scroll-strip">
+        <div id="linkTargetResult" class="target-result-link-hotzone"></div>
     </div>
 
     <script>
@@ -252,4 +253,5 @@
             window.visualViewport.addEventListener('resize', () => {
                 const container = document.getElementById('viewGoogleHome');
                 const currentContainerTop = container.getBoundingClientRect().top;
-if (currentContainerTop < 0) {googleHomeBg.style.top = ${Math.abs(currentContainerTop)}px;} else {googleHomeBg.style.top = '0px';}});}
+                if (currentContainerTop < 0) {googleHomeBg.style.top = ${Math.abs(currentContainerTop)}px;} else {googleHomeBg.style.top = '0px';}});}
+                
