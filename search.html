@@ -117,16 +117,22 @@
             -webkit-user-select: none;
         }
 
-        /* INTERACTIVE TARGET LINK OVERLAY ZONE */
+        /* --- ADJUSTED: Shifted up to align exactly over the blue title card --- */
         .target-result-link-hotzone {
             position: absolute;
-            top: 142px; 
+            top: 149px;        /* Changed from 218px to 125px to pull it cleanly upward */
             left: 0;
             width: 100%;
-            height: 85px;
+            height: 95px;     
             background: transparent;
             cursor: pointer;
             z-index: 20;
+            transition: background-color 0.05s ease;
+        }
+
+        /* Turns the hotzone container gray when actively triggered */
+        .target-result-link-hotzone.flash-active {
+            background-color: rgba(0, 0, 0, 0.08); 
         }
 
         /* Display State Utility Class */
@@ -173,46 +179,80 @@
             }
         });
 
-        // --- DYNAMIC SEARCH INTERACTION MAPPING ENGINE ---
+      // --- DYNAMIC SEARCH INTERACTION MAPPING ENGINE (CHARACTER COUNT UPGRADE) ---
         fakeSearchQuery.addEventListener('input', function() {
-            const currentString = fakeSearchQuery.value.toLowerCase().trim();
+            // Note: We use .length directly on the untrimmed value so spaces count as characters
+            const currentLength = fakeSearchQuery.value.length;
 
-            if (currentString === "") {
-                googleHomeBg.src = "./images/blank.png";
-                autocompleteHotzone.style.display = "none";
-            } else if (currentString === "r") {
-                googleHomeBg.src = "./images/r.png";
-                autocompleteHotzone.style.display = "block"; 
-            } else if (currentString === "ra") {
-                googleHomeBg.src = "./images/ra.png";
-                autocompleteHotzone.style.display = "block";
-            } else if (currentString === "ran") {
-                googleHomeBg.src = "./images/ran.png";
-                autocompleteHotzone.style.display = "block";
-            } else if (currentString === "rand") {
-                googleHomeBg.src = "./images/rand.png";
-                autocompleteHotzone.style.display = "block";
-            } else if (currentString === "rando") {
-                googleHomeBg.src = "./images/rando.png";
-                autocompleteHotzone.style.display = "block";
-            } else if (currentString === "random") {
-                googleHomeBg.src = "./images/random.png";
-                autocompleteHotzone.style.display = "block";
-            } else if (currentString === "random w") {
-                googleHomeBg.src = "./images/random w.png";
-                autocompleteHotzone.style.display = "block";
-            } else {
-                googleHomeBg.src = "./images/random w.png";
+            // Automatically reveal the autocomplete hotzone layer for any active input state
+            if (currentLength > 0) {
                 autocompleteHotzone.style.display = "block";
             }
-        });
 
-        fakeSearchQuery.addEventListener('blur', function() {
-            if (fakeSearchQuery.value.trim() === "") {
-                fakeSearchQuery.classList.remove('typing-active');
-                btnExecuteSearch.style.display = 'none';
-                autocompleteHotzone.style.display = "none";
-                googleHomeBg.src = "./images/google_home.png";
+            switch (currentLength) {
+                case 0:
+                    googleHomeBg.src = "./images/blank.png";
+                    autocompleteHotzone.style.display = "none";
+                    break;
+                case 1: // "r"
+                    googleHomeBg.src = "./images/r.png";
+                    break;
+                case 2: // "ra"
+                    googleHomeBg.src = "./images/ra.png";
+                    break;
+                case 3: // "ran"
+                    googleHomeBg.src = "./images/ran.png";
+                    break;
+                case 4: // "rand"
+                    googleHomeBg.src = "./images/rand.png";
+                    break;
+                case 5: // "rando"
+                    googleHomeBg.src = "./images/rando.png";
+                    break;
+                case 6: // "random"
+                case 7: // "random "
+                    googleHomeBg.src = "./images/random.png";
+                    break;
+                case 8: // "random w"
+                    googleHomeBg.src = "./images/random w.png";
+                    break;
+                case 9: // "random wo"
+                    googleHomeBg.src = "./images/random wo.png";
+                    break;
+                case 10: // "random wor"
+                    googleHomeBg.src = "./images/random wor.png";
+                    break;
+                case 11: // "random word"
+                case 12: // "random word "
+                    googleHomeBg.src = "./images/random word.png";
+                    break;
+                case 13: // "random word g"
+                    googleHomeBg.src = "./images/random word g.png";
+                    break;
+                case 14: // "random word ge"
+                    googleHomeBg.src = "./images/random word ge.png";
+                    break;
+                case 15: // "random word gen"
+                    googleHomeBg.src = "./images/random word gen.png";
+                    break;
+                case 16: // "random word gene"
+                    googleHomeBg.src = "./images/random word gene.png";
+                    break;
+                case 17: // "random word gener"
+                    googleHomeBg.src = "./images/random word gener.png";
+                    break;
+                case 18: // "random word genera"
+                    googleHomeBg.src = "./images/random word genera.png";
+                    break;
+                case 19: // "random word generat"
+                    googleHomeBg.src = "./images/random word generat.png";
+                    break;
+                case 20: // "random word generato"
+                    googleHomeBg.src = "./images/random word generato.png";
+                    break;
+                default: // 21 or more characters (e.g., "random word generator")
+                    googleHomeBg.src = "./images/random word generator.png";
+                    break;
             }
         });
 
@@ -237,9 +277,23 @@
             processSearchTransition();
         });
 
+        // --- SEAMLESS LINK CLICK FLASH ANIMATION WITH NETWORK DELAY ---
         linkTargetResult.addEventListener('click', function() {
-            window.location.href = "./index.html";
+            // 1. Instantly trigger the grey selection highlight
+            linkTargetResult.classList.add('flash-active');
+
+            // 2. Snappy 120ms window for the tap flash to disappear
+            setTimeout(() => {
+                linkTargetResult.classList.remove('flash-active');
+                
+                // 3. NEW: Artificial network pause (500ms) after it disappears before the load begins
+                setTimeout(() => {
+                    window.location.href = "./index.html";
+                }, 500); /* 500ms pause simulating a realistic data-fetching delay */
+                
+            }, 120); 
         });
+
 
         // --- PERFECTED CROSS-IPHONE DYNAMIC VIEWPORT COUNTERACTION ---
         if (window.visualViewport) {
