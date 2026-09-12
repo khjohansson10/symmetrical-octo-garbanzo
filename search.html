@@ -86,18 +86,25 @@
             display: none; /* Only reveals when typing starts */
         }
 
-        /* Invisible overlay zone matching the target autocomplete prediction row */
+        /* --- DYNAMIC TARGET AUTOCOMPLETE PREDICTION TIER --- */
         .autocomplete-suggestion-hotzone {
             position: absolute;
-            top: 130px; 
+            
+            /* GEOMETRIC COORDINATES: Shifted down to line up perfectly over the "random word generator" line */
+            top: 70px;         /* Changed from 130px to 154px to slide it directly over the top line entry */
             left: 0;
             width: 100%;
-            height: 55px;
-            background: transparent;
+            height: 180px;       /* Stretched from 55px to 60px to naturally match the full vertical row footprint */
+            
+            /* DIAGNOSTIC CHECK ONLY: Temporary blue color so you can physically see the box bounds */
+            /* background: rgba(0, 150, 255, 0.45); 
+            
             cursor: pointer;
             z-index: 50;
-            display: none; 
+            display: none;      /* Stays completely hidden until character length is greater than 0 */
+            -webkit-tap-highlight-color: transparent; /* Clean touch reset */
         }
+
 
         /* --- CONTAINER 2: SCROLLABLE RESULTS ENGINE --- */
         #viewGoogleResults {
