@@ -13,22 +13,6 @@
             font-family: -apple-system, BlinkMacSystemFont, Arial, sans-serif;
             background-color: #ffffff; /* Use #121212 for Dark Mode */
             overflow: hidden;
-
-            /* Center the locked canvas on screens that are wider/taller than standard aspect ratios */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        /* --- UNIFIED IPHONE 14 BASELINE WRAPPER --- */
-        /* Hardcoded to a pure iPhone 14 reference layout grid */
-        #viewportLockContainer {
-            position: relative;
-            width: 393px;
-            height: 852px;
-            overflow: hidden;
-            transform-origin: center center; /* Clean, centralized expansion layout anchor */
-            flex-shrink: 0;
         }
 
         /* --- CONTAINER 1: FAKE GOOGLE HOMEPAGE & AUTOCOMPLETE TIER --- */
@@ -40,10 +24,12 @@
             display: none;
         }
 
+        /* FIXED FIXED FIXED: Removed height restrictions so it scales to match full width natively */
         .home-bg-img {
             width: 100%;
-            height: 100%;
-            object-fit: fill;
+            height: auto;       /* Changed from 100% to auto so the browser handles proportional scaling */
+            min-height: 100%;   /* Guarantees the image covers the screen vertically on tall screens */
+            object-fit: cover;
             object-position: top;
             user-select: none;
             -webkit-user-select: none;
@@ -53,7 +39,6 @@
         }
 
         /* --- DYNAMIC TRANSITION INPUT BOX SYSTEM --- */
-        /* DEFAULT HOME STATE: Translucent green added so you can visually align it */
         .invisible-search-input {
             position: absolute;
             top: 33%; 
@@ -61,8 +46,6 @@
             width: 100%;
             height: 46px;
             background: transparent;
-            /* CHANGE THIS LINE: Swap 'transparent' out for this tinted color block */
-            /* background: rgba(0, 200, 0, 0.4); */
             
             border: none !important;
             outline: none;
@@ -197,31 +180,6 @@
         
         const viewGoogleHome = document.getElementById('viewGoogleHome');
         const viewGoogleResults = document.getElementById('viewGoogleResults');
-
-        // --- NEW: AUTOMATIC IPHONE 14 PROPORTIONAL MATRIX SCALING ENGINE ---
-        function runViewportProportionalScale() {
-            const baseWidth = 393;
-            const baseHeight = 852;
-            
-            // Query the window size profile natively
-            const windowWidth = window.innerWidth;
-            const windowHeight = window.innerHeight;
-            
-            // Calculate proportional scale metrics
-            const widthScaleFactor = windowWidth / baseWidth;
-            const heightScaleFactor = windowHeight / baseHeight;
-            
-            // Match structural scale limits to guarantee no image cropping shifts occur
-            const universalTargetScale = Math.min(widthScaleFactor, heightScaleFactor);
-            
-            // Execute hardware-accelerated 2D CSS rendering tracking across the workspace wrapper bounds
-            viewportLockContainer.style.transform = `scale(${universalTargetScale})`;
-        }
-
-        // Initialize and bind matrix scaling listeners
-        window.addEventListener('resize', runViewportProportionalScale);
-        window.addEventListener('DOMContentLoaded', runViewportProportionalScale);
-        runViewportProportionalScale(); // Fire immediately on initial page configuration load
         
         // --- TRANSITION FROM HOME SCREEN VIEW TO TYPING STATE ---
         fakeSearchQuery.addEventListener('focus', function() {
