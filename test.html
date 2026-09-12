@@ -267,14 +267,17 @@
         function triggerLoadingSequence() {
             // Step 1: Switch background to "random word generator" instantly
             googleHomeBg.src = "./images/random word generator.png";
+            googleHomeBg.style.visibility = 'visible'; // Ensure it's explicitly shown
             
-            // Step 2: After 0.12 seconds, go completely blank
+            // Step 2: After 0.12 seconds, go COMPLETELY BLANK (true code-based blank canvas)
             setTimeout(() => {
-                googleHomeBg.src = "./images/blank.png";
+                // Hides the image asset completely to show a raw, empty page background
+                googleHomeBg.style.visibility = 'hidden'; 
                 
-                // Step 3: After 0.1 seconds, change to load_2
+                // Step 3: After 0.1 seconds, change to load_2 and reveal the image layer again
                 setTimeout(() => {
                     googleHomeBg.src = "./images/load_2.png";
+                    googleHomeBg.style.visibility = 'visible';
                     
                     // Step 4: After 0.1 seconds, change to load_3
                     setTimeout(() => {
