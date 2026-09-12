@@ -20,15 +20,15 @@
             align-items: center;
         }
 
-        /* --- NEW: UNIFIED IPHONE VIEWPORT LOCK --- */
-        /* Forces the canvas to scale identically on EVERY iPhone size (Mini to Pro Max) */
+        /* --- UNIFIED IPHONE 14 BASELINE WRAPPER --- */
+        /* Hardcoded to a pure iPhone 14 reference layout grid */
         #viewportLockContainer {
             position: relative;
-            width: 100vw;
-            height: 100vh;
-            max-width: calc(100vh * (9 / 19.5));
-            max-height: calc(100vw * (19.5 / 9));
+            width: 393px;
+            height: 852px;
             overflow: hidden;
+            transform-origin: center center; /* Clean, centralized expansion layout anchor */
+            flex-shrink: 0;
         }
 
         /* --- CONTAINER 1: FAKE GOOGLE HOMEPAGE & AUTOCOMPLETE TIER --- */
@@ -149,7 +149,7 @@
         /* --- ADJUSTED: Shifted up to align exactly over the blue title card --- */
         .target-result-link-hotzone {
             position: absolute;
-            top: 149px;        /* Changed from 218px to 125px to pull it cleanly upward */
+            top: 149px;
             left: 0;
             width: 100%;
             height: 95px;     
@@ -198,6 +198,31 @@
         const viewGoogleHome = document.getElementById('viewGoogleHome');
         const viewGoogleResults = document.getElementById('viewGoogleResults');
 
+        // --- NEW: AUTOMATIC IPHONE 14 PROPORTIONAL MATRIX SCALING ENGINE ---
+        function runViewportProportionalScale() {
+            const baseWidth = 393;
+            const baseHeight = 852;
+            
+            // Query the window size profile natively
+            const windowWidth = window.innerWidth;
+            const windowHeight = window.innerHeight;
+            
+            // Calculate proportional scale metrics
+            const widthScaleFactor = windowWidth / baseWidth;
+            const heightScaleFactor = windowHeight / baseHeight;
+            
+            // Match structural scale limits to guarantee no image cropping shifts occur
+            const universalTargetScale = Math.min(widthScaleFactor, heightScaleFactor);
+            
+            // Execute hardware-accelerated 2D CSS rendering tracking across the workspace wrapper bounds
+            viewportLockContainer.style.transform = `scale(${universalTargetScale})`;
+        }
+
+        // Initialize and bind matrix scaling listeners
+        window.addEventListener('resize', runViewportProportionalScale);
+        window.addEventListener('DOMContentLoaded', runViewportProportionalScale);
+        runViewportProportionalScale(); // Fire immediately on initial page configuration load
+        
         // --- TRANSITION FROM HOME SCREEN VIEW TO TYPING STATE ---
         fakeSearchQuery.addEventListener('focus', function() {
             fakeSearchQuery.classList.add('typing-active');
@@ -208,7 +233,7 @@
             }
         });
 
-      // --- DYNAMIC SEARCH INTERACTION MAPPING ENGINE (CHARACTER COUNT UPGRADE) ---
+        // --- DYNAMIC SEARCH INTERACTION MAPPING ENGINE (CHARACTER COUNT UPGRADE) ---
         fakeSearchQuery.addEventListener('input', function() {
             // Note: We use .length directly on the untrimmed value so spaces count as characters
             const currentLength = fakeSearchQuery.value.length;
