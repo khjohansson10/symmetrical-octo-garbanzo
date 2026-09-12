@@ -120,14 +120,14 @@
         /* INTERACTIVE TARGET LINK OVERLAY ZONE */
         .target-result-link-hotzone {
             position: absolute;
-            top: 250px; /* Adjust this value down so it aligns right over the top header link in your screenshot */
+            top: 142px; 
             left: 0;
             width: 100%;
-            height: 110px; /* Height covers the blue text and the URL block */
+            height: 85px;
             background: transparent;
             cursor: pointer;
             z-index: 20;
-            transition: background-color 0.1s ease; /* Snappy transition matching Safari's link overlay */
+            transition: background-color 0.1s ease;
         }
 
         /* Triggered via JS: Flashes a transparent grey block over the target area */
@@ -154,7 +154,6 @@
 
     <!-- SCREEN 2: SCROLLABLE SEARCH RESULTS INTERFACE -->
     <div id="viewGoogleResults">
-        <!-- Overlay link hotzone sits directly above the image in the DOM stack -->
         <div id="linkTargetResult" class="target-result-link-hotzone"></div>
         <img src="./images/google_results.png" alt="Google Query Results" class="results-scroll-strip">
     </div>
@@ -246,22 +245,15 @@
 
         // --- SEAMLESS LINK CLICK FLASH ANIMATION ---
         linkTargetResult.addEventListener('click', function() {
-            // Apply the grey overlay highlight
             linkTargetResult.classList.add('flash-active');
-
-            // Hold it visible briefly to replicate Safari's touch feedback, then route to destination
             setTimeout(() => {
-            window.location.href = "./index.html";}, 180);
+                window.location.href = "./index.html";
+            }, 180); 
         });
-        
+
         // --- PERFECTED CROSS-IPHONE DYNAMIC VIEWPORT COUNTERACTION ---
         if (window.visualViewport) {
             window.visualViewport.addEventListener('resize', () => {
                 const container = document.getElementById('viewGoogleHome');
                 const currentContainerTop = container.getBoundingClientRect().top;
-                if (currentContainerTop < 0) {
-                    googleHomeBg.style.top = ${Math.abs(currentContainerTop)}px;
-                } else {
-                    googleHomeBg.style.top = '0px';
-                }
-            });}
+                if (currentContainerTop < 0) {googleHomeBg.style.top = ${Math.abs(currentContainerTop)}px;} else {googleHomeBg.style.top = '0px';}});}
