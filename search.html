@@ -210,16 +210,6 @@
             }
         });
 
-        fakeSearchQuery.addEventListener('blur', function() {
-            if (fakeSearchQuery.value.trim() === "") {
-                // Revert completely back to centered layout button coordinates
-                fakeSearchQuery.classList.remove('typing-active');
-                btnExecuteSearch.style.display = 'none';
-                autocompleteHotzone.style.display = "none";
-                googleHomeBg.src = "./images/google_home.png";
-            }
-        });
-
         // --- VIEWPORT TRANSITION CONTROLLERS ---
         function processSearchTransition() {
             if (fakeSearchQuery.value.trim() === "") return; 
