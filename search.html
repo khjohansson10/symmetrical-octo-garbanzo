@@ -37,21 +37,27 @@
         }
 
         /* --- DYNAMIC TRANSITION INPUT BOX SYSTEM --- */
-        /* DEFAULT STATE: Stretched completely across the screen over the google_home search bar */
+        /* DEFAULT HOME STATE: Translucent green added so you can visually align it */
         .invisible-search-input {
             position: absolute;
-            top: 36.5%; 
+            top: 33%; 
             left: 0;
             width: 100%;
             height: 46px;
             background: transparent;
-            border: none;
+            /* CHANGE THIS LINE: Swap 'transparent' out for this tinted color block */
+            /* background: rgba(0, 200, 0, 0.4); */
+            
+            border: none !important;
             outline: none;
             font-size: 17px;
-            color: transparent; /* Hides the native typing cursor/caret before they tap */
+            color: transparent; 
             padding: 0 20px;
             z-index: 9999;
             cursor: pointer;
+            
+            /* DISABLES DEFAULT MOBILE TAP ANIMATIONS/SHADOWS RIGHT HERE */
+            -webkit-tap-highlight-color: transparent !important;
         }
 
         /* TYPING ACTIVE STATE: Snaps instantly up to fill the top layout bar width */
@@ -153,7 +159,7 @@
         <img id="googleHomeBg" src="./images/google_home.png" alt="Google Search Portal" class="home-bg-img">
         
         <!-- Single Input Container: Starts at center, switches seamlessly to full-width top alignment -->
-        <input type="text" id="fakeSearchQuery" class="invisible-search-input" autocomplete="off" autocapitalize="off" spellcheck="false">
+        <input type="text" id="fakeSearchQuery" class="invisible-search-input" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
         <div id="btnExecuteSearch" class="search-trigger-hotzone"></div>
         
         <div id="autocompleteHotzone" class="autocomplete-suggestion-hotzone"></div>
@@ -192,8 +198,10 @@
             const currentLength = fakeSearchQuery.value.length;
 
             // Automatically reveal the autocomplete hotzone layer for any active input state
-            if (currentLength > 0) {
+            if (currentLength >= 6) {
                 autocompleteHotzone.style.display = "block";
+            } else {
+                autocompleteHotzone.style.display = "none";
             }
 
             switch (currentLength) {
@@ -263,44 +271,84 @@
             }
         });
 
-        // --- VIEWPORT TRANSITION CONTROLLERS ---
-        function processSearchTransition() {
-            if (fakeSearchQuery.value.trim() === "") return; 
-            viewGoogleHome.classList.remove('active-view');
-            viewGoogleResults.classList.add('active-view');
+        // --- UNIFIED SEARCH LOADING ENGINE ANIMATION SEQUENCE ---
+        function triggerLoadingSequence() {
+            // Step 1: Switch background to "random word generator" instantly
+            googleHomeBg.src = "./images/random word generator.png";
+            googleHomeBg.style.visibility = 'visible'; // Ensure it's explicitly shown
+            
+            // Step 2: After 0.12 seconds, go COMPLETELY BLANK (true code-based blank canvas)
+            setTimeout(() => {
+                // Hides the image asset completely to show a raw, empty page background
+                googleHomeBg.style.visibility = 'hidden'; 
+                
+                // Step 3: After 0.1 seconds, change to load_2 and reveal the image layer again
+                setTimeout(() => {
+                    googleHomeBg.src = "./images/load_2.png";
+                    googleHomeBg.style.visibility = 'visible';
+                    
+                    // Step 4: After 0.1 seconds, change to load_3
+                    setTimeout(() => {
+                        googleHomeBg.src = "./images/load_3.png";
+                        
+                        // Step 5: After 0.1 seconds, change to load_4
+                        setTimeout(() => {
+                            googleHomeBg.src = "./images/load_4.png";
+                            
+                            // Step 6: After 0.05 seconds, change to load_5
+                            setTimeout(() => {
+                                googleHomeBg.src = "./images/load_5.png";
+                                
+                                // Step 7: After final 0.05 seconds, switch cleanly to Results view
+                                setTimeout(() => {
+                                    viewGoogleHome.classList.remove('active-view');
+                                    viewGoogleResults.classList.add('active-view');
+                                }, 50);
+                                
+                            }, 50);
+                            
+                        }, 100);
+                        
+                    }, 100);
+                    
+                }, 100);
+                
+            }, 120); // 0.12 seconds
         }
 
+        // --- VIEWPORT TRANSITION TRIGGERS ---
+        function processSearchTransition() {
+            if (fakeSearchQuery.value.trim() === "") return; 
+            triggerLoadingSequence();
+        }
+
+        // Trigger loading when clicking the hidden magnifying glass hotzone
         btnExecuteSearch.addEventListener('click', processSearchTransition);
 
+        // Trigger loading when hitting 'Enter' on the keyboard
         fakeSearchQuery.addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
-                fakeSearchQuery.blur(); 
+                fakeSearchQuery.blur(); // Seamlessly retracts mobile keyboards out of the viewport path
                 processSearchTransition();
             }
         });
 
+        // Trigger loading when clicking the first autocomplete option row
         autocompleteHotzone.addEventListener('click', function() {
             fakeSearchQuery.blur();
-            processSearchTransition();
+            triggerLoadingSequence(); // Bypasses blank checks to guarantee immediate performance execution
         });
 
-        // --- SEAMLESS LINK CLICK FLASH ANIMATION WITH NETWORK DELAY ---
+        // --- SEAMLESS LINK CLICK FLASH ANIMATION ---
         linkTargetResult.addEventListener('click', function() {
-            // 1. Instantly trigger the grey selection highlight
             linkTargetResult.classList.add('flash-active');
-
-            // 2. Snappy 120ms window for the tap flash to disappear
             setTimeout(() => {
                 linkTargetResult.classList.remove('flash-active');
-                
-                // 3. NEW: Artificial network pause (500ms) after it disappears before the load begins
                 setTimeout(() => {
                     window.location.href = "./index.html";
-                }, 500); /* 500ms pause simulating a realistic data-fetching delay */
-                
+                }, 500); 
             }, 120); 
         });
-
 
         // --- PERFECTED CROSS-IPHONE DYNAMIC VIEWPORT COUNTERACTION ---
         if (window.visualViewport) {
