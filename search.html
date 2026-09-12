@@ -55,12 +55,23 @@
             cursor: pointer;
         }
 
-        /* --- MAINTAINED: Text box shifted safely to the right --- */
+        /* TYPING STATE: Hidden text variables injected */
         .invisible-search-input.typing-active {
-            top: 15px;      
-            left: 28%;      /* Kept at 28% to perfectly align right after "random w" */
-            width: 58%;     /* Maintained to keep text neatly bounded on the row */
-            color: #000000; 
+            position: absolute;
+            top: 14px;      
+            left: 0;        
+            width: 100%;    /* Fills the whole width so it's super easy to interact with */
+            height: 46px;
+            background: transparent;
+            border: none;
+            outline: none;
+            
+            /* MAGIC TRICK SHORTCUT: Hides both the typed characters and the flashing cursor line */
+            color: transparent !important;
+            caret-color: transparent !important;
+            
+            /* Removes standard mobile browser tap highlights */
+            -webkit-tap-highlight-color: transparent; 
             cursor: text;
         }
 
