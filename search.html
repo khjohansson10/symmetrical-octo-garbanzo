@@ -127,12 +127,6 @@
             background: transparent;
             cursor: pointer;
             z-index: 20;
-            transition: background-color 0.1s ease;
-        }
-
-        /* Triggered via JS: Flashes a transparent grey block over the target area */
-        .target-result-link-hotzone.flash-active {
-            background-color: rgba(0, 0, 0, 0.1); 
         }
 
         /* Display State Utility Class */
@@ -154,8 +148,8 @@
 
     <!-- SCREEN 2: SCROLLABLE SEARCH RESULTS INTERFACE -->
     <div id="viewGoogleResults">
-        <div id="linkTargetResult" class="target-result-link-hotzone"></div>
         <img src="./images/google_results.png" alt="Google Query Results" class="results-scroll-strip">
+        <div id="linkTargetResult" class="target-result-link-hotzone"></div>
     </div>
 
     <script>
@@ -243,12 +237,8 @@
             processSearchTransition();
         });
 
-        // --- SEAMLESS LINK CLICK FLASH ANIMATION ---
         linkTargetResult.addEventListener('click', function() {
-            linkTargetResult.classList.add('flash-active');
-            setTimeout(() => {
-                window.location.href = "./index.html";
-            }, 180); 
+            window.location.href = "./index.html";
         });
 
         // --- PERFECTED CROSS-IPHONE DYNAMIC VIEWPORT COUNTERACTION ---
@@ -256,4 +246,14 @@
             window.visualViewport.addEventListener('resize', () => {
                 const container = document.getElementById('viewGoogleHome');
                 const currentContainerTop = container.getBoundingClientRect().top;
-                if (currentContainerTop < 0) {googleHomeBg.style.top = ${Math.abs(currentContainerTop)}px;} else {googleHomeBg.style.top = '0px';}});}
+                
+                if (currentContainerTop < 0) {
+                    googleHomeBg.style.top = `${Math.abs(currentContainerTop)}px`;
+                } else {
+                    googleHomeBg.style.top = '0px';
+                }
+            });
+        }
+    </script>
+</body>
+</html>
