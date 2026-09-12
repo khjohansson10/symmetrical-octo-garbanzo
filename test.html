@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, interactive-widget=overlays-content">
+    <title>Google Test</title>
+    <style>
+        /* --- CORE VISUAL CANVAS RESET --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body, html { 
+            width: 100%; 
+            height: 100%; 
+            font-family: -apple-system, BlinkMacSystemFont, Arial, sans-serif;
+            background-color: #ffffff; /* Use #121212 for Dark Mode */
+            overflow: hidden;
+        }
+
+        /* --- CONTAINER 1: FAKE GOOGLE HOMEPAGE & AUTOCOMPLETE TIER --- */
+        #viewGoogleHome {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            display: none;
+        }
+
+        .home-bg-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: top;
+            user-select: none;
+            -webkit-user-select: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        /* --- DYNAMIC TRANSITION INPUT BOX SYSTEM --- */
+        /* DEFAULT STATE: Stretched completely across the screen over the google_home search bar */
+        .invisible-search-input {
+            position: absolute;
+            top: 36.5%; 
+            left: 0;
+            width: 100%;
+            height: 46px;
+            background: transparent;
+            border: none;
+            outline: none;
+            font-size: 17px;
+            color: transparent; /* Hides the native typing cursor/caret before they tap */
+            padding: 0 20px;
+            z-index: 9999;
+            cursor: pointer;
+        }
+
+        /* TYPING ACTIVE STATE: Snaps instantly up to fill the top layout bar width */
+        .invisible-search-input.typing-active {
+            top: 14px;      
+            left: 0;        
+            width: 100%;    /* Fills the horizontal space so text field tracking is bulletproof */
+            height: 46px;
+            background: transparent;
+            border: none;
+            outline: none;
+            
+            /* MAGIC TRICK SHORTCUT: Fully blinds both the typed characters and the flashing cursor line */
+            color: transparent !important;
+            caret-color: transparent !important;
+            
+            /* Removes standard mobile browser tap highlights */
+            -webkit-tap-highlight-color: transparent; 
+            cursor: text;
+        }
+
+        /* Hidden magnifying glass trigger hotzone (shifted up to match the top bar right side) */
+        .search-trigger-hotzone {
+            position: absolute;
+            top: 14px;
+            right: 5%;
+            width: 50px;
+            height: 46px;
+            background: transparent;
+            cursor: pointer;
+            z-index: 40;
+            display: none; /* Only reveals when typing starts */
+        }
+
+        /* Invisible overlay zone matching the target autocomplete prediction row */
+        .autocomplete-suggestion-hotzone {
+            position: absolute;
+            top: 130px; 
+            left: 0;
+            width: 100%;
+            height: 55px;
+            background: transparent;
+            cursor: pointer;
+            z-index: 50;
+            display: none; 
+        }
+
+        /* --- CONTAINER 2: SCROLLABLE RESULTS ENGINE --- */
+        #viewGoogleResults {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            overflow-y: scroll; 
+            -webkit-overflow-scrolling: touch;
+            display: none;
+        }
+
+        .results-scroll-strip {
+            width: 100%;
+            height: auto; 
+            display: block;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        /* INTERACTIVE TARGET LINK OVERLAY ZONE */
+        .target-result-link-hotzone {
+            position: absolute;
+            top: 142px; /* Sits right over the "Random Word Generator" text line area */
+            left: 0;
+            width: 100%;
+            height: 110px; /* Height spans the blue title down through the green URL */
+            background: transparent;
+            cursor: pointer;
+            z-index: 20;
+            transition: background-color 0.1s ease; /* Rapid response to match mobile Safari */
+        }
+
+        /* Triggered via JS: Flashes a transparent grey block over the target area */
+        .target-result-link-hotzone.flash-active {
+            background-color: rgba(0, 0, 0, 0.08); 
+        }
+
+        /* Display State Utility Class */
+        .active-view { display: block !important; }
+    </style>
+</head>
+<body>
+
+    <!-- SCREEN 1: THE FAKE SEARCH INTERFACE LAYER -->
+    <div id="viewGoogleHome" class="active-view">
+        <img id="googleHomeBg" src="./images/google_home.png" alt="Google Search Portal" class="home-bg-img">
+        
+        <!-- Single Input Container: Starts at center, switches seamlessly to full-width top alignment -->
+        <input type="text" id="fakeSearchQuery" class="invisible-search-input" autocomplete="off" autocapitalize="off" spellcheck="false">
+        <div id="btnExecuteSearch" class="search-trigger-hotzone"></div>
+        
+        <div id="autocompleteHotzone" class="autocomplete-suggestion-hotzone"></div>
+    </div>
+
+    <!-- SCREEN 2: SCROLLABLE SEARCH RESULTS INTERFACE -->
+    <div id="viewGoogleResults">
+        <div id="linkTargetResult" class="target-result-link-hotzone"></div>
+        <img src="./images/google_results.png" alt="Google Query Results" class="results-scroll-strip">
+    </div>
+
+    <script>
+        const fakeSearchQuery = document.getElementById('fakeSearchQuery');
+        const googleHomeBg = document.getElementById('googleHomeBg');
+        const autocompleteHotzone = document.getElementById('autocompleteHotzone');
+        
+        const btnExecuteSearch = document.getElementById('btnExecuteSearch');
+        const linkTargetResult = document.getElementById('linkTargetResult');
+        
+        const viewGoogleHome = document.getElementById('viewGoogleHome');
+        const viewGoogleResults = document.getElementById('viewGoogleResults');
+
+        // --- TRANSITION FROM HOME SCREEN VIEW TO TYPING STATE ---
+        fakeSearchQuery.addEventListener('focus', function() {
+            fakeSearchQuery.classList.add('typing-active');
+            btnExecuteSearch.style.display = 'block';
+
+            if (fakeSearchQuery.value === "") {
+                googleHomeBg.src = "./images/blank.png";
+            }
+        });
+
+        // --- DYNAMIC SEARCH INTERACTION MAPPING ENGINE ---
+        fakeSearchQuery.addEventListener('input', function() {
+            const currentString = fakeSearchQuery.value.toLowerCase().trim();
+
+            if (currentString === "") {
+                googleHomeBg.src = "./images/blank.png";
+                autocompleteHotzone.style.display = "none";
+            } else if (currentString === "r") {
+                googleHomeBg.src = "./images/r.png";
+                autocompleteHotzone.style.display = "block"; 
+            } else if (currentString === "ra") {
+                googleHomeBg.src = "./images/ra.png";
+                autocompleteHotzone.style.display = "block";
+            } else if (currentString === "ran") {
+                googleHomeBg.src = "./images/ran.png";
+                autocompleteHotzone.style.display = "block";
+            } else if (currentString === "rand") {
+                googleHomeBg.src = "./images/rand.png";
+                autocompleteHotzone.style.display = "block";
+            } else if (currentString === "rando") {
+                googleHomeBg.src = "./images/rando.png";
+                autocompleteHotzone.style.display = "block";
+            } else if (currentString === "random") {
+                googleHomeBg.src = "./images/random.png";
+                autocompleteHotzone.style.display = "block";
+            } else if (currentString === "random w") {
+                googleHomeBg.src = "./images/random w.png";
+                autocompleteHotzone.style.display = "block";
+            } else {
+                googleHomeBg.src = "./images/random w.png";
+                autocompleteHotzone.style.display = "block";
+            }
+        });
+
+        fakeSearchQuery.addEventListener('blur', function() {
+            if (fakeSearchQuery.value.trim() === "") {
+                fakeSearchQuery.classList.remove('typing-active');
+                btnExecuteSearch.style.display = 'none';
+                autocompleteHotzone.style.display = "none";
+                googleHomeBg.src = "./images/google_home.png";
+            }
+        });
+
+        // --- VIEWPORT TRANSITION CONTROLLERS ---
+        function processSearchTransition() {
+            if (fakeSearchQuery.value.trim() === "") return; 
+            viewGoogleHome.classList.remove('active-view');
+            viewGoogleResults.classList.add('active-view');
+        }
+
+        btnExecuteSearch.addEventListener('click', processSearchTransition);
+
+        fakeSearchQuery.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                fakeSearchQuery.blur(); 
+                processSearchTransition();
+            }
+        });
+
+        autocompleteHotzone.addEventListener('click', function() {
+            fakeSearchQuery.blur();
+            processSearchTransition();
+        });
+
+        // --- SEAMLESS LINK CLICK FLASH ANIMATION ---
+        linkTargetResult.addEventListener('click', function() {
+            // Apply the grey overlay highlight class style
+            linkTargetResult.classList.add('flash-active');
+
+            // Hold the tint visible for 180 milliseconds, then cleanly execute the page change
+            setTimeout(() => {
+                window.location.href = "./index.html";
+            }, 180); 
+        });
+// --- PERFECTED CROSS-IPHONE DYNAMIC VIEWPORT COUNTERACTION ---if (window.visualViewport) {window.visualViewport.addEventListener('resize', () => {const container = document.getElementById('viewGoogleHome');const currentContainerTop = container.getBoundingClientRect().top;if (currentContainerTop < 0) {googleHomeBg.style.top = ${Math.abs(currentContainerTop)}px;} else {googleHomeBg.style.top = '0px';}});}
+
