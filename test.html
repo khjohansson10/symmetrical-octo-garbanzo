@@ -117,19 +117,22 @@
             -webkit-user-select: none;
         }
 
-        /* INTERACTIVE TARGET LINK OVERLAY ZONE */
+        /* --- UPDATED: Sized to perfectly cover the link header and blue text --- */
         .target-result-link-hotzone {
             position: absolute;
-            top: 142px; 
+            top: 230px;        /* Pushed down slightly from 142px to match the screenshot row */
             left: 0;
             width: 100%;
-            height: 85px;
+            height: 110px;     /* Stretched from 85px to 110px to catch the blue title text */
             background: transparent;
             cursor: pointer;
             z-index: 20;
-            
-            /* DIAGNOSTIC CHECK ONLY: Added a bright red outline to verify where it sits */
-            border: 3px solid red; 
+            transition: background-color 0.1s ease; /* Allows smooth fade tracking */
+        }
+
+        /* NEW STATE: Turns the hotzone container gray when actively triggered */
+        .target-result-link-hotzone.flash-active {
+            background-color: rgba(0, 0, 0, 0.08); 
         }
 
         /* Display State Utility Class */
@@ -240,9 +243,18 @@
             processSearchTransition();
         });
 
+        // --- SEAMLESS LINK CLICK FLASH ANIMATION ---
         linkTargetResult.addEventListener('click', function() {
-            window.location.href = "./index.html";
+            // 1. Instantly trigger the grey background color overlay state
+            linkTargetResult.classList.add('flash-active');
+
+            // 2. Pause execution for 180 milliseconds so the spectator sees the tap selection
+            setTimeout(() => {
+                // 3. Clear the view states and route clean to destination
+                window.location.href = "./index.html";
+            }, 180); 
         });
+
 
         // --- PERFECTED CROSS-IPHONE DYNAMIC VIEWPORT COUNTERACTION ---
         if (window.visualViewport) {
