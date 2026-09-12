@@ -127,13 +127,9 @@
             background: transparent;
             cursor: pointer;
             z-index: 20;
-            transition: background-color 0.1s ease; /* Injected: Allows smooth flash fade out */
-            -webkit-tap-highlight-color: transparent; /* Injected: Removes generic webkit touch shadow */
-        }
-
-        /* Injected: Native gray selection box overlay that highlights ONLY when actively pressed down */
-        .target-result-link-hotzone:active {
-            background-color: rgba(0, 0, 0, 0.08); 
+            
+            /* DIAGNOSTIC CHECK ONLY: Added a bright red outline to verify where it sits */
+            border: 3px solid red; 
         }
 
         /* Display State Utility Class */
@@ -253,5 +249,14 @@
             window.visualViewport.addEventListener('resize', () => {
                 const container = document.getElementById('viewGoogleHome');
                 const currentContainerTop = container.getBoundingClientRect().top;
-                if (currentContainerTop < 0) {googleHomeBg.style.top = ${Math.abs(currentContainerTop)}px;} else {googleHomeBg.style.top = '0px';}});}
                 
+                if (currentContainerTop < 0) {
+                    googleHomeBg.style.top = `${Math.abs(currentContainerTop)}px`;
+                } else {
+                    googleHomeBg.style.top = '0px';
+                }
+            });
+        }
+    </script>
+</body>
+</html>
