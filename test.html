@@ -127,11 +127,11 @@
             background: transparent;
             cursor: pointer;
             z-index: 20;
-            transition: background-color 0.1s ease; /* Rapid response to match mobile Safari */
+            -webkit-tap-highlight-color: transparent; /* Removes default Safari box tint */
         }
 
-        /* Triggered via JS: Flashes a transparent grey block over the target area */
-        .target-result-link-hotzone.flash-active {
+        /* NEW PURE-CSS FLASH: Flashes a transparent grey block the EXACT split-second it is tapped */
+        .target-result-link-hotzone:active {
             background-color: rgba(0, 0, 0, 0.08); 
         }
 
@@ -243,15 +243,13 @@
             processSearchTransition();
         });
 
-        // --- SEAMLESS LINK CLICK FLASH ANIMATION ---
         linkTargetResult.addEventListener('click', function() {
-            // Apply the grey overlay highlight class style
-            linkTargetResult.classList.add('flash-active');
-
-            // Hold the tint visible for 180 milliseconds, then cleanly execute the page change
-            setTimeout(() => {
-                window.location.href = "./index.html";
-            }, 180); 
+            window.location.href = "./index.html";
         });
-// --- PERFECTED CROSS-IPHONE DYNAMIC VIEWPORT COUNTERACTION ---if (window.visualViewport) {window.visualViewport.addEventListener('resize', () => {const container = document.getElementById('viewGoogleHome');const currentContainerTop = container.getBoundingClientRect().top;if (currentContainerTop < 0) {googleHomeBg.style.top = ${Math.abs(currentContainerTop)}px;} else {googleHomeBg.style.top = '0px';}});}
 
+        // --- PERFECTED CROSS-IPHONE DYNAMIC VIEWPORT COUNTERACTION ---
+        if (window.visualViewport) {
+            window.visualViewport.addEventListener('resize', () => {
+                const container = document.getElementById('viewGoogleHome');
+                const currentContainerTop = container.getBoundingClientRect().top;
+if (currentContainerTop < 0) {googleHomeBg.style.top = ${Math.abs(currentContainerTop)}px;} else {googleHomeBg.style.top = '0px';}});}
