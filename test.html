@@ -179,79 +179,80 @@
             }
         });
 
-        // --- DYNAMIC SEARCH INTERACTION MAPPING ENGINE ---
+      // --- DYNAMIC SEARCH INTERACTION MAPPING ENGINE (CHARACTER COUNT UPGRADE) ---
         fakeSearchQuery.addEventListener('input', function() {
-            const currentString = fakeSearchQuery.value.toLowerCase().trim();
+            // Note: We use .length directly on the untrimmed value so spaces count as characters
+            const currentLength = fakeSearchQuery.value.length;
 
-            if (currentString === "") {
-                googleHomeBg.src = "./images/blank.png";
-                autocompleteHotzone.style.display = "none";
-            } else if (currentString === "r") {
-                googleHomeBg.src = "./images/r.png";
-                autocompleteHotzone.style.display = "block"; 
-            } else if (currentString === "ra") {
-                googleHomeBg.src = "./images/ra.png";
-                autocompleteHotzone.style.display = "block";
-            } else if (currentString === "ran") {
-                googleHomeBg.src = "./images/ran.png";
-                autocompleteHotzone.style.display = "block";
-            } else if (currentString === "rand") {
-                googleHomeBg.src = "./images/rand.png";
-                autocompleteHotzone.style.display = "block";
-            } else if (currentString === "rando") {
-                googleHomeBg.src = "./images/rando.png";
-                autocompleteHotzone.style.display = "block";
-            } else if (currentString === "random" || currentString === "random ") {
-                googleHomeBg.src = "./images/random.png";
-                autocompleteHotzone.style.display = "block";
-            } else if (currentString === "random w") {
-                googleHomeBg.src = "./images/random w.png";
-                autocompleteHotzone.style.display = "block";
-            } else if (currentString === "random wo") {
-                googleHomeBg.src = "./images/random wo.png";
-                autocompleteHotzone.style.display = "block";
-            } else if (currentString === "random wor") {
-                googleHomeBg.src = "./images/random wor.png";
-                autocompleteHotzone.style.display = "block";
-            } else if (currentString === "random word" || currentString === "random word ") {
-                googleHomeBg.src = "./images/random word.png";
-                autocompleteHotzone.style.display = "block";
-            } else if (currentString === "randon word g") {
-                googleHomeBg.src = "./images/random word g.png";
-                autocompleteHotzone.style.display = "block";
-            } else if (currentString === "random word ge") {
-                googleHomeBg.src = "./images/random word ge.png";
-                autocompleteHotzone.style.display = "block";
-            } else if (currentString === "random word gen") {
-                googleHomeBg.src = "./images/random word gen.png";
-                autocompleteHotzone.style.display = "block";
-            } else if (currentString === "random word gene") {
-                googleHomeBg.src = "./images/random word gene.png";
-                autocompleteHotzone.style.display = "block";
-            } else if (currentString === "random word gener") {
-                googleHomeBg.src = "./images/random word gener.png";
-                autocompleteHotzone.style.display = "block";
-            } else if (currentString === "randon word genera") {
-                googleHomeBg.src = "./images/random word genera.png";
-                autocompleteHotzone.style.display = "block";
-            } else if (currentString === "random word generat") {
-                googleHomeBg.src = "./images/random word generat.png";
-                autocompleteHotzone.style.display = "block";
-            } else if (currentString === "random word generato") {
-                googleHomeBg.src = "./images/random word generato.png";
-                autocompleteHotzone.style.display = "block";
-            } else {
-                googleHomeBg.src = "./images/random word generator.png";
+            // Automatically reveal the autocomplete hotzone layer for any active input state
+            if (currentLength > 0) {
                 autocompleteHotzone.style.display = "block";
             }
-        });
 
-        fakeSearchQuery.addEventListener('blur', function() {
-            if (fakeSearchQuery.value.trim() === "") {
-                fakeSearchQuery.classList.remove('typing-active');
-                btnExecuteSearch.style.display = 'none';
-                autocompleteHotzone.style.display = "none";
-                googleHomeBg.src = "./images/google_home.png";
+            switch (currentLength) {
+                case 0:
+                    googleHomeBg.src = "./images/blank.png";
+                    autocompleteHotzone.style.display = "none";
+                    break;
+                case 1: // "r"
+                    googleHomeBg.src = "./images/r.png";
+                    break;
+                case 2: // "ra"
+                    googleHomeBg.src = "./images/ra.png";
+                    break;
+                case 3: // "ran"
+                    googleHomeBg.src = "./images/ran.png";
+                    break;
+                case 4: // "rand"
+                    googleHomeBg.src = "./images/rand.png";
+                    break;
+                case 5: // "rando"
+                    googleHomeBg.src = "./images/rando.png";
+                    break;
+                case 6: // "random"
+                case 7: // "random "
+                    googleHomeBg.src = "./images/random.png";
+                    break;
+                case 8: // "random w"
+                    googleHomeBg.src = "./images/random w.png";
+                    break;
+                case 9: // "random wo"
+                    googleHomeBg.src = "./images/random wo.png";
+                    break;
+                case 10: // "random wor"
+                    googleHomeBg.src = "./images/random wor.png";
+                    break;
+                case 11: // "random word"
+                case 12: // "random word "
+                    googleHomeBg.src = "./images/random word.png";
+                    break;
+                case 13: // "random word g"
+                    googleHomeBg.src = "./images/random word g.png";
+                    break;
+                case 14: // "random word ge"
+                    googleHomeBg.src = "./images/random word ge.png";
+                    break;
+                case 15: // "random word gen"
+                    googleHomeBg.src = "./images/random word gen.png";
+                    break;
+                case 16: // "random word gene"
+                    googleHomeBg.src = "./images/random word gene.png";
+                    break;
+                case 17: // "random word gener"
+                    googleHomeBg.src = "./images/random word gener.png";
+                    break;
+                case 18: // "random word genera"
+                    googleHomeBg.src = "./images/random word genera.png";
+                    break;
+                case 19: // "random word generat"
+                    googleHomeBg.src = "./images/random word generat.png";
+                    break;
+                case 20: // "random word generato"
+                    googleHomeBg.src = "./images/random word generato.png";
+                    break;
+                default: // 21 or more characters (e.g., "random word generator")
+                    googleHomeBg.src = "./images/random word generator.png";
+                    break;
             }
         });
 
