@@ -198,7 +198,7 @@
             const currentLength = fakeSearchQuery.value.length;
 
             // Automatically reveal the autocomplete hotzone layer for any active input state
-            if (currentLength > 0) {
+            if (currentLength >= 6) {
                 autocompleteHotzone.style.display = "block";
             }
 
