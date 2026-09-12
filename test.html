@@ -13,6 +13,22 @@
             font-family: -apple-system, BlinkMacSystemFont, Arial, sans-serif;
             background-color: #ffffff; /* Use #121212 for Dark Mode */
             overflow: hidden;
+
+            /* Center the locked canvas on screens that are wider/taller than standard aspect ratios */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* --- NEW: UNIFIED IPHONE VIEWPORT LOCK --- */
+        /* Forces the canvas to scale identically on EVERY iPhone size (Mini to Pro Max) */
+        #viewportLockContainer {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            max-width: calc(100vh * (9 / 19.5));
+            max-height: calc(100vw * (19.5 / 9));
+            overflow: hidden;
         }
 
         /* --- CONTAINER 1: FAKE GOOGLE HOMEPAGE & AUTOCOMPLETE TIER --- */
@@ -27,7 +43,7 @@
         .home-bg-img {
             width: 100%;
             height: 100%;
-            object-fit: cover;
+            object-fit: fill;
             object-position: top;
             user-select: none;
             -webkit-user-select: none;
