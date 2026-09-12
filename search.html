@@ -120,13 +120,19 @@
         /* INTERACTIVE TARGET LINK OVERLAY ZONE */
         .target-result-link-hotzone {
             position: absolute;
-            top: 142px; 
+            top: 142px; /* Sits right over the "Random Word Generator" text line area */
             left: 0;
             width: 100%;
-            height: 85px;
+            height: 110px; /* Height spans the blue title down through the green URL */
             background: transparent;
             cursor: pointer;
             z-index: 20;
+            transition: background-color 0.1s ease; /* Rapid response to match mobile Safari */
+        }
+
+        /* Triggered via JS: Flashes a transparent grey block over the target area */
+        .target-result-link-hotzone.flash-active {
+            background-color: rgba(0, 0, 0, 0.08); 
         }
 
         /* Display State Utility Class */
@@ -239,6 +245,17 @@
 
         linkTargetResult.addEventListener('click', function() {
             window.location.href = "./index.html";
+        });
+
+        // --- SEAMLESS LINK CLICK FLASH ANIMATION ---
+        linkTargetResult.addEventListener('click', function() {
+            // Apply the grey overlay highlight class style
+            linkTargetResult.classList.add('flash-active');
+
+            // Hold the tint visible for 180 milliseconds, then cleanly execute the page change
+            setTimeout(() => {
+                window.location.href = "./index.html";
+            }, 180); 
         });
 
         // --- PERFECTED CROSS-IPHONE DYNAMIC VIEWPORT COUNTERACTION ---
