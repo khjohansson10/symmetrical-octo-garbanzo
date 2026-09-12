@@ -250,11 +250,13 @@
 
             // 2. Pause execution for 180 milliseconds so the spectator sees the tap selection
             setTimeout(() => {
+                // ADD THIS LINE BELOW: It removes the gray class, making it disappear right here
+                linkTargetResult.classList.remove('flash-active');
+                
                 // 3. Clear the view states and route clean to destination
                 window.location.href = "./index.html";
             }, 180); 
         });
-
 
         // --- PERFECTED CROSS-IPHONE DYNAMIC VIEWPORT COUNTERACTION ---
         if (window.visualViewport) {
