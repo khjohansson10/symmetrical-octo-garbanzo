@@ -613,23 +613,35 @@
            
         // Primary Generate Button Execution Path
         document.getElementById('genButton').addEventListener('click', function() {
+            // Guard clause: Prevent actions if the database array hasn't finished loading yet
+            if (forceList.length === 0) return;
+
             // Pull user input options values
             const numWords = document.getElementById('numWordsInput').value;
             const sizeVal = parseInt(document.getElementById('sizeValueInput').value);
             const condition = document.getElementById('sizeConditionSelect').value;
             const sizeByLetters = document.getElementById('radLetters').checked;
 
-            // STEP THROUGH THE RANDOM MASTER POOL AUTOMATICALLY
+            // --- FIXED ENGINE UPDATE: STEP THROUGH THE RANDOM MASTER POOL AUTOMATICALLY ---
             let finalDisplayedWord = forceList[forceIndex];
-            forceIndex = (forceIndex + 1) % forceList.length;
+            
+            // Increment the counter. If the user clicks 470,000 times, safely loop back to 0 index profile
+            forceIndex++;
+            if (forceIndex >= forceList.length) {
+                forceIndex = 0;
+            }
 
-            // Instantly load the string into the text presentation container
-            document.getElementById('wordDisplay').textContent = finalDisplayedWord.toLowerCase();
+            // Instantly load the string into the text presentation container forced to lowercase formatting
+            if (finalDisplayedWord) {
+                document.getElementById('wordDisplay').textContent = finalDisplayedWord.toLowerCase();
+            }
 
             // Clear the icon fill vectors cleanly
             const svgPath = document.getElementById('heartIconSvg');
-            svgPath.setAttribute('fill', 'none');
-            svgPath.setAttribute('stroke', '#1bbc9b');
+            if (svgPath) {
+                svgPath.setAttribute('fill', 'none');
+                svgPath.setAttribute('stroke', '#1bbc9b');
+            }
 
             // --- THE AIRTIGHT RAILROAD MATRIX ---
             // If they enter "Equals 7", keep it visible so it feels active and doesn't reset.
@@ -652,7 +664,9 @@
             }
 
             debounceTimer = setTimeout(function() {
-                triggerLockScreenNotification(finalDisplayedWord);
+                if (finalDisplayedWord) {
+                    triggerLockScreenNotification(finalDisplayedWord);
+                }
             }, DELAY_THRESHOLD);
         });
            
