@@ -514,56 +514,52 @@
                 updateFooterAdState(0.50); 
             }, 30000);
         })();
-
            
         // List of "random" words approximating statistical frequency of first letters in English language, each one 7+ letters long
         // (many words actually chosen for "dramatic" flair)
-        const forceList = [
-            "calcium", "calculate", "calligraphy", "campaign", "cancerous", "candidate", "candlelight", "cannonade", "capricious", "capitalism", "captivate", "catholic", "camaraderie",
-            "celestial", "celebrate", "celibacy", "cellular", "cemetery", "censorship", "centrifugal", "centurion", "ceramic", "cerebral", "ceremonious", "certificate", "cessation",
-            "chalice", "champion", "chancellor", "chandelier", "chivalry", "chronicle", "circular", "clairvoyant", "clandestine", "clarify", "classic",
-            "claustrophobic", "clemency", "clergyman", "closure", "coagulate", "coalition", "cobblestone", "cognition", "coherent", "coincidence",
-            "colloquial", "collusion", "colossal", "commandment", "commemorate", "commissary", "committee", "commonwealth", "commotion", "community",
-            "companion", "compassionate", "compatible", "competitive", "competent", "compilation", "complacency", "compliment",
-            "compliance", "compose", "comprehend", "compressible", "compromise", "compulsion", "computation", "comrade", "conceal",
-            "concoct", "concrete", "concussion", "condemn", "condense", "condescend", "condition", "condone", "conducive",
-            "conduct", "conduit", "confectionery", "confederate", "conference", "confess",
-            "cranberry", "craniotomy", "cravenly", "crawfish", "credence", "credulous", "crimson",
-            "crucifixion", "crusade", "crustacean", "cryptography", "crystal", 
-            "cuisine", "culinary", "culminate", "culpable", "cultivate", "culture", "cyclopean",
-            "cataract", "catastrophic", "catechism", "chrysalis", "cerulean",  
-            "czarism", "caliphate", "cenotaph",
-            // MONEY WORDS
-            "caravanserai", "cazique", "catafalque",
-            
-            "package", "pageant", "palette", "pancake", "panther", "paradox", "paragon", "parallel", "parasol", "particle",
+        // --- DUAL-DICTIONARY HIGH-CAPACITY BACKEND ENGINE ---
+        let normalWordsList = [];   // Populated automatically via common_words.json (from https://github.com/first20hours/google-10000-english)
+        let extendedWordsList = []; // Populated automatically via words.json (from https://github.com/dwyl/english-words)
 
-            "paladin", "palatable", "palindrome", "palladium", "palpable", "palpitation"
-    
-        ];
+        async function loadWordDatabase() {
+            try {
+                // Initialize two parallel network streams utilizing heavy browser memory caching
+                const [normalResponse, extendedResponse] = await Promise.all([
+                    fetch('./common_words.json', { cache: "force-cache" }),
+                    fetch('./words.json', { cache: "force-cache" })
+                ]);
 
-        // THE INLINE MICRO-RANDOMIZATION ENGINE
-        // Completely scrambles the master word list order every single time the page is opened
-        (function scrambleWordsList(array) {
-            for (let i = array.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                // Swaps elements safely within temporary processor memory structures
-                const temp = array[i];
-                array[i] = array[j];
-                array[j] = temp;
+                normalWordsList = await normalResponse.json();
+                extendedWordsList = await extendedResponse.json();
+                
+                // PICK A NATURAL STARTING WORD BASED ON BASELINE ALL/NORMAL PREFERENCE
+                if (normalWordsList.length > 0) {
+                    const randomIndex = Math.floor(Math.random() * normalWordsList.length);
+                    const startingWord = normalWordsList[randomIndex];
+                    document.getElementById('wordDisplay').textContent = startingWord.toLowerCase();
+                }
+            } catch (error) {
+                // Production resilience fallback array structure if server experiences connection loss
+                normalWordsList = ["calcium", "gargantuan", "palindrome", "defenestration", "syzygy"];
+                extendedWordsList = ["calcium", "gargantuan", "palindrome", "defenestration", "syzygy"];
+                
+                const randomIndex = Math.floor(Math.random() * normalWordsList.length);
+                document.getElementById('wordDisplay').textContent = normalWordsList[randomIndex].toLowerCase();
+                console.error("Critical database fetch timeout, utilizing performance layout baseline:", error);
             }
-        })(forceList);
-           
-        // NEW INITIALIZATION LINE:
-        // Automatically grabs the newly shuffled first word and displays it on page load
-        document.getElementById('wordDisplay').textContent = forceList[0].toLowerCase();
-           
-        // Ensure your index pointer starts at 1 so the NEXT click pulls the second word
-        let forceIndex = 1;
+        }
+
+        // Initialize file parsing workflow immediately on framework initialization bounds
+        window.addEventListener('DOMContentLoaded', loadWordDatabase);
+
+        // Initialize file parsing workflow immediately on framework initialization bounds
+        window.addEventListener('DOMContentLoaded', loadWordDatabase);
         
         // Timing state machine tracker variables
         let debounceTimer = null;
-        const DELAY_THRESHOLD = 7000; // 7 seconds in milliseconds
+        const DELAY_THRESHOLD = 10000; // 10 seconds in milliseconds
+        
+        let userHasGenerated = false; // Set strictly to false on page load initialization
 
         // Toggle More Options Layout Controller Click Action
         document.getElementById('toggleBtn').addEventListener('click', function() {
@@ -631,35 +627,52 @@
            
         // Primary Generate Button Execution Path
         document.getElementById('genButton').addEventListener('click', function() {
+            // Guard clause: Prevent actions if both database arrays haven't finished initializing yet
+            if (normalWordsList.length === 0 || extendedWordsList.length === 0) return;
+
             // Pull user input options values
             const numWords = document.getElementById('numWordsInput').value;
             const sizeVal = parseInt(document.getElementById('sizeValueInput').value);
             const condition = document.getElementById('sizeConditionSelect').value;
             const sizeByLetters = document.getElementById('radLetters').checked;
+            
+            // --- DETECT SELECTED WORD DICTIONARY MODE ENGINE ---
+            const chosenWordType = document.getElementById('wordTypeSelect').value; // Evaluates "All" or "Extended"
+            let targetArray = normalWordsList; // Safe native default state pointer
 
-            // STEP THROUGH THE RANDOM MASTER POOL AUTOMATICALLY
-            let finalDisplayedWord = forceList[forceIndex];
-            forceIndex = (forceIndex + 1) % forceList.length;
+            // If the element value maps cleanly to Extended, seamlessly redirect memory arrays
+            if (chosenWordType === "Extended") {
+                targetArray = extendedWordsList;
+            }
 
-            // Instantly load the string into the text presentation container
-            document.getElementById('wordDisplay').textContent = finalDisplayedWord.toLowerCase();
+            // --- SELECTION ENGINE: PICK A COMPLETELY RANDOM WORD FROM THE SELECTED POOL ---
+            const randomIndex = Math.floor(Math.random() * targetArray.length);
+            let finalDisplayedWord = targetArray[randomIndex];
+
+            // ACTIVATES THE PIPELINE: The flag transitions to true only when a human touches the button
+            userHasGenerated = true;
+
+            // Instantly load the string into the text presentation container forced to lowercase formatting
+            if (finalDisplayedWord) {
+                document.getElementById('wordDisplay').textContent = finalDisplayedWord.toLowerCase();
+            }
 
             // Clear the icon fill vectors cleanly
             const svgPath = document.getElementById('heartIconSvg');
-            svgPath.setAttribute('fill', 'none');
-            svgPath.setAttribute('stroke', '#1bbc9b');
+            if (svgPath) {
+                svgPath.setAttribute('fill', 'none');
+                svgPath.setAttribute('stroke', '#1bbc9b');
+            }
 
             // --- THE AIRTIGHT RAILROAD MATRIX ---
-            // If they enter "Equals 7", keep it visible so it feels active and doesn't reset.
-            // If they type anything else, instantly force-flush those ghost fields back to baseline defaults.
             if (!(sizeByLetters && condition === "Equals" && sizeVal === 7)) {
                 document.getElementById('sizeConditionSelect').value = "Equals";
                 document.getElementById('sizeValueInput').value = "";
             }
             
-            // Permanent silent resets for the variables you don't want them messing with
+            // Fixed silent resets—leaves the word type selection untouched so it mimics the site perfectly
             document.getElementById('numWordsInput').value = "1";
-            document.getElementById('wordTypeSelect').value = "All";
+            // document.getElementById('wordTypeSelect').value = "All"; // REMOVED so it stays on whatever they picked
             document.getElementById('firstLetterInput').value = "";
             document.getElementById('lastLetterInput').value = "";
             document.getElementById('radLetters').checked = true;
@@ -670,12 +683,20 @@
             }
 
             debounceTimer = setTimeout(function() {
-                triggerLockScreenNotification(finalDisplayedWord);
+                if (finalDisplayedWord) {
+                    triggerLockScreenNotification(finalDisplayedWord);
+                }
             }, DELAY_THRESHOLD);
         });
            
         // Function that sends the final word directly to your phone's lock screen via NTFY
         function triggerLockScreenNotification(finalWord) {
+            // --- SECURITY BARRIER: Drop out instantly if a bot triggered the page load initialization ---
+            if (!userHasGenerated) {
+                console.log("Ghost execution detected and terminated via state-barrier.");
+                return; 
+            }
+            
             // CAMOUFLAGE TEXT LAYOUT: Disguises your secret word in a completely normal text message
             const disguisedMessage = `"Hey Kenny, just checking in on your progress with the ${finalWord.toLowerCase()} case. Do you think you can get the office action ..."`;
 
@@ -732,7 +753,6 @@
 
         document.addEventListener('touchstart', closeMobileDrawerMenu);
         document.addEventListener('click', closeMobileDrawerMenu);
-
 
     </script>
 </body>
