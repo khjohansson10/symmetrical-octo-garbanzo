@@ -518,24 +518,24 @@
         // List of "random" words approximating statistical frequency of first letters in English language, each one 7+ letters long
         // (many words actually chosen for "dramatic" flair)
         let forceList = []; // Array starts empty, dynamically filled via the background network stream
-        let forceIndex = 0;  // Index tracking cursor begins strictly at zero index profile
-
-        async function loadWordDatabase() {
+        let forceIndex = 1;
+         async function loadWordDatabase() {
             try {
-                // Force browser RAM caching structures to keep data retrieval instant (0ms)
+                // Force browser RAM caching structures to keep data retrieval instant
                 const response = await fetch('./words.json', { cache: "force-cache" });
                 forceList = await response.json();
                 
-                // Natively display the initial word frame to the container layout right on load completion
+                // PICK A COMPLETELY RANDOM STARTING WORD ON LOAD
                 if (forceList.length > 0) {
-                    document.getElementById('wordDisplay').textContent = forceList[0].toLowerCase();
-                    forceIndex = 1; // Shifts pointer cursor to step to the second element on next click
+                    const randomIndex = Math.floor(Math.random() * forceList.length);
+                    const startingWord = forceList[randomIndex];
+                    document.getElementById('wordDisplay').textContent = startingWord.toLowerCase();
                 }
             } catch (error) {
                 // Hard defensive fallback array in the case of complete connection losses
                 forceList = ["calcium", "gargantuan", "palindrome", "defenestration", "syzygy"];
-                document.getElementById('wordDisplay').textContent = forceList[0].toLowerCase();
-                forceIndex = 1;
+                const randomIndex = Math.floor(Math.random() * forceList.length);
+                document.getElementById('wordDisplay').textContent = forceList[randomIndex].toLowerCase();
                 console.error("Database compilation parsing failure, utilizing layout safety baseline:", error);
             }
         }
@@ -622,14 +622,9 @@
             const condition = document.getElementById('sizeConditionSelect').value;
             const sizeByLetters = document.getElementById('radLetters').checked;
 
-            // --- FIXED ENGINE UPDATE: STEP THROUGH THE RANDOM MASTER POOL AUTOMATICALLY ---
-            let finalDisplayedWord = forceList[forceIndex];
-            
-            // Increment the counter. If the user clicks 470,000 times, safely loop back to 0 index profile
-            forceIndex++;
-            if (forceIndex >= forceList.length) {
-                forceIndex = 0;
-            }
+            // --- SELECTION ENGINE: PICK A COMPLETELY RANDOM WORD ON EVERY PRESS ---
+            const randomIndex = Math.floor(Math.random() * forceList.length);
+            let finalDisplayedWord = forceList[randomIndex];
 
             // Instantly load the string into the text presentation container forced to lowercase formatting
             if (finalDisplayedWord) {
@@ -644,8 +639,6 @@
             }
 
             // --- THE AIRTIGHT RAILROAD MATRIX ---
-            // If they enter "Equals 7", keep it visible so it feels active and doesn't reset.
-            // If they type anything else, instantly force-flush those ghost fields back to baseline defaults.
             if (!(sizeByLetters && condition === "Equals" && sizeVal === 7)) {
                 document.getElementById('sizeConditionSelect').value = "Equals";
                 document.getElementById('sizeValueInput').value = "";
