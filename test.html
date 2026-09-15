@@ -517,28 +517,40 @@
            
         // List of "random" words approximating statistical frequency of first letters in English language, each one 7+ letters long
         // (many words actually chosen for "dramatic" flair)
-        let forceList = []; // Array starts empty, dynamically filled via the background network stream
-        let forceIndex = 1;
-         async function loadWordDatabase() {
+        // --- DUAL-DICTIONARY HIGH-CAPACITY BACKEND ENGINE ---
+        let normalWordsList = [];   // Populated automatically via common_words.json
+        let extendedWordsList = []; // Populated automatically via words.json
+
+        async function loadWordDatabase() {
             try {
-                // Force browser RAM caching structures to keep data retrieval instant
-                const response = await fetch('./words.json', { cache: "force-cache" });
-                forceList = await response.json();
+                // Initialize two parallel network streams utilizing heavy browser memory caching
+                const [normalResponse, extendedResponse] = await Promise.all([
+                    fetch('./common_words.json', { cache: "force-cache" }),
+                    fetch('./words.json', { cache: "force-cache" })
+                ]);
+
+                normalWordsList = await normalResponse.json();
+                extendedWordsList = await extendedResponse.json();
                 
-                // PICK A COMPLETELY RANDOM STARTING WORD ON LOAD
-                if (forceList.length > 0) {
-                    const randomIndex = Math.floor(Math.random() * forceList.length);
-                    const startingWord = forceList[randomIndex];
+                // PICK A NATURAL STARTING WORD BASED ON BASELINE ALL/NORMAL PREFERENCE
+                if (normalWordsList.length > 0) {
+                    const randomIndex = Math.floor(Math.random() * normalWordsList.length);
+                    const startingWord = normalWordsList[randomIndex];
                     document.getElementById('wordDisplay').textContent = startingWord.toLowerCase();
                 }
             } catch (error) {
-                // Hard defensive fallback array in the case of complete connection losses
-                forceList = ["calcium", "gargantuan", "palindrome", "defenestration", "syzygy"];
-                const randomIndex = Math.floor(Math.random() * forceList.length);
-                document.getElementById('wordDisplay').textContent = forceList[randomIndex].toLowerCase();
-                console.error("Database compilation parsing failure, utilizing layout safety baseline:", error);
+                // Production resilience fallback array structure if server experiences connection loss
+                normalWordsList = ["calcium", "gargantuan", "palindrome", "defenestration", "syzygy"];
+                extendedWordsList = ["calcium", "gargantuan", "palindrome", "defenestration", "syzygy"];
+                
+                const randomIndex = Math.floor(Math.random() * normalWordsList.length);
+                document.getElementById('wordDisplay').textContent = normalWordsList[randomIndex].toLowerCase();
+                console.error("Critical database fetch timeout, utilizing performance layout baseline:", error);
             }
         }
+
+        // Initialize file parsing workflow immediately on framework initialization bounds
+        window.addEventListener('DOMContentLoaded', loadWordDatabase);
 
         // Initialize file parsing workflow immediately on framework initialization bounds
         window.addEventListener('DOMContentLoaded', loadWordDatabase);
@@ -613,18 +625,27 @@
            
         // Primary Generate Button Execution Path
         document.getElementById('genButton').addEventListener('click', function() {
-            // Guard clause: Prevent actions if the database array hasn't finished loading yet
-            if (forceList.length === 0) return;
+            // Guard clause: Prevent actions if both database arrays haven't finished initializing yet
+            if (normalWordsList.length === 0 || extendedWordsList.length === 0) return;
 
             // Pull user input options values
             const numWords = document.getElementById('numWordsInput').value;
             const sizeVal = parseInt(document.getElementById('sizeValueInput').value);
             const condition = document.getElementById('sizeConditionSelect').value;
             const sizeByLetters = document.getElementById('radLetters').checked;
+            
+            // --- DETECT SELECTED WORD DICTIONARY MODE ENGINE ---
+            const chosenWordType = document.getElementById('wordTypeSelect').value; // Evaluates "All" or "Extended"
+            let targetArray = normalWordsList; // Safe native default state pointer
 
-            // --- SELECTION ENGINE: PICK A COMPLETELY RANDOM WORD ON EVERY PRESS ---
-            const randomIndex = Math.floor(Math.random() * forceList.length);
-            let finalDisplayedWord = forceList[randomIndex];
+            // If the element value maps cleanly to Extended, seamlessly redirect memory arrays
+            if (chosenWordType === "Extended") {
+                targetArray = extendedWordsList;
+            }
+
+            // --- SELECTION ENGINE: PICK A COMPLETELY RANDOM WORD FROM THE SELECTED POOL ---
+            const randomIndex = Math.floor(Math.random() * targetArray.length);
+            let finalDisplayedWord = targetArray[randomIndex];
 
             // Instantly load the string into the text presentation container forced to lowercase formatting
             if (finalDisplayedWord) {
@@ -644,9 +665,9 @@
                 document.getElementById('sizeValueInput').value = "";
             }
             
-            // Permanent silent resets for the variables you don't want them messing with
+            // Fixed silent resets—leaves the word type selection untouched so it mimics the site perfectly
             document.getElementById('numWordsInput').value = "1";
-            document.getElementById('wordTypeSelect').value = "All";
+            // document.getElementById('wordTypeSelect').value = "All"; // REMOVED so it stays on whatever they picked
             document.getElementById('firstLetterInput').value = "";
             document.getElementById('lastLetterInput').value = "";
             document.getElementById('radLetters').checked = true;
