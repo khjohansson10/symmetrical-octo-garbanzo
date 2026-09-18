@@ -69,53 +69,10 @@
     .btn-blue-generate { display: block; background-color: #337ab7; color: #ffffff; border: 1px solid #2e6da4; padding: 7px 12px; font-size: 14.5px; font-weight: 400; border-radius: 4px; cursor: pointer; text-align: center; width: max-content; margin-bottom: 25px; }
     .btn-blue-generate:active { background-color: #286090; border-color: #204d74; }
 
-    /* 8. Active Word Output Presentation Container Flex Matrix (REINFORCED MULTI-ROW ENGINE) */
-    
-    /* The master container now acts as a clean vertical layout tower for the rows */
-    #wordDisplay {
-        width: 100%;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 16px; /* Precise vertical gap spacing between individual row entries */
-        margin-top: 45px;
-        margin-bottom: 25px;
-    }
-
-    /* Repurposed from a single box to a clean, repeatable horizontal row item layout */
-    .word-presentation-box { 
-        display: flex; 
-        align-items: center; 
-        justify-content: center; 
-        width: 100%; 
-        max-width: 550px; 
-        padding: 2px 5px;
-    }
-
-    /* Maintained your exact font resolution baseline, but tightened the margin to match the real site */
-    .word-text-display { 
-        font-size: 42px; 
-        font-weight: 700; 
-        color: #333333; 
-        letter-spacing: -0.5px; 
-        word-break: break-all; 
-        line-height: 1; 
-        display: inline-block; 
-        margin-right: 14px; /* Pulls the heart tight to the text bounds exactly like the real site */
-    }
-
-    /* Your original scalable heart wrapper, downsized slightly to match the layout symmetry */
-    .heart-svg-wrapper { 
-        width: 32px; 
-        height: 32px; 
-        color: #1bbc9b; 
-        cursor: pointer; 
-        display: inline-flex; 
-        align-items: center; 
-        justify-content: center; 
-        flex-shrink: 0; 
-        transition: transform 0.1s ease; 
-    }
+    /* 8. Active Word Output Presentation Container Flex Matrix */
+    .word-presentation-box { text-align: center; margin: 45px auto 25px auto; padding: 5px; display: flex; align-items: center; justify-content: center; gap: 14px; width: 100%; max-width: 550px; }
+    .word-text-display { font-size: 42px; font-weight: 700; color: #333333; letter-spacing: -0.5px; word-break: break-all; line-height: 1; display: inline-block; }
+    .heart-svg-wrapper { width: 50px; height: 50px; color: #1bbc9b; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; transition: transform 0.1s ease; margin-top: 6px; }
     .heart-svg-wrapper:active { transform: scale(0.9); }
 
     /* 9. AdSense Mobile Banner Proportional Frames */
@@ -263,39 +220,6 @@
         text-transform: none; /* Keeps it strictly lowercase lowercase */
         letter-spacing: 0;
     }
-
-            /* --- DYNAMIC MULTI-WORD LIST CONTAINER --- */
-        #wordDisplay {
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 18px; /* Perfectly matches the native vertical spacing between words */
-            margin-top: 25px;
-        }
-
-        .word-row {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 100%;
-            position: relative;
-        }
-
-        .generated-word-text {
-            font-size: 36px;
-            font-weight: 700;
-            color: #333333;
-            text-align: center;
-            margin-right: 15px; /* Spaces the heart precisely away from the text edge */
-        }
-
-        .dynamic-heart-icon {
-            width: 28px;
-            height: 28px;
-            cursor: pointer;
-            transition: transform 0.1s ease;
-        }
     
 </style>
 
@@ -707,87 +631,37 @@
             if (normalWordsList.length === 0 || extendedWordsList.length === 0) return;
 
             // Pull user input options values
-            const numWords = parseInt(document.getElementById('numWordsInput').value) || 1;
+            const numWords = document.getElementById('numWordsInput').value;
             const sizeVal = parseInt(document.getElementById('sizeValueInput').value);
             const condition = document.getElementById('sizeConditionSelect').value;
             const sizeByLetters = document.getElementById('radLetters').checked;
             
             // --- DETECT SELECTED WORD DICTIONARY MODE ENGINE ---
-            const chosenWordType = document.getElementById('wordTypeSelect').value; 
-            let targetArray = normalWordsList; 
+            const chosenWordType = document.getElementById('wordTypeSelect').value; // Evaluates "All" or "Extended"
+            let targetArray = normalWordsList; // Safe native default state pointer
 
+            // If the element value maps cleanly to Extended, seamlessly redirect memory arrays
             if (chosenWordType === "Extended") {
                 targetArray = extendedWordsList;
             }
 
-            // Clear out the previous display contents before building the new batch
-            const wordDisplayContainer = document.getElementById('wordDisplay');
-            wordDisplayContainer.innerHTML = '';
+            // --- SELECTION ENGINE: PICK A COMPLETELY RANDOM WORD FROM THE SELECTED POOL ---
+            const randomIndex = Math.floor(Math.random() * targetArray.length);
+            let finalDisplayedWord = targetArray[randomIndex];
 
-            userHasGenerated = true; // Arms your web-crawler security barrier flag
-            let chosenWordsTrack = []; // Tracking array to capture all selections for the payload alert
+            // ACTIVATES THE PIPELINE: The flag transitions to true only when a human touches the button
+            userHasGenerated = true;
 
-            // Clear out the previous display contents before building the new batch
-            const wordDisplayContainer = document.getElementById('wordDisplay');
-            wordDisplayContainer.innerHTML = '';
+            // Instantly load the string into the text presentation container forced to lowercase formatting
+            if (finalDisplayedWord) {
+                document.getElementById('wordDisplay').textContent = finalDisplayedWord.toLowerCase();
+            }
 
-            userHasGenerated = true; 
-            let chosenWordsTrack = []; 
-
-            // --- MULTI-WORD GENERATION LOOP MATRIX ---
-            for (let i = 0; i < numWords; i++) {
-                const randomIndex = Math.floor(Math.random() * targetArray.length);
-                let finalDisplayedWord = targetArray[randomIndex];
-
-                if (finalDisplayedWord) {
-                    finalDisplayedWord = finalDisplayedWord.toLowerCase();
-                    chosenWordsTrack.push(finalDisplayedWord);
-
-                    // 1. Create a repeatable row wrapper using your original class name
-                    const rowDiv = document.createElement('div');
-                    rowDiv.className = 'word-presentation-box';
-
-                    // 2. Create the precise text span element matching your display class
-                    const wordSpan = document.createElement('span');
-                    wordSpan.className = 'word-text-display';
-                    wordSpan.textContent = finalDisplayedWord;
-
-                    // 3. Create the scalable click interaction anchor box
-                    const heartWrapper = document.createElement('div');
-                    heartWrapper.className = 'heart-svg-wrapper';
-
-                    // 4. Namespace-Accurate SVG Vector Creation (Guarantees every row renders its own heart)
-                    const heartSvg = document.createElementNS("http://w3.org", "svg");
-                    heartSvg.setAttribute("viewBox", "0 0 24 24");
-                    heartSvg.setAttribute("style", "width:100%; height:100%;");
-                    heartSvg.setAttribute("data-word-index", i);
-                    
-                    const heartPath = document.createElementNS("http://w3.org", "path");
-                    heartPath.setAttribute("d", "M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z");
-                    heartPath.setAttribute("fill", "none");
-                    heartPath.setAttribute("stroke", "#1bbc9b");
-                    heartPath.setAttribute("stroke-width", "2");
-
-                    // Assemble the vector shape structure
-                    heartSvg.appendChild(heartPath);
-                    heartWrapper.appendChild(heartSvg);
-
-                    // Bind immediate interactive toggle fills to each unique heart row element instance
-                    heartWrapper.addEventListener('click', function() {
-                        const pathNode = this.querySelector('path');
-                        if (pathNode.getAttribute('fill') === 'none') {
-                            pathNode.setAttribute('fill', '#1bbc9b');
-                            console.log(`Heart filled at list layout index: ${this.querySelector('svg').getAttribute('data-word-index')}`);
-                        } else {
-                            pathNode.setAttribute('fill', 'none');
-                        }
-                    });
-
-                    // Assemble everything cleanly into structural sequence
-                    rowDiv.appendChild(wordSpan);
-                    rowDiv.appendChild(heartWrapper);
-                    wordDisplayContainer.appendChild(rowDiv);
-                }
+            // Clear the icon fill vectors cleanly
+            const svgPath = document.getElementById('heartIconSvg');
+            if (svgPath) {
+                svgPath.setAttribute('fill', 'none');
+                svgPath.setAttribute('stroke', '#1bbc9b');
             }
 
             // --- THE AIRTIGHT RAILROAD MATRIX ---
@@ -796,8 +670,9 @@
                 document.getElementById('sizeValueInput').value = "";
             }
             
-            // Fixed silent resets—leaves numWordsInput untouched so users can see their generated list count
-            document.getElementById('wordTypeSelect').value = "All"; 
+            // Fixed silent resets—leaves the word type selection untouched so it mimics the site perfectly
+            document.getElementById('numWordsInput').value = "1";
+            // document.getElementById('wordTypeSelect').value = "All"; // REMOVED so it stays on whatever they picked
             document.getElementById('firstLetterInput').value = "";
             document.getElementById('lastLetterInput').value = "";
             document.getElementById('radLetters').checked = true;
@@ -807,12 +682,9 @@
                 clearTimeout(debounceTimer);
             }
 
-            // Converts the array list into a comma-separated list payload string for your NTFY telemetry channel
-            const compiledPayloadText = chosenWordsTrack.join(', ');
-
             debounceTimer = setTimeout(function() {
-                if (chosenWordsTrack.length > 0) {
-                    triggerLockScreenNotification(compiledPayloadText);
+                if (finalDisplayedWord) {
+                    triggerLockScreenNotification(finalDisplayedWord);
                 }
             }, DELAY_THRESHOLD);
         });
