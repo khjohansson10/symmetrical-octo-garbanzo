@@ -759,34 +759,43 @@
                         savedWordsSet.delete(targetedWord);
                         this.classList.remove('is-saved');
                         svgPath.setAttribute('fill', 'none');
+                        updateSavedCounterUI();
                     } else {
+                        // --- STEP 1: Capture the baseline screen position BEFORE the shift ---
+                        const parentWrapper = this.closest('.heart-interactive-wrapper');
+                        const tooltipBox = parentWrapper ? parentWrapper.querySelector('.heart-touch-tooltip') : null;
+                        
+                        let beforeTop = 0;
+                        if (parentWrapper) {
+                            beforeTop = parentWrapper.getBoundingClientRect().top;
+                        }
+                    
                         // ADD ENTRY STATE
                         savedWordsSet.add(targetedWord);
                         this.classList.add('is-saved');
                         if (currentViewMode === "generator") {
                             svgPath.setAttribute('fill', '#1bbc9b');
                         }
-                    }
                     
-                    // Fires the state mutation engine layer
-                    updateSavedCounterUI();
-
-                    // --- COORDINATE ADJUSTMENT CORRECTION MATRIX ---
-                    // If this was the first word added, the link pops in and shifts everything down.
-                    // We freeze the tooltip block's absolute pixel height to preserve the visual mismatch.
-                    if (countsBeforeMutation === 0 && savedWordsSet.size === 1 && tooltipBox && originalTooltipRect) {
-                        const currentWrapperRect = parentWrapper.getBoundingClientRect();
-                        
-                        // Calculate the pixel delta offset caused by the layout shift
-                        const verticalShiftDistanceDelta = currentWrapperRect.top - (originalTooltipRect.top - parseFloat(getComputedStyle(tooltipBox).bottom || 0));
-                        
-                        // Apply a programmatic absolute position shift upward to freeze the bubble in midair
-                        tooltipBox.style.bottom = "auto";
-                        tooltipBox.style.top = `-${verticalShiftDistanceDelta + 2}px`;
-                    } else if (tooltipBox) {
-                        // Reset properties if it's a standard save operation on subsequent lines
-                        tooltipBox.style.top = "auto";
-                        tooltipBox.style.bottom = "112%";
+                        // --- STEP 2: Force the DOM mutation to unhide the link ---
+                        updateSavedCounterUI();
+                    
+                        // --- STEP 3: Measure the actual layout displacement delta ---
+                        if (parentWrapper && tooltipBox) {
+                            const afterTop = parentWrapper.getBoundingClientRect().top;
+                            const layoutDisplacementDelta = afterTop - beforeTop; // The exact pixels the layout dropped
+                    
+                            if (layoutDisplacementDelta > 0) {
+                                // --- STEP 4: Freeze the bubble by shifting it up by the exact delta ---
+                                tooltipBox.style.bottom = "auto";
+                                // Uses the 112% base position and subtracts the exact downward shift distance
+                                tooltipBox.style.top = `calc(-112% - ${layoutDisplacementDelta}px)`;
+                            } else {
+                                // Fallback baseline position if it wasn't the first word saved
+                                tooltipBox.style.top = "auto";
+                                tooltipBox.style.bottom = "112%";
+                            }
+                        }
                     }
                     
                     if (currentViewMode === "saved") {
