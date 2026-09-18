@@ -92,7 +92,7 @@
 
     .word-text-display { font-size: 42px; font-weight: 700; color: #333333; letter-spacing: -0.5px; word-break: break-all; line-height: 1; display: inline-block; }
     
-        /* MODIFIED: Preserves the strict geometry while shifting the off-center internal SVG graphic */
+    /* FIXED: Restored clean flex-centering and dimensions. Stripped padding to prevent shrinking the heart asset */
     .heart-svg-wrapper { 
         width: 50px; 
         height: 50px; 
@@ -103,9 +103,6 @@
         justify-content: center; 
         flex-shrink: 0; 
         transition: transform 0.1s ease;
-        
-        /* THE ALIGNMENT LOCK */
-        padding-right: 12px; /* Programmatically counterbalances the internal asymmetry of the SVG vector path */
     }
     .heart-svg-wrapper:active { transform: scale(0.9); }
 
@@ -126,11 +123,12 @@
         display: inline-flex;
     }
 
+    /* Clean, native relative centering rules for the absolute tooltip bubble banner */
     .heart-touch-tooltip {
         position: absolute;
-        bottom: 95%; /* Lifted up cleanly away from the top edge curves */
+        bottom: 95%; /* Clean vertical separation distance */
         left: 50%;
-        transform: translateX(-50%); /* Clean, native visual alignment balancing */
+        transform: translateX(-50%); /* Locks horizontal visual symmetry */
         background-color: #111111;
         color: #ffffff;
         font-family: Arial, sans-serif !important;
@@ -140,7 +138,7 @@
         white-space: nowrap;
         padding: 4px 8px;
         border-radius: 4px;
-        z-index: 999999 !important;
+        z-index: 999999 !important; 
         pointer-events: none;
         box-shadow: 0 2px 4px rgba(0,0,0,0.2);
         display: none; 
@@ -152,7 +150,7 @@
         position: absolute;
         top: 100%; 
         left: 50%;
-        margin-left: -4px; /* Standard adjustment parameter (half of total 8px border width) */
+        margin-left: -4px; /* Perfectly aligns the point tip along the center axis */
         border-width: 4px;
         border-style: solid;
         border-color: #111111 transparent transparent transparent;
@@ -693,13 +691,12 @@
                 <div class="word-row" data-word="${word}">
                     <div class="word-text-display">${word}</div>
                     
-                    <!-- NEW: Relational tracking container maps bubble layout paths directly above the button -->
                     <div class="heart-interactive-wrapper">
-                        <!-- Precise Target Site Text Message Copy String -->
                         <div class="heart-touch-tooltip">Click to <u>save</u> this word!</div>
                         
                         <div class="heart-svg-wrapper dynamic-heart-btn${isSaved}">
-                            <svg viewBox="0 0 32 32" width="100%" height="100%" fill="none" stroke="#1bbc9b" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+                            <!-- FIXED: Changed viewBox from 0 0 32 32 to -4 0 32 32 to center the off-axis heart path -->
+                            <svg viewBox="-4 0 32 32" width="100%" height="100%" fill="none" stroke="#1bbc9b" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
                             </svg>
                         </div>
