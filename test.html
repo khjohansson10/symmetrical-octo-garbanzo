@@ -782,7 +782,7 @@
                         
                         // Apply a programmatic absolute position shift upward to freeze the bubble in midair
                         tooltipBox.style.bottom = "auto";
-                        tooltipBox.style.top = `-${verticalShiftDistanceDelta}px`;
+                        tooltipBox.style.top = `-${verticalShiftDistanceDelta/2}px`;
                     } else if (tooltipBox) {
                         // Reset properties if it's a standard save operation on subsequent lines
                         tooltipBox.style.top = "auto";
