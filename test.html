@@ -92,8 +92,21 @@
 
     .word-text-display { font-size: 42px; font-weight: 700; color: #333333; letter-spacing: -0.5px; word-break: break-all; line-height: 1; display: inline-block; }
     
-    /* Retained: Preserves the strict geometry and animations of the heart button */
-    .heart-svg-wrapper { width: 50px; height: 50px; color: #1bbc9b; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; transition: transform 0.1s ease;}
+        /* MODIFIED: Preserves the strict geometry while shifting the off-center internal SVG graphic */
+    .heart-svg-wrapper { 
+        width: 50px; 
+        height: 50px; 
+        color: #1bbc9b; 
+        cursor: pointer; 
+        display: inline-flex; 
+        align-items: center; 
+        justify-content: center; 
+        flex-shrink: 0; 
+        transition: transform 0.1s ease;
+        
+        /* THE ALIGNMENT LOCK */
+        padding-right: 12px; /* Programmatically counterbalances the internal asymmetry of the SVG vector path */
+    }
     .heart-svg-wrapper:active { transform: scale(0.9); }
 
     /* Style updates to support dynamic heart fill routing modifications */
@@ -115,9 +128,9 @@
 
     .heart-touch-tooltip {
         position: absolute;
-        bottom: 95%; /* FIXED: Lifted up from 88% to stop overlapping the heart curves */
-        left: 45%;   /* FIXED: Shifted slightly left from 50% to align the tail with the heart cleft */
-        transform: translateX(-50%); /* Keeps text expansion balanced symmetrically */
+        bottom: 95%; /* Lifted up cleanly away from the top edge curves */
+        left: 50%;
+        transform: translateX(-50%); /* Clean, native visual alignment balancing */
         background-color: #111111;
         color: #ffffff;
         font-family: Arial, sans-serif !important;
@@ -127,22 +140,22 @@
         white-space: nowrap;
         padding: 4px 8px;
         border-radius: 4px;
-        z-index: 999999 !important; /* Forces the text message bubble to float cleanly over header lines and ads */
+        z-index: 999999 !important;
         pointer-events: none;
         box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-        display: none; /* Hidden by default layout instructions */
+        display: none; 
     }
 
-    /* The exact centered layout indicator arrow geometry */
+    /* Absolute native centering for the indicator triangle tail */
     .heart-touch-tooltip::after {
         content: "";
         position: absolute;
-        top: 100%; /* Snaps arrow baseline flush to the bottom black container edge */
+        top: 100%; 
         left: 50%;
-        margin-left: -4px;
+        margin-left: -4px; /* Standard adjustment parameter (half of total 8px border width) */
         border-width: 4px;
         border-style: solid;
-        border-color: #111111 transparent transparent transparent; /* Creates the crisp down-pointing triangle */
+        border-color: #111111 transparent transparent transparent;
     }
 
     /* Active utility engine flag modifications */
@@ -795,7 +808,7 @@
                     const tooltipBox = wrapper.querySelector('.heart-touch-tooltip');
                     if (tooltipBox) {
                         tooltipBox.style.top = "auto";
-                        tooltipBox.style.bottom = "88%";
+                        tooltipBox.style.bottom = "95%"; 
                     }
                 });
             }
