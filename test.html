@@ -92,9 +92,20 @@
 
     .word-text-display { font-size: 42px; font-weight: 700; color: #333333; letter-spacing: -0.5px; word-break: break-all; line-height: 1; display: inline-block; }
     
-    /* Retained: Preserves the strict geometry and animations of the heart button */
-    .heart-svg-wrapper { width: 50px; height: 50px; color: #1bbc9b; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; transition: transform 0.1s ease;}
-    .heart-svg-wrapper:active { transform: scale(0.9); }
+    /* MODIFIED: Reduced size to match the target site, added a translation rule to cancel out the top-heavy SVG path math */
+    .heart-svg-wrapper { 
+        width: 32px; /* Scale reduced from 50px to match text x-height proportions */
+        height: 32px; 
+        color: #1bbc9b; 
+        cursor: pointer; 
+        display: inline-flex; 
+        align-items: center; 
+        justify-content: center; 
+        flex-shrink: 0; 
+        transition: transform 0.1s ease; 
+        transform: translateY(3.5px); /* Programmatically shifts the asset down to correct the internal layout shift */
+    }
+    .heart-svg-wrapper:active { transform: scale(0.9) translateY(3.5px); }
 
     /* 9. AdSense Mobile Banner Proportional Frames */
     .mock-ad-top, .mock-ad-bottom { 
