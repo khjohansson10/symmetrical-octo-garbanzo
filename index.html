@@ -71,7 +71,7 @@
 
     /* 8. Active Word Output Presentation Container Flex Matrix */
     .word-presentation-box { 
-        margin: 10px auto 25px auto; /* FIXED: Reduced margin-top from 35px to 10px to shift content upward */
+        margin: 2px auto 25px auto; /* FIXED: Reduced margin-top from 35px to 10px to shift content upward */
         padding: 0 5px; /* FIXED: Tightened padding to eliminate vertical spacing gaps */
         display: flex; 
         flex-direction: column; /* Stacks multiple rows vertically */
@@ -121,6 +121,7 @@
     .heart-interactive-wrapper {
         position: relative; /* Establishes the structural boundary for the absolute child banner */
         display: inline-flex;
+        transform: translateY(12px);
     }
 
     /* Clean, native relative centering rules for the absolute tooltip bubble banner */
