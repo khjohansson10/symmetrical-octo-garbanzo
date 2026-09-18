@@ -71,8 +71,8 @@
 
     /* 8. Active Word Output Presentation Container Flex Matrix */
     .word-presentation-box { 
-        margin: 35px auto 25px auto; 
-        padding: 5px; 
+        margin: 10px auto 25px auto; /* FIXED: Reduced margin-top from 35px to 10px to shift content upward */
+        padding: 0 5px; /* FIXED: Tightened padding to eliminate vertical spacing gaps */
         display: flex; 
         flex-direction: column; /* Stacks multiple rows vertically */
         align-items: center; 
@@ -80,7 +80,7 @@
         width: 100%; 
         max-width: 550px; 
     }
-    
+
     /* Handles horizontal alignment of text next to its respective heart */
     .word-row {
         display: flex;
