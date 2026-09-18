@@ -107,7 +107,7 @@
         stroke: #333333;
     }
 
-        /* Precision CSS Tooltip Layout Architecture Matrix */
+    /* Precision CSS Tooltip Layout Architecture Matrix */
     .heart-interactive-wrapper {
         position: relative; /* Establishes the structural boundary for the absolute child banner */
         display: inline-flex;
@@ -115,9 +115,9 @@
 
     .heart-touch-tooltip {
         position: absolute;
-        bottom: 88%; /* Suspends the bubble cleanly directly above the heart graphic icon bounding box */
-        left: 50%;
-        transform: translateX(-50%); /* Shifts the container layout leftward to force horizontal centering */
+        bottom: 95%; /* FIXED: Lifted up from 88% to stop overlapping the heart curves */
+        left: 45%;   /* FIXED: Shifted slightly left from 50% to align the tail with the heart cleft */
+        transform: translateX(-50%); /* Keeps text expansion balanced symmetrically */
         background-color: #111111;
         color: #ffffff;
         font-family: Arial, sans-serif !important;
