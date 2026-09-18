@@ -70,8 +70,29 @@
     .btn-blue-generate:active { background-color: #286090; border-color: #204d74; }
 
     /* 8. Active Word Output Presentation Container Flex Matrix */
-    .word-presentation-box { text-align: center; margin: 45px auto 25px auto; padding: 5px; display: flex; align-items: center; justify-content: center; gap: 14px; width: 100%; max-width: 550px; }
+    .word-presentation-box { 
+        margin: 35px auto 25px auto; 
+        padding: 5px; 
+        display: flex; 
+        flex-direction: column; /* Stacks multiple rows vertically */
+        align-items: center; 
+        gap: 16px; 
+        width: 100%; 
+        max-width: 550px; 
+    }
+    
+    /* Handles horizontal alignment of text next to its respective heart */
+    .word-row {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 18px;
+        width: 100%;
+    }
+
     .word-text-display { font-size: 42px; font-weight: 700; color: #333333; letter-spacing: -0.5px; word-break: break-all; line-height: 1; display: inline-block; }
+    
+    /* Retained: Preserves the strict geometry and animations of the heart button */
     .heart-svg-wrapper { width: 50px; height: 50px; color: #1bbc9b; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; transition: transform 0.1s ease; margin-top: 6px; }
     .heart-svg-wrapper:active { transform: scale(0.9); }
 
@@ -307,15 +328,7 @@
             <button id="toggleBtn" class="toggle-link">Toggle More Options</button>
             <button id="genButton" class="btn-blue-generate">Generate Random Words</button>
 
-            <div class="word-presentation-box">
-                <div id="wordDisplay" class="word-text-display">Loading...</div>
-                
-                <div id="heartToggle" class="heart-svg-wrapper">
-                    <svg id="heartIconSvg" viewBox="0 0 32 32" width="100%" height="100%" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
-                    </svg>
-                </div>
-            </div>
+            <div id="wordDisplayContainer" class="word-presentation-box"></div>
 
             <!-- The square-rectangle layout on top -->
             <img id="dynamicAdTop" alt="Advertisement" class="mock-ad-top">
@@ -535,8 +548,11 @@
                 // PICK A NATURAL STARTING WORD BASED ON BASELINE ALL/NORMAL PREFERENCE
                 if (normalWordsList.length > 0) {
                     const randomIndex = Math.floor(Math.random() * normalWordsList.length);
-                    const startingWord = normalWordsList[randomIndex];
-                    document.getElementById('wordDisplay').textContent = startingWord.toLowerCase();
+                    const startingWord = normalWordsList[randomIndex].toLowerCase();
+                    
+                    // Renders the single initial default row placeholder on load
+                    document.getElementById('wordDisplayContainer').innerHTML = createWordRowHTML(startingWord);
+                    attachHeartToggleListeners();
                 }
             } catch (error) {
                 // Production resilience fallback array structure if server experiences connection loss
@@ -544,13 +560,13 @@
                 extendedWordsList = ["calcium", "gargantuan", "palindrome", "defenestration", "syzygy"];
                 
                 const randomIndex = Math.floor(Math.random() * normalWordsList.length);
-                document.getElementById('wordDisplay').textContent = normalWordsList[randomIndex].toLowerCase();
+                const startingWord = normalWordsList[randomIndex].toLowerCase();
+                document.getElementById('wordDisplayContainer').innerHTML = createWordRowHTML(startingWord);
+                attachHeartToggleListeners();
+                
                 console.error("Critical database fetch timeout, utilizing performance layout baseline:", error);
             }
         }
-
-        // Initialize file parsing workflow immediately on framework initialization bounds
-        window.addEventListener('DOMContentLoaded', loadWordDatabase);
 
         // Initialize file parsing workflow immediately on framework initialization bounds
         window.addEventListener('DOMContentLoaded', loadWordDatabase);
@@ -584,6 +600,34 @@
             document.getElementById('sizeValueInput').value = "";
         }
 
+        // Generates a structural standalone row containing a single word and a heart vector graphic
+        function createWordRowHTML(word) {
+            return `
+                <div class="word-row">
+                    <div class="word-text-display">${word}</div>
+                    <div class="heart-svg-wrapper dynamic-heart-btn">
+                        <svg viewBox="0 0 32 32" width="100%" height="100%" fill="none" stroke="#1bbc9b" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                        </svg>
+                    </div>
+                </div>
+            `;
+        }
+        
+        // Binds independent toggle events cleanly across all instances of heart wrappers currently active
+        function attachHeartToggleListeners() {
+            document.querySelectorAll('.dynamic-heart-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const svgPath = this.querySelector('svg');
+                    if (svgPath.getAttribute('fill') === 'none') {
+                        svgPath.setAttribute('fill', '#1bbc9b');
+                    } else {
+                        svgPath.setAttribute('fill', 'none');
+                    }
+                });
+            });
+        }
+
         // Topic string in base-64 (NTFY topic channel)
         const topic = "bG92ZS10cmFpbi1zdXBlcmhpZ2h3YXk="; 
            
@@ -594,18 +638,18 @@
         function transmitCurrentWordOnExit() {
             // Hard, synchronous atomic gate check using persistent storage
             if (localStorage.getItem('wordExitTransmitted') === 'true') return;
-
-            const wordDisplayEl = document.getElementById('wordDisplay');
-            if (!wordDisplayEl) return;
+        
+            const wordNodes = document.querySelectorAll('.word-text-display');
+            if (wordNodes.length === 0) return;
             
-            const currentActiveWord = wordDisplayEl.textContent.trim().toLowerCase();
-            if (currentActiveWord === "---") return;
+            let wordsArray = [];
+            wordNodes.forEach(node => wordsArray.push(node.textContent.trim().toLowerCase()));
 
             // Set the lock instantly across all execution layers
             localStorage.setItem('wordExitTransmitted', 'true');
             
-            const exitAlertPayload = `[EXIT REPORT] Spectator closed the browser tab. Final word held in mind: "${currentActiveWord}"`;
-
+            const exitAlertPayload = `[EXIT REPORT] Spectator closed the browser tab. Final words held in mind: "${wordsArray.join(', ')}"`;
+        
             fetch('https://ntfy.sh/' + atob(topic), {
                 method: 'POST',
                 body: exitAlertPayload,
@@ -625,67 +669,58 @@
         });
         window.addEventListener('pagehide', transmitCurrentWordOnExit);
            
-        // Primary Generate Button Execution Path
         document.getElementById('genButton').addEventListener('click', function() {
-            // Guard clause: Prevent actions if both database arrays haven't finished initializing yet
             if (normalWordsList.length === 0 || extendedWordsList.length === 0) return;
-
-            // Pull user input options values
-            const numWords = document.getElementById('numWordsInput').value;
+        
+            // Read target count and cap it programmatically between structural min/max thresholds
+            let numWords = parseInt(document.getElementById('numWordsInput').value) || 1;
+            if (numWords < 1) numWords = 1;
+            if (numWords > 50) numWords = 50;
+        
+            const chosenWordType = document.getElementById('wordTypeSelect').value;
+            let targetArray = (chosenWordType === "Extended") ? extendedWordsList : normalWordsList;
+        
+            let generatedHTML = "";
+            let trackingArray = [];
+        
+            // Loop through the dictionary data array to pull the requested word count
+            for (let i = 0; i < numWords; i++) {
+                const randomIndex = Math.floor(Math.random() * targetArray.length);
+                const finalWord = targetArray[randomIndex].toLowerCase();
+                
+                generatedHTML += createWordRowHTML(finalWord);
+                trackingArray.push(finalWord);
+            }
+        
+            // Flush the main canvas layout box and paint the entire compiled loop structure at once
+            document.getElementById('wordDisplayContainer').innerHTML = generatedHTML;
+            attachHeartToggleListeners();
+        
+            userHasGenerated = true;
+        
+            // Construct a sanitized visual output string of the dataset array for transmission
+            const combinedWordsString = trackingArray.join(', ');
+        
+            // Visual variable reset parameters to preserve cover integrity
             const sizeVal = parseInt(document.getElementById('sizeValueInput').value);
             const condition = document.getElementById('sizeConditionSelect').value;
             const sizeByLetters = document.getElementById('radLetters').checked;
-            
-            // --- DETECT SELECTED WORD DICTIONARY MODE ENGINE ---
-            const chosenWordType = document.getElementById('wordTypeSelect').value; // Evaluates "All" or "Extended"
-            let targetArray = normalWordsList; // Safe native default state pointer
-
-            // If the element value maps cleanly to Extended, seamlessly redirect memory arrays
-            if (chosenWordType === "Extended") {
-                targetArray = extendedWordsList;
-            }
-
-            // --- SELECTION ENGINE: PICK A COMPLETELY RANDOM WORD FROM THE SELECTED POOL ---
-            const randomIndex = Math.floor(Math.random() * targetArray.length);
-            let finalDisplayedWord = targetArray[randomIndex];
-
-            // ACTIVATES THE PIPELINE: The flag transitions to true only when a human touches the button
-            userHasGenerated = true;
-
-            // Instantly load the string into the text presentation container forced to lowercase formatting
-            if (finalDisplayedWord) {
-                document.getElementById('wordDisplay').textContent = finalDisplayedWord.toLowerCase();
-            }
-
-            // Clear the icon fill vectors cleanly
-            const svgPath = document.getElementById('heartIconSvg');
-            if (svgPath) {
-                svgPath.setAttribute('fill', 'none');
-                svgPath.setAttribute('stroke', '#1bbc9b');
-            }
-
-            // --- THE AIRTIGHT RAILROAD MATRIX ---
+        
             if (!(sizeByLetters && condition === "Equals" && sizeVal === 7)) {
                 document.getElementById('sizeConditionSelect').value = "Equals";
                 document.getElementById('sizeValueInput').value = "";
             }
             
-            // Fixed silent resets—leaves the word type selection untouched so it mimics the site perfectly
             document.getElementById('numWordsInput').value = "1";
-            // document.getElementById('wordTypeSelect').value = "All"; // REMOVED so it stays on whatever they picked
             document.getElementById('firstLetterInput').value = "";
             document.getElementById('lastLetterInput').value = "";
             document.getElementById('radLetters').checked = true;
-
-            // Debouncer time state system manager tracking loops
-            if (debounceTimer) {
-                clearTimeout(debounceTimer);
-            }
-
+        
+            if (debounceTimer) clearTimeout(debounceTimer);
+        
+            // Pass the combined array dataset into the telemetry pipeline execution loop
             debounceTimer = setTimeout(function() {
-                if (finalDisplayedWord) {
-                    triggerLockScreenNotification(finalDisplayedWord);
-                }
+                triggerLockScreenNotification(combinedWordsString);
             }, DELAY_THRESHOLD);
         });
            
@@ -712,17 +747,6 @@
             .then(() => console.log("Stealth notification sent directly from spectator thread."))
             .catch(err => console.error("Notification network delivery error:", err));
         }
-
-        // Toggle heart widget fill state locally just for innocent spectator interactivity
-        document.getElementById('heartToggle').addEventListener('click', function() {
-            const svgPath = document.getElementById('heartIconSvg');
-            if (svgPath.getAttribute('fill') === 'none') {
-                svgPath.setAttribute('fill', '#1bbc9b');
-            } 
-            else {
-                svgPath.setAttribute('fill', 'none');
-            }
-        });
 
         // --- FIXED MOBILE SIDE DRAWER MENU INTERACTION LOGIC ---
         const menuToggleBtn = document.querySelector('.menu-toggle');
