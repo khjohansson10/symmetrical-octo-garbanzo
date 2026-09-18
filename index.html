@@ -861,15 +861,25 @@
         document.getElementById('viewSavedBtn').addEventListener('click', renderSavedWordsView);
         
         document.getElementById('clearListLink').addEventListener('click', function() {
-            savedWordsSet.clear();
-            switchToGeneratorView();
+            // Evaluates native alert workflow window parameters to intercept the click stream
+            if (confirm("Are you sure you want to delete all your favorites?")) {
+                // FIXED: Instantly kills any pending telemetry network requests before regenerating
+                if (debounceTimer) {
+                    clearTimeout(debounceTimer);
+                    debounceTimer = null;
+                }
+                
+                savedWordsSet.clear();
+                switchToGeneratorView();
+                
+                // Programmatic simulation of the primary word generation pipeline click event
+                document.getElementById('genButton').click();
+            }
         });
 
         document.getElementById('copyListLink').addEventListener('click', function() {
             const wordsString = Array.from(savedWordsSet).join('\n');
-            navigator.clipboard.writeText(wordsString).then(() => {
-                alert('Saved words list copied to clipboard!');
-            }).catch(err => {
+            navigator.clipboard.writeText(wordsString).catch(err => {
                 console.error('Failed to execute text copy tracking action:', err);
             });
         });
