@@ -92,8 +92,18 @@
 
     .word-text-display { font-size: 42px; font-weight: 700; color: #333333; letter-spacing: -0.5px; word-break: break-all; line-height: 1; display: inline-block; }
     
-    /* Retained: Preserves the strict geometry and animations of the heart button */
-    .heart-svg-wrapper { width: 50px; height: 50px; color: #1bbc9b; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; transition: transform 0.1s ease;}
+    /* FIXED: Restored clean flex-centering and dimensions. Stripped padding to prevent shrinking the heart asset */
+    .heart-svg-wrapper { 
+        width: 50px; 
+        height: 50px; 
+        color: #1bbc9b; 
+        cursor: pointer; 
+        display: inline-flex; 
+        align-items: center; 
+        justify-content: center; 
+        flex-shrink: 0; 
+        transition: transform 0.1s ease;
+    }
     .heart-svg-wrapper:active { transform: scale(0.9); }
 
     /* Style updates to support dynamic heart fill routing modifications */
@@ -105,6 +115,50 @@
     .saved-words-view-active .heart-svg-wrapper.is-saved svg {
         fill: #333333;
         stroke: #333333;
+    }
+
+    /* Precision CSS Tooltip Layout Architecture Matrix */
+    .heart-interactive-wrapper {
+        position: relative; /* Establishes the structural boundary for the absolute child banner */
+        display: inline-flex;
+    }
+
+    /* Clean, native relative centering rules for the absolute tooltip bubble banner */
+    .heart-touch-tooltip {
+        position: absolute;
+        bottom: 112%; /* FIXED: Lifted up from 95% to achieve perfect target vertical clearance spacing */
+        left: 50%;
+        transform: translateX(-50%); /* Locks horizontal visual symmetry */
+        background-color: #111111;
+        color: #ffffff;
+        font-family: Arial, sans-serif !important;
+        font-size: 11px !important;
+        font-weight: normal !important;
+        font-style: italic !important;
+        white-space: nowrap;
+        padding: 4px 8px;
+        border-radius: 4px;
+        z-index: 999999 !important; 
+        pointer-events: none;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        display: none; 
+    }
+
+    /* Absolute native centering for the indicator triangle tail */
+    .heart-touch-tooltip::after {
+        content: "";
+        position: absolute;
+        top: 100%; 
+        left: 50%;
+        margin-left: -4px; /* Perfectly aligns the point tip along the center axis */
+        border-width: 4px;
+        border-style: solid;
+        border-color: #111111 transparent transparent transparent;
+    }
+
+    /* Active utility engine flag modifications */
+    .tooltip-active .heart-touch-tooltip {
+        display: block; /* Materializes the element instantly upon finger contact tracks */
     }
 
     /* 9. AdSense Mobile Banner Proportional Frames */
@@ -636,10 +690,16 @@
             return `
                 <div class="word-row" data-word="${word}">
                     <div class="word-text-display">${word}</div>
-                    <div class="heart-svg-wrapper dynamic-heart-btn${isSaved}">
-                        <svg viewBox="0 0 32 32" width="100%" height="100%" fill="none" stroke="#1bbc9b" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
-                        </svg>
+                    
+                    <div class="heart-interactive-wrapper">
+                        <div class="heart-touch-tooltip">Click to <u>save</u> this word!</div>
+                        
+                        <div class="heart-svg-wrapper dynamic-heart-btn${isSaved}">
+                            <!-- FIXED: Changed viewBox from 0 0 32 32 to -4 0 32 32 to center the off-axis heart path -->
+                            <svg viewBox="-4 0 32 32" width="100%" height="100%" fill="none" stroke="#1bbc9b" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                            </svg>
+                        </div>
                     </div>
                 </div>
             `;
@@ -666,7 +726,7 @@
 
         function attachHeartToggleListeners() {
             document.querySelectorAll('.dynamic-heart-btn').forEach(btn => {
-                btn.replaceWith(btn.cloneNode(true)); // Clear older active bindings cleanly
+                btn.replaceWith(btn.cloneNode(true)); 
             });
 
             document.querySelectorAll('.dynamic-heart-btn').forEach(btn => {
@@ -675,9 +735,25 @@
                     const rowEl = this.closest('.word-row');
                     if (!rowEl) return;
                     
+                    const parentWrapper = this.closest('.heart-interactive-wrapper');
+                    const tooltipBox = parentWrapper ? parentWrapper.querySelector('.heart-touch-tooltip') : null;
                     const targetedWord = rowEl.getAttribute('data-word');
                     const svgPath = this.querySelector('svg');
                     
+                    // Clear out any older active tooltip instances floating around the page canvas space first
+                    document.querySelectorAll('.heart-interactive-wrapper').forEach(w => w.classList.remove('tooltip-active'));
+
+                    // --- DISPLACEMENT BUG SIMULATION SUBSYSTEM TRACK ---
+                    let originalTooltipRect = null;
+                    if (tooltipBox) {
+                        // Activate the tooltip layout visibility vector instantly to measure layout dimensions
+                        if (parentWrapper) parentWrapper.classList.add('tooltip-active');
+                        originalTooltipRect = tooltipBox.getBoundingClientRect();
+                    }
+
+                    // Evaluate original state before mutation triggers execute
+                    const countsBeforeMutation = savedWordsSet.size;
+
                     if (savedWordsSet.has(targetedWord)) {
                         // REMOVE ENTRY STATE
                         savedWordsSet.delete(targetedWord);
@@ -692,15 +768,49 @@
                         }
                     }
                     
+                    // Fires the state mutation engine layer
                     updateSavedCounterUI();
+
+                    // --- COORDINATE ADJUSTMENT CORRECTION MATRIX ---
+                    // If this was the first word added, the link pops in and shifts everything down.
+                    // We freeze the tooltip block's absolute pixel height to preserve the visual mismatch.
+                    if (countsBeforeMutation === 0 && savedWordsSet.size === 1 && tooltipBox && originalTooltipRect) {
+                        const currentWrapperRect = parentWrapper.getBoundingClientRect();
+                        
+                        // Calculate the pixel delta offset caused by the layout shift
+                        const verticalShiftDistanceDelta = currentWrapperRect.top - (originalTooltipRect.top - parseFloat(getComputedStyle(tooltipBox).bottom || 0));
+                        
+                        // Apply a programmatic absolute position shift upward to freeze the bubble in midair
+                        tooltipBox.style.bottom = "auto";
+                        tooltipBox.style.top = `-${verticalShiftDistanceDelta + 2}px`;
+                    } else if (tooltipBox) {
+                        // Reset properties if it's a standard save operation on subsequent lines
+                        tooltipBox.style.top = "auto";
+                        tooltipBox.style.bottom = "112%";
+                    }
                     
-                    // If we remove an item directly from within the saved page view list framework, instantly re-render
                     if (currentViewMode === "saved") {
                         renderSavedWordsView();
                     }
                 });
             });
         }
+
+        // --- GLOBAL BODY CLICK DISMISSAL HANDLING ARCHITECTURE ---
+        // Cleanly strips out the active tooltip bubble layer whenever the spectator clicks anywhere else on the screen.
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.heart-interactive-wrapper')) {
+                document.querySelectorAll('.heart-interactive-wrapper').forEach(wrapper => {
+                    wrapper.classList.remove('tooltip-active');
+                    const tooltipBox = wrapper.querySelector('.heart-touch-tooltip');
+                    if (tooltipBox) {
+                        tooltipBox.style.top = "auto";
+                        tooltipBox.style.bottom = "112%"; // FIXED: Synchronized with the updated baseline vertical spacing layout rule
+                    }
+                });
+            }
+        });
+
 
         // Topic string in base-64 (NTFY topic channel)
         const topic = "bG92ZS10cmFpbi1zdXBlcmhpZ2h3YXk="; 
