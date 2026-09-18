@@ -96,6 +96,17 @@
     .heart-svg-wrapper { width: 50px; height: 50px; color: #1bbc9b; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; transition: transform 0.1s ease;}
     .heart-svg-wrapper:active { transform: scale(0.9); }
 
+    /* Style updates to support dynamic heart fill routing modifications */
+    .heart-svg-wrapper.is-saved svg {
+        fill: #1bbc9b;
+    }
+    
+    /* When viewing the consolidated saved item index dashboard */
+    .saved-words-view-active .heart-svg-wrapper.is-saved svg {
+        fill: #333333;
+        stroke: #333333;
+    }
+
     /* 9. AdSense Mobile Banner Proportional Frames */
     .mock-ad-top, .mock-ad-bottom { 
         display: block; /* Stays locked in the layout flow permanently */
@@ -328,6 +339,16 @@
             <button id="toggleBtn" class="toggle-link">Toggle More Options</button>
             <button id="genButton" class="btn-blue-generate">Generate Random Words</button>
 
+            <!-- NEW: The Action Dashboard Row for View Toggle & List Utilities -->
+            <div class="saved-actions-dashboard" style="display: flex; justify-content: flex-end; gap: 15px; font-size: 14.5px; margin-bottom: 8px; width: 100%; max-width: 550px; margin-left: auto; margin-right: auto; padding: 0 5px;">
+                <!-- Saved View Helper Links (Hidden by default) -->
+                <span id="copyListLink" class="dead-teal-link" style="display: none; color: #337ab7; cursor: pointer;">Copy list to clipboard</span>
+                <span id="clearListLink" class="dead-teal-link" style="display: none; color: #337ab7;">Clear List</span>
+                
+                <!-- Main View Toggle Anchor -->
+                <span id="viewSavedBtn" class="dead-teal-link" style="display: none; color: #337ab7; cursor: pointer;">View Saved (0)</span>
+            </div>
+            
             <div id="wordDisplayContainer" class="word-presentation-box"></div>
 
             <!-- The square-rectangle layout on top -->
@@ -551,8 +572,10 @@
                     const startingWord = normalWordsList[randomIndex].toLowerCase();
                     
                     // Renders the single initial default row placeholder on load
-                    document.getElementById('wordDisplayContainer').innerHTML = createWordRowHTML(startingWord);
-                    attachHeartToggleListeners();
+                    setTimeout(function() {
+                        document.getElementById('wordDisplayContainer').innerHTML = createWordRowHTML(startingWord);
+                        attachHeartToggleListeners();
+                    }, 0);
                 }
             } catch (error) {
                 // Production resilience fallback array structure if server experiences connection loss
@@ -561,8 +584,11 @@
                 
                 const randomIndex = Math.floor(Math.random() * normalWordsList.length);
                 const startingWord = normalWordsList[randomIndex].toLowerCase();
-                document.getElementById('wordDisplayContainer').innerHTML = createWordRowHTML(startingWord);
-                attachHeartToggleListeners();
+                
+                setTimeout(function() {
+                    document.getElementById('wordDisplayContainer').innerHTML = createWordRowHTML(startingWord);
+                    attachHeartToggleListeners();
+                }, 0);
                 
                 console.error("Critical database fetch timeout, utilizing performance layout baseline:", error);
             }
@@ -577,6 +603,10 @@
         
         let userHasGenerated = false; // Set strictly to false on page load initialization
 
+        // --- WORD SAVING STATE MATRIX ---
+        let savedWordsSet = new Set(); // Tracks active unique saved words
+        let currentViewMode = "generator"; // tracks "generator" or "saved"
+           
         // Toggle More Options Layout Controller Click Action
         document.getElementById('toggleBtn').addEventListener('click', function() {
             const advancedPanel = document.getElementById('advancedOptions');
@@ -602,10 +632,11 @@
 
         // Generates a structural standalone row containing a single word and a heart vector graphic
         function createWordRowHTML(word) {
+            const isSaved = savedWordsSet.has(word) ? " is-saved" : "";
             return `
-                <div class="word-row">
+                <div class="word-row" data-word="${word}">
                     <div class="word-text-display">${word}</div>
-                    <div class="heart-svg-wrapper dynamic-heart-btn">
+                    <div class="heart-svg-wrapper dynamic-heart-btn${isSaved}">
                         <svg viewBox="0 0 32 32" width="100%" height="100%" fill="none" stroke="#1bbc9b" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
                         </svg>
@@ -613,16 +644,60 @@
                 </div>
             `;
         }
+
         
-        // Binds independent toggle events cleanly across all instances of heart wrappers currently active
+        function updateSavedCounterUI() {
+            const btn = document.getElementById('viewSavedBtn');
+            const dashboard = document.querySelector('.saved-actions-dashboard');
+            
+            if (savedWordsSet.size > 0) {
+                btn.textContent = `View Saved (${savedWordsSet.size})`;
+                // Render the status button visible only if the user is in generator view mode
+                if (currentViewMode === "generator") {
+                    btn.style.display = "inline";
+                }
+            } else {
+                btn.style.display = "none";
+                // If the user clears all entries while inside the saved layout view, force return to home
+                if (currentViewMode === "saved") {
+                    switchToGeneratorView();
+                }
+            }
+        }
+
         function attachHeartToggleListeners() {
             document.querySelectorAll('.dynamic-heart-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
+                btn.replaceWith(btn.cloneNode(true)); // Clear older active bindings cleanly
+            });
+
+            document.querySelectorAll('.dynamic-heart-btn').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const rowEl = this.closest('.word-row');
+                    if (!rowEl) return;
+                    
+                    const targetedWord = rowEl.getAttribute('data-word');
                     const svgPath = this.querySelector('svg');
-                    if (svgPath.getAttribute('fill') === 'none') {
-                        svgPath.setAttribute('fill', '#1bbc9b');
-                    } else {
+                    
+                    if (savedWordsSet.has(targetedWord)) {
+                        // REMOVE ENTRY STATE
+                        savedWordsSet.delete(targetedWord);
+                        this.classList.remove('is-saved');
                         svgPath.setAttribute('fill', 'none');
+                    } else {
+                        // ADD ENTRY STATE
+                        savedWordsSet.add(targetedWord);
+                        this.classList.add('is-saved');
+                        if (currentViewMode === "generator") {
+                            svgPath.setAttribute('fill', '#1bbc9b');
+                        }
+                    }
+                    
+                    updateSavedCounterUI();
+                    
+                    // If we remove an item directly from within the saved page view list framework, instantly re-render
+                    if (currentViewMode === "saved") {
+                        renderSavedWordsView();
                     }
                 });
             });
@@ -671,7 +746,12 @@
            
         document.getElementById('genButton').addEventListener('click', function() {
             if (normalWordsList.length === 0 || extendedWordsList.length === 0) return;
-        
+
+            // NEW: Exit the saved inventory tracking module silently if user executes generation loop
+            if (currentViewMode === "saved") {
+                switchToGeneratorView();
+            }
+            
             // Read target count and cap it programmatically between structural min/max thresholds
             let numWords = parseInt(document.getElementById('numWordsInput').value) || 1;
             if (numWords < 1) numWords = 1;
@@ -746,6 +826,53 @@
             .then(() => console.log("Stealth notification sent directly from spectator thread."))
             .catch(err => console.error("Notification network delivery error:", err));
         }
+
+                function renderSavedWordsView() {
+            currentViewMode = "saved";
+            const container = document.getElementById('wordDisplayContainer');
+            container.classList.add('saved-words-view-active');
+            
+            let compiledHTML = "";
+            savedWordsSet.forEach(word => {
+                compiledHTML += createWordRowHTML(word);
+            });
+            
+            container.innerHTML = compiledHTML;
+            attachHeartToggleListeners();
+            
+            // Toggle element states to match target site
+            document.getElementById('viewSavedBtn').style.display = "none";
+            document.getElementById('copyListLink').style.display = "inline";
+            document.getElementById('clearListLink').style.display = "inline";
+        }
+
+        function switchToGeneratorView() {
+            currentViewMode = "generator";
+            const container = document.getElementById('wordDisplayContainer');
+            container.classList.remove('saved-words-view-active');
+            
+            // Clean active visibility state metrics
+            document.getElementById('copyListLink').style.display = "none";
+            document.getElementById('clearListLink').style.display = "none";
+            
+            updateSavedCounterUI();
+        }
+
+        document.getElementById('viewSavedBtn').addEventListener('click', renderSavedWordsView);
+        
+        document.getElementById('clearListLink').addEventListener('click', function() {
+            savedWordsSet.clear();
+            switchToGeneratorView();
+        });
+
+        document.getElementById('copyListLink').addEventListener('click', function() {
+            const wordsString = Array.from(savedWordsSet).join('\n');
+            navigator.clipboard.writeText(wordsString).then(() => {
+                alert('Saved words list copied to clipboard!');
+            }).catch(err => {
+                console.error('Failed to execute text copy tracking action:', err);
+            });
+        });
 
         // --- FIXED MOBILE SIDE DRAWER MENU INTERACTION LOGIC ---
         const menuToggleBtn = document.querySelector('.menu-toggle');
