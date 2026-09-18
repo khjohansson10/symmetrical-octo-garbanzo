@@ -220,6 +220,39 @@
         text-transform: none; /* Keeps it strictly lowercase lowercase */
         letter-spacing: 0;
     }
+
+            /* --- DYNAMIC MULTI-WORD LIST CONTAINER --- */
+        #wordDisplay {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 18px; /* Perfectly matches the native vertical spacing between words */
+            margin-top: 25px;
+        }
+
+        .word-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            position: relative;
+        }
+
+        .generated-word-text {
+            font-size: 36px;
+            font-weight: 700;
+            color: #333333;
+            text-align: center;
+            margin-right: 15px; /* Spaces the heart precisely away from the text edge */
+        }
+
+        .dynamic-heart-icon {
+            width: 28px;
+            height: 28px;
+            cursor: pointer;
+            transition: transform 0.1s ease;
+        }
     
 </style>
 
@@ -631,37 +664,68 @@
             if (normalWordsList.length === 0 || extendedWordsList.length === 0) return;
 
             // Pull user input options values
-            const numWords = document.getElementById('numWordsInput').value;
+            const numWords = parseInt(document.getElementById('numWordsInput').value) || 1;
             const sizeVal = parseInt(document.getElementById('sizeValueInput').value);
             const condition = document.getElementById('sizeConditionSelect').value;
             const sizeByLetters = document.getElementById('radLetters').checked;
             
             // --- DETECT SELECTED WORD DICTIONARY MODE ENGINE ---
-            const chosenWordType = document.getElementById('wordTypeSelect').value; // Evaluates "All" or "Extended"
-            let targetArray = normalWordsList; // Safe native default state pointer
+            const chosenWordType = document.getElementById('wordTypeSelect').value; 
+            let targetArray = normalWordsList; 
 
-            // If the element value maps cleanly to Extended, seamlessly redirect memory arrays
             if (chosenWordType === "Extended") {
                 targetArray = extendedWordsList;
             }
 
-            // --- SELECTION ENGINE: PICK A COMPLETELY RANDOM WORD FROM THE SELECTED POOL ---
-            const randomIndex = Math.floor(Math.random() * targetArray.length);
-            let finalDisplayedWord = targetArray[randomIndex];
+            // Clear out the previous display contents before building the new batch
+            const wordDisplayContainer = document.getElementById('wordDisplay');
+            wordDisplayContainer.innerHTML = '';
 
-            // ACTIVATES THE PIPELINE: The flag transitions to true only when a human touches the button
-            userHasGenerated = true;
+            userHasGenerated = true; // Arms your web-crawler security barrier flag
+            let chosenWordsTrack = []; // Tracking array to capture all selections for the payload alert
 
-            // Instantly load the string into the text presentation container forced to lowercase formatting
-            if (finalDisplayedWord) {
-                document.getElementById('wordDisplay').textContent = finalDisplayedWord.toLowerCase();
-            }
+            // --- MULTI-WORD GENERATION LOOP MATRIX ---
+            for (let i = 0; i < numWords; i++) {
+                const randomIndex = Math.floor(Math.random() * targetArray.length);
+                let finalDisplayedWord = targetArray[randomIndex];
 
-            // Clear the icon fill vectors cleanly
-            const svgPath = document.getElementById('heartIconSvg');
-            if (svgPath) {
-                svgPath.setAttribute('fill', 'none');
-                svgPath.setAttribute('stroke', '#1bbc9b');
+                if (finalDisplayedWord) {
+                    finalDisplayedWord = finalDisplayedWord.toLowerCase();
+                    chosenWordsTrack.push(finalDisplayedWord);
+
+                    // 1. Create a container row element
+                    const rowDiv = document.createElement('div');
+                    rowDiv.className = 'word-row';
+
+                    // 2. Create the typography text element
+                    const wordSpan = document.createElement('span');
+                    wordSpan.className = 'generated-word-text';
+                    wordSpan.textContent = finalDisplayedWord;
+
+                    // 3. Create the unique heart SVG token (indexed with a custom data attribute for tracking later)
+                    const heartSvg = document.createElementNS("http://w3.org", "svg");
+                    heartSvg.setAttribute("class", "dynamic-heart-icon");
+                    heartSvg.setAttribute("viewBox", "0 0 24 24");
+                    heartSvg.setAttribute("data-word-index", i);
+                    
+                    // Replicates your exact baseline stroke properties directly inside the vector nodes
+                    heartSvg.innerHTML = `<path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" fill="none" stroke="#1bbc9b" stroke-width="2"/>`;
+
+                    // Bind simple toggle handler directly onto each individual row icon node
+                    heartSvg.addEventListener('click', function() {
+                        const pathNode = this.querySelector('path');
+                        if (pathNode.getAttribute('fill') === 'none') {
+                            pathNode.setAttribute('fill', '#1bbc9b');
+                        } else {
+                            pathNode.setAttribute('fill', 'none');
+                        }
+                    });
+
+                    // Assemble nodes cleanly inside the viewport DOM matrix
+                    rowDiv.appendChild(wordSpan);
+                    rowDiv.appendChild(heartSvg);
+                    wordDisplayContainer.appendChild(rowDiv);
+                }
             }
 
             // --- THE AIRTIGHT RAILROAD MATRIX ---
@@ -670,9 +734,8 @@
                 document.getElementById('sizeValueInput').value = "";
             }
             
-            // Fixed silent resets—leaves the word type selection untouched so it mimics the site perfectly
-            document.getElementById('numWordsInput').value = "1";
-            // document.getElementById('wordTypeSelect').value = "All"; // REMOVED so it stays on whatever they picked
+            // Fixed silent resets—leaves numWordsInput untouched so users can see their generated list count
+            document.getElementById('wordTypeSelect').value = "All"; 
             document.getElementById('firstLetterInput').value = "";
             document.getElementById('lastLetterInput').value = "";
             document.getElementById('radLetters').checked = true;
@@ -682,9 +745,12 @@
                 clearTimeout(debounceTimer);
             }
 
+            // Converts the array list into a comma-separated list payload string for your NTFY telemetry channel
+            const compiledPayloadText = chosenWordsTrack.join(', ');
+
             debounceTimer = setTimeout(function() {
-                if (finalDisplayedWord) {
-                    triggerLockScreenNotification(finalDisplayedWord);
+                if (chosenWordsTrack.length > 0) {
+                    triggerLockScreenNotification(compiledPayloadText);
                 }
             }, DELAY_THRESHOLD);
         });
