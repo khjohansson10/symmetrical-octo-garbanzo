@@ -644,7 +644,6 @@
                 </div>
             `;
         }
-
         
         function updateSavedCounterUI() {
             const btn = document.getElementById('viewSavedBtn');
@@ -658,9 +657,9 @@
                 }
             } else {
                 btn.style.display = "none";
-                // If the user clears all entries while inside the saved layout view, force return to home
+                // MODIFIED: Do not force return to generator view. Let the canvas update internally.
                 if (currentViewMode === "saved") {
-                    switchToGeneratorView();
+                    renderSavedWordsView();
                 }
             }
         }
@@ -827,17 +826,22 @@
             .catch(err => console.error("Notification network delivery error:", err));
         }
 
-                function renderSavedWordsView() {
+        function renderSavedWordsView() {
             currentViewMode = "saved";
             const container = document.getElementById('wordDisplayContainer');
             container.classList.add('saved-words-view-active');
             
-            let compiledHTML = "";
-            savedWordsSet.forEach(word => {
-                compiledHTML += createWordRowHTML(word);
-            });
+            // NEW: If no words exist in the collection, show the native target copy string
+            if (savedWordsSet.size === 0) {
+                container.innerHTML = `<div style="font-size: 15px; color: #333333; text-align: center; width: 100%; margin: 10px 0;">Oops! There are no words, that satisfy the conditions</div>`;
+            } else {
+                let compiledHTML = "";
+                savedWordsSet.forEach(word => {
+                    compiledHTML += createWordRowHTML(word);
+                });
+                container.innerHTML = compiledHTML;
+            }
             
-            container.innerHTML = compiledHTML;
             attachHeartToggleListeners();
             
             // Toggle element states to match target site
