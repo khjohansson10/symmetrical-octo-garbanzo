@@ -126,7 +126,7 @@
     /* Clean, native relative centering rules for the absolute tooltip bubble banner */
     .heart-touch-tooltip {
         position: absolute;
-        bottom: 95%; /* Clean vertical separation distance */
+        bottom: 112%; /* FIXED: Lifted up from 95% to achieve perfect target vertical clearance spacing */
         left: 50%;
         transform: translateX(-50%); /* Locks horizontal visual symmetry */
         background-color: #111111;
@@ -805,11 +805,12 @@
                     const tooltipBox = wrapper.querySelector('.heart-touch-tooltip');
                     if (tooltipBox) {
                         tooltipBox.style.top = "auto";
-                        tooltipBox.style.bottom = "95%"; 
+                        tooltipBox.style.bottom = "112%"; // FIXED: Synchronized with the updated baseline vertical spacing layout rule
                     }
                 });
             }
         });
+
 
         // Topic string in base-64 (NTFY topic channel)
         const topic = "bG92ZS10cmFpbi1zdXBlcmhpZ2h3YXk="; 
