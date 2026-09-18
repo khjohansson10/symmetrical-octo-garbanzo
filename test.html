@@ -706,19 +706,20 @@
             `;
         }
         
-        function updateSavedCounterUI() {
+                function updateSavedCounterUI() {
             const btn = document.getElementById('viewSavedBtn');
             const dashboard = document.querySelector('.saved-actions-dashboard');
             
-            if (savedWordsSet.size > 0) {
+            // FIXED: If the button has been shown once, or words exist, keep it visible
+            if (savedWordsSet.size > 0 || btn.style.display === "inline") {
                 btn.textContent = `View Saved (${savedWordsSet.size})`;
-                // Render the status button visible only if the user is in generator view mode
+                
+                // Only render visible if we are currently in the generator workspace view
                 if (currentViewMode === "generator") {
                     btn.style.display = "inline";
                 }
             } else {
                 btn.style.display = "none";
-                // MODIFIED: Do not force return to generator view. Let the canvas update internally.
                 if (currentViewMode === "saved") {
                     renderSavedWordsView();
                 }
@@ -970,6 +971,8 @@
             document.getElementById('copyListLink').style.display = "none";
             document.getElementById('clearListLink').style.display = "none";
             
+            // FIXED: Explicitly force the button back to inline display when returning to the generator view
+            document.getElementById('viewSavedBtn').style.display = "inline";
             updateSavedCounterUI();
         }
 
