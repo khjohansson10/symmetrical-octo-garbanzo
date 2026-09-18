@@ -711,12 +711,17 @@
             const btn = document.getElementById('viewSavedBtn');
             const dashboard = document.querySelector('.saved-actions-dashboard');
             
-            // Set the session lock if the spectator ever adds a favorite
+            // Lock the sticky session flag if the spectator adds a favorite
             if (savedWordsSet.size > 0) {
                 hasSavedInSession = true;
             }
             
-            // FIXED: Evaluate the clean boolean tracker instead of inline string attributes
+            // FIXED: If we are in the saved list view and the size hits 0, reset the session flag
+            if (currentViewMode === "saved" && savedWordsSet.size === 0) {
+                hasSavedInSession = false;
+            }
+            
+            // Evaluate the clean boolean tracker instead of inline style selectors
             if (hasSavedInSession) {
                 btn.textContent = `View Saved (${savedWordsSet.size})`;
                 
