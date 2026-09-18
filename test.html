@@ -74,50 +74,26 @@
         margin: 35px auto 25px auto; 
         padding: 5px; 
         display: flex; 
-        flex-direction: column; 
+        flex-direction: column; /* Stacks multiple rows vertically */
         align-items: center; 
-        gap: 20px; /* Aligns row tracking density to the real layout */
+        gap: 16px; 
         width: 100%; 
         max-width: 550px; 
     }
     
-    /* Documented Fix: Removes flex-centering logic to prevent dynamic bounding box shifts */
+    /* Handles horizontal alignment of text next to its respective heart */
     .word-row {
-        display: block; /* Changes parent tracking to block-level inline container */
-        text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 18px;
         width: 100%;
-        line-height: 48px; /* Hardlocks visual baseline row height */
     }
 
-    /* Documented Fix: Standardizes font baseline bounds */
-    .word-text-display { 
-        font-size: 42px; 
-        font-weight: 700; 
-        color: #333333; 
-        letter-spacing: -0.5px; 
-        word-break: break-all; 
-        line-height: 48px; /* Matches row height to eliminate font tracking errors */
-        display: inline-block; 
-        vertical-align: middle; /* Forces typographic alignment to text cap-height */
-        margin: 0;
-        padding: 0;
-    }
+    .word-text-display { font-size: 42px; font-weight: 700; color: #333333; letter-spacing: -0.5px; word-break: break-all; line-height: 1; display: inline-block; }
     
-    /* Documented Fix: Standardizes layout bounds to match the target site's inline-icon styling */
-    .heart-svg-wrapper { 
-        width: 32px; /* Scale corrected to match target site's character height proportions */
-        height: 32px; 
-        color: #1bbc9b; 
-        cursor: pointer; 
-        display: inline-block; /* Aligns asset into font row calculations */
-        vertical-align: middle; /* Forces precise typographical alignment */
-        margin-left: 14px; /* Restores exact horizontal layout spacing gap */
-        transition: transform 0.1s ease; 
-        
-        /* Neutralizes internal top-heavy SVG asset code paths safely */
-        padding-top: 3px; 
-        box-sizing: border-box;
-    }
+    /* Retained: Preserves the strict geometry and animations of the heart button */
+    .heart-svg-wrapper { width: 50px; height: 50px; color: #1bbc9b; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; transition: transform 0.1s ease;}
     .heart-svg-wrapper:active { transform: scale(0.9); }
 
     /* 9. AdSense Mobile Banner Proportional Frames */
