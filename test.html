@@ -95,8 +95,7 @@
     /* FIXED: Restored clean flex-centering and dimensions. Stripped padding to prevent shrinking the heart asset */
     .heart-svg-wrapper { 
         width: 50px; 
-        height: auto; /* Changed from 50px to auto so it wraps fluidly */
-        aspect-ratio: 1 / 1; /* Maintains a perfect square constraint */
+        height: 50px; 
         color: #1bbc9b; 
         cursor: pointer; 
         display: inline-flex; 
@@ -104,7 +103,6 @@
         justify-content: center; 
         flex-shrink: 0; 
         transition: transform 0.1s ease;
-        padding: 2px 0; /* Tiny uniform padding to settle the visual anchor line */
     }
     .heart-svg-wrapper:active { transform: scale(0.9); }
 
