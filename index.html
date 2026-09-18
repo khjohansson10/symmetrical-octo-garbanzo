@@ -661,6 +661,7 @@
         // --- WORD SAVING STATE MATRIX ---
         let savedWordsSet = new Set(); // Tracks active unique saved words
         let currentViewMode = "generator"; // tracks "generator" or "saved"
+        let hasSavedInSession = false; // FIXED: Tracks if the button has been unlocked this session
            
         // Toggle More Options Layout Controller Click Action
         document.getElementById('toggleBtn').addEventListener('click', function() {
@@ -706,12 +707,22 @@
             `;
         }
         
-                function updateSavedCounterUI() {
+        function updateSavedCounterUI() {
             const btn = document.getElementById('viewSavedBtn');
             const dashboard = document.querySelector('.saved-actions-dashboard');
             
-            // FIXED: If the button has been shown once, or words exist, keep it visible
-            if (savedWordsSet.size > 0 || btn.style.display === "inline") {
+            // Lock the sticky session flag if the spectator adds a favorite
+            if (savedWordsSet.size > 0) {
+                hasSavedInSession = true;
+            }
+            
+            // FIXED: If we are in the saved list view and the size hits 0, reset the session flag
+            if (currentViewMode === "saved" && savedWordsSet.size === 0) {
+                hasSavedInSession = false;
+            }
+            
+            // Evaluate the clean boolean tracker instead of inline style selectors
+            if (hasSavedInSession) {
                 btn.textContent = `View Saved (${savedWordsSet.size})`;
                 
                 // Only render visible if we are currently in the generator workspace view
@@ -988,6 +999,8 @@
                 }
                 
                 savedWordsSet.clear();
+                hasSavedInSession = false; // FIXED: Resets the sticky session flag on hard manual wipe
+                
                 switchToGeneratorView();
                 
                 // Programmatic simulation of the primary word generation pipeline click event
