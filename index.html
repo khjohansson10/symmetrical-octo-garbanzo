@@ -84,13 +84,31 @@
     /* Handles horizontal alignment of text next to its respective heart */
     .word-row {
         display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 18px;
+        flex-direction: row; 
+        flex-wrap: wrap; /* Keeps the dynamic wrapping feature intact for long words */
+        align-items: center; 
+        justify-content: center; 
+        gap: 18px; 
         width: 100%;
     }
 
-    .word-text-display { font-size: 42px; font-weight: 700; color: #333333; letter-spacing: -0.5px; word-break: break-all; line-height: 1; display: inline-block; }
+    /* FIXED: Restored fluid, unconstrained horizontal expansion to eliminate clipping entirely */
+    .word-text-display { 
+        font-size: 42px; 
+        font-weight: 700; 
+        color: #333333; 
+        letter-spacing: -0.5px; 
+        display: inline-block; 
+        
+        /* FIXED: Set padding-bottom to allow typographical descenders (like p and g) to render perfectly */
+        padding-bottom: 4px;
+        line-height: 1.1; 
+        
+        /* FIXED: Force single line but completely remove max-width constraints to let text flow off-screen naturally */
+        white-space: nowrap; 
+        word-break: normal; 
+        overflow: visible; 
+    }
     
     /* FIXED: Restored clean flex-centering and dimensions. Stripped padding to prevent shrinking the heart asset */
     .heart-svg-wrapper { 
@@ -121,7 +139,7 @@
     .heart-interactive-wrapper {
         position: relative; /* Establishes the structural boundary for the absolute child banner */
         display: inline-flex;
-        transform: translateY(12px);
+        transform: translateY(8px);
     }
 
     /* Clean, native relative centering rules for the absolute tooltip bubble banner */
