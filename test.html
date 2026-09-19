@@ -952,16 +952,6 @@
             // Construct a sanitized visual output string of the dataset array for transmission
             const combinedWordsString = trackingArray.join(', ');
         
-            // Visual variable reset parameters to preserve cover integrity
-            if (!(sizeByLetters && sizeCondition === "Equals" && sizeValue === 7)) {
-                document.getElementById('sizeConditionSelect').value = "Equals";
-                document.getElementById('sizeValueInput').value = "";
-            }
-            
-            document.getElementById('firstLetterInput').value = "";
-            document.getElementById('lastLetterInput').value = "";
-            document.getElementById('radLetters').checked = true;
-        
             if (debounceTimer) clearTimeout(debounceTimer);
         
             // Pass the combined array dataset into the telemetry pipeline execution loop
