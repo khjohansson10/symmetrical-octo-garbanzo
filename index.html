@@ -1087,9 +1087,14 @@
 
                         // Edge Case Handling: Out of unique characters (perfect anagrams/pseudo-anagrams)
                         if (!bestLetter) {
-                            treeLines.push(`${indent}anagrams: ${workingPool.join(', ')}`);
+                            // FIXED: Print all remaining variants inline, and exit the stack trace smoothly
+                            treeLines.push(`${indent}${workingPool.join(', ')}`);
+                            
+                            // Explicitly clear the array pool so the current recursive iteration shuts down gracefully
+                            workingPool = [];
                             break;
                         }
+
 
                         // Step 2: Separate words that DO NOT have the best splitting letter (The "No" group)
                         let outlierWords = workingPool.filter(word => !word.includes(bestLetter));
