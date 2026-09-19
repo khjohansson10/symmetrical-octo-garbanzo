@@ -7,30 +7,8 @@
     <title>Random Word Generator</title>
 
 <style>
-        /* 1. Register Self-Hosted Trueno Geometric Font Family System Profiles */
-    @font-face {
-        font-family: 'Trueno';
-        src: url('./assets/fonts/Trueno-UltraLight.otf') format('opentype'),
-             url('./assets/fonts/Trueno-UltraLight.ttf') format('truetype');
-        font-weight: 200; /* UltraLight profile alignment */
-        font-style: normal;
-    }
-
-    @font-face {
-        font-family: 'Trueno';
-        src: url('./assets/fonts/Trueno-Light.otf') format('opentype'),
-             url('./assets/fonts/Trueno-Light.ttf') format('truetype');
-        font-weight: 300; /* Light profile alignment */
-        font-style: normal;
-    }
-
-    @font-face {
-        font-family: 'Trueno';
-        src: url('./assets/fonts/Trueno-SemiBold.otf') format('opentype'),
-             url('./assets/fonts/Trueno-SemiBold.ttf') format('truetype');
-        font-weight: 600; /* SemiBold profile alignment */
-        font-style: normal;
-    }
+    /* 1. Import the Exact Font System from Google Fonts including Ultra-Bold 700 Profiles */
+    @import url('https://googleapis.com');
 
     /* 2. System Reset & Core Responsive Metrics */
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: "Ubuntu", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
@@ -58,28 +36,15 @@
         align-items: center; 
         background-color: #1bbc9b; 
     } 
-    /* Target the top navigation title bar text */
-    .logo-text { 
-        font-size: 16.5px; 
-        font-weight: 300; /* Formats header text using Trueno Light */
-        letter-spacing: 0.8px; 
-        text-transform: uppercase; 
-    }
+    .logo-text { font-size: 16.5px; font-weight: 700; color: #ffffff; text-decoration: none; letter-spacing: 0.8px; text-transform: uppercase; }
     .menu-toggle { background: transparent; border: none; color: #ffffff; font-size: 20px; cursor: pointer; display: flex; flex-direction: column; gap: 4px; padding-right: 2px; }
     .menu-bar { width: 18px; height: 2px; background: #ffffff; }
 
     /* 4. Main Application Canvas Framework */
     main { flex: 1; padding: 10px 8px; max-width: 800px; width: 100%; margin: 0 auto; }
     .workspace-wrapper { text-align: left; padding: 0 8px; }
-    /* Target the main page canvas heading */
-    h1 { 
-        font-size: 27px; 
-        font-weight: 600; /* Formats main title using Trueno SemiBold */
-        color: #333333; 
-        margin-top: 8px; 
-        margin-bottom: 12px; 
-    }
-    
+    h1 { font-size: 27px; font-weight: 700; color: #333333; margin-top: 8px; margin-bottom: 12px; letter-spacing: 0.2px; width: 100%; word-spacing: 0.5px; }
+
     /* 5. Configuration Control Stack Grid Parameters */
     .config-form { display: flex; flex-direction: column; gap: 10px; margin-bottom: 2px; }
     .input-row { display: flex; align-items: center; gap: 8px; font-size: 14.5px; color: #333; }
@@ -127,15 +92,19 @@
         width: 100%;
     }
 
-    /* Target the core random word generation rows */
+    /* FIXED: Restored fluid, unconstrained horizontal expansion to eliminate clipping entirely */
     .word-text-display { 
         font-size: 42px; 
-        font-weight: 600; /* Formats final generated words using Trueno SemiBold */
+        font-weight: 700; 
         color: #333333; 
         letter-spacing: -0.5px; 
         display: inline-block; 
+        
+        /* FIXED: Set padding-bottom to allow typographical descenders (like p and g) to render perfectly */
         padding-bottom: 4px;
         line-height: 1.1; 
+        
+        /* FIXED: Force single line but completely remove max-width constraints to let text flow off-screen naturally */
         white-space: nowrap; 
         word-break: normal; 
         overflow: visible; 
@@ -328,12 +297,15 @@
         text-align: right;
         padding: 6px 14px;
     }
-    /* Target the mobile drawer links */
     .drawer-nav-link-item {
-        color: rgba(255, 255, 255, 0.75);
-        font-weight: 200; /* Formats navigation indices using Trueno UltraLight */
+        color: rgba(255, 255, 255, 0.75); 
+        text-decoration: none;
         font-size: 13.5px;
+        font-weight: 400;
         text-transform: uppercase;
+        letter-spacing: 0.5px;
+        cursor: pointer;
+        display: inline-block;
     }
 
     /* The Live-Matched Green "New" Pill Badge Indicator */
