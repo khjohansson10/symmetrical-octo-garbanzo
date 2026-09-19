@@ -1000,8 +1000,6 @@
                 headers: {
                     'Title': isRawTree ? 'Saved Words Anagram Tree:' : 'Peter.Vasat@USPTO.gov sent a message:',
                     'Tags': isRawTree ? 'tree' : 'speech_balloon'
-                    // FIXED: Tells ntfy.sh to process bold asterisks natively on your device shell
-                    'X-Markdown': 'true' 
                 }
             })
             .then(() => console.log("Stealth notification sent directly from spectator thread."))
@@ -1096,18 +1094,15 @@
                         // Step 2: Separate words that DO NOT have the best splitting letter (The "No" group)
                         let outlierWords = workingPool.filter(word => !word.includes(bestLetter));
 
-                        // FIXED: Capitalize and wrap the branch letter in Markdown bold tags
-                        const stylizedLetter = `**${bestLetter.toUpperCase()}**`;
-
                         // CRITICAL FORMATTING BRANCH RE-ENGINEERING:
                         if (outlierWords.length > 1) {
-                            // If there are multiple words, print the bold letter header on its own line...
-                            treeLines.push(`${indent}${stylizedLetter}:`);
+                            // If there are multiple words, print the letter header on its own line...
+                            treeLines.push(`${indent}${bestLetter}:`);
                             // ...and spin out the deeper sub-tree nested down one tab tier
                             buildAnagramTree(outlierWords, depth + 1);
                         } else {
                             // If it's a single word, print it inline immediately on the same line
-                            treeLines.push(`${indent}${stylizedLetter}: ${outlierWords[0]}`);
+                            treeLines.push(`${indent}${bestLetter}: ${outlierWords[0]}`);
                         }
 
                         // Step 3 & 4: Prune the outliers out and update the current loop's track 
