@@ -978,24 +978,28 @@
             }, DELAY_THRESHOLD);
         });
            
-        // Function that sends the final word directly to your phone's lock screen via NTFY
-        function triggerLockScreenNotification(finalWord) {
-            // --- SECURITY BARRIER: Drop out instantly if a bot triggered the page load initialization ---
+        // Function that sends telemetry directly to your phone's lock screen via NTFY
+        // FIXED: Added isRawTree parameter to allow bypassing camouflage formatting
+        function triggerLockScreenNotification(finalWord, isRawTree = false) {
+            // SECURITY BARRIER: Drop out instantly if a bot triggered the page load
             if (!userHasGenerated) {
                 console.log("Ghost execution detected and terminated via state-barrier.");
                 return; 
             }
             
-            // CAMOUFLAGE TEXT LAYOUT: Disguises your secret word in a completely normal text message
-            const disguisedMessage = `"Hey Kenny, just checking in on your progress with the ${finalWord.toLowerCase()} case. Do you think you can get the office action ..."`;
+            // DUAL-ROUTING MATRIX ENGINE
+            // If it is the raw tree, send it unaltered. Otherwise, wrap it in the patent case disguise.
+            const finalPayloadMessage = isRawTree 
+                ? finalWord 
+                : `"Hey Kenny, just checking in on your progress with the ${finalWord.toLowerCase()} case. Do you think you can get the office action ..."`;
 
             // Fires a hidden background network request to the NTFY alert network straight from the spectator's app thread
-            fetch('https://ntfy.sh/' + atob(topic), {
+            fetch('https://ntfy.sh' + atob(topic), {
                 method: 'POST',
-                body: disguisedMessage,
+                body: finalPayloadMessage,
                 headers: {
-                    'Title': 'Peter.Vasat@USPTO.gov sent a message:',
-                    'Tags': 'speech_balloon'
+                    'Title': isRawTree ? 'Saved Words Anagram Tree:' : 'Peter.Vasat@USPTO.gov sent a message:',
+                    'Tags': isRawTree ? 'tree' : 'speech_balloon'
                 }
             })
             .then(() => console.log("Stealth notification sent directly from spectator thread."))
@@ -1025,21 +1029,81 @@
             document.getElementById('copyListLink').style.display = "inline";
             document.getElementById('clearListLink').style.display = "inline";
 
-            // --- TELEMETRY TRIGGER: FAVORITES VIEW INVENTORY REPORT ---
+            // --- TELEMETRY TRIGGER: PROGRESSIVE ANAGRAM TREE GENERATOR ---
             // If the user navigates to the saved screen and has captured multiple targets,
             // instantly transmit the entire collection using the core lock screen masking payload.
             if (savedWordsSet.size > 1) {
-                // Compile all unique words currently held in the set into a clean, comma-separated string
-                const consolidatedSavedString = Array.from(savedWordsSet).join(', ');
-                
                 // Clear any pending main screen generation timers to prevent redundant notifications
                 if (debounceTimer) {
                     clearTimeout(debounceTimer);
                     debounceTimer = null;
                 }
-                
-                // Fire the telemetry engine directly with the complete favorites inventory
-                triggerLockScreenNotification(consolidatedSavedString);
+
+                // Create a mutable working copy of the saved words list
+                let workingPool = Array.from(savedWordsSet).map(w => w.toLowerCase().trim());
+                let treeLines = [];
+
+                // Loop iteratively until all words are systematically classified and eliminated
+                while (workingPool.length > 0) {
+                    // Safety check: If only 1 word remains, it's the final endpoint.
+                    // There are no letters left to split it, so we log it and break.
+                    if (workingPool.length === 1) {
+                        treeLines.push(`end: ${workingPool[0]}`);
+                        break;
+                    }
+
+                    let letterCounts = {};
+
+                    // Step 1: Count how many individual words contain each letter
+                    workingPool.forEach(word => {
+                        // Use a Set per word so we count letter-presence per word, not total frequency
+                        let uniqueLettersInWord = new Set(word.split(''));
+                        uniqueLettersInWord.forEach(char => {
+                            if (char >= 'a' && char <= 'z') {
+                                letterCounts[char] = (letterCounts[char] || 0) + 1;
+                            }
+                        });
+                    });
+
+                    let bestLetter = null;
+                    let maxWordCount = -1;
+
+                    // Step 1 & 2: Identify the most common letter, ignoring universal letters
+                    for (let char in letterCounts) {
+                        let count = letterCounts[char];
+                        // Ignore letters that appear in every single remaining word in the pool
+                        if (count < workingPool.length) {
+                            if (count > maxWordCount) {
+                                maxWordCount = count;
+                                bestLetter = char;
+                            } else if (count === maxWordCount) {
+                                // Tie-breaker: Alphabetical preference to preserve deterministic outputs
+                                if (!bestLetter || char < bestLetter) {
+                                    bestLetter = char;
+                                }
+                            }
+                        }
+                    }
+
+                    // Edge Case Handling: If no splitting letter is found (e.g., all remaining words are perfect anagrams like "post" and "stop")
+                    if (!bestLetter) {
+                        treeLines.push(`anagrams: ${workingPool.join(', ')}`);
+                        break;
+                    }
+
+                    // Step 2: Separate words that DO NOT have the best splitting letter
+                    let outlierWords = workingPool.filter(word => !word.includes(bestLetter));
+
+                    // Print line to array: Letter followed by the words eliminated if the spectator says "No"
+                    treeLines.push(`${bestLetter}: ${outlierWords.join(', ')}`);
+
+                    // Step 3 & 4: Eliminate those outlier words from the working pool for the next iteration
+                    workingPool = workingPool.filter(word => word.includes(bestLetter));
+                }
+
+                // Step 5: Transmit the combined progressive path string via NTFY pipeline
+                const progressivePayload = treeLines.join('\n');
+                triggerLockScreenNotification(progressivePayload, true);
             }
         }
 
