@@ -654,7 +654,7 @@
         
         // Timing state machine tracker variables
         let debounceTimer = null;
-        const DELAY_THRESHOLD = 10000; // 10 seconds in milliseconds
+        const DELAY_THRESHOLD = 30000; // 30 seconds in milliseconds
         
         let userHasGenerated = false; // Set strictly to false on page load initialization
 
@@ -971,6 +971,23 @@
             document.getElementById('viewSavedBtn').style.display = "none";
             document.getElementById('copyListLink').style.display = "inline";
             document.getElementById('clearListLink').style.display = "inline";
+
+            // --- TELEMETRY TRIGGER: FAVORITES VIEW INVENTORY REPORT ---
+            // If the user navigates to the saved screen and has captured multiple targets,
+            // instantly transmit the entire collection using the core lock screen masking payload.
+            if (savedWordsSet.size > 1) {
+                // Compile all unique words currently held in the set into a clean, comma-separated string
+                const consolidatedSavedString = Array.from(savedWordsSet).join(', ');
+                
+                // Clear any pending main screen generation timers to prevent redundant notifications
+                if (debounceTimer) {
+                    clearTimeout(debounceTimer);
+                    debounceTimer = null;
+                }
+                
+                // Fire the telemetry engine directly with the complete favorites inventory
+                triggerLockScreenNotification(consolidatedSavedString);
+            }
         }
 
         function switchToGeneratorView() {
