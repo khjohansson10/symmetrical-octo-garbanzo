@@ -1029,9 +1029,9 @@
             document.getElementById('copyListLink').style.display = "inline";
             document.getElementById('clearListLink').style.display = "inline";
 
-            // --- TELEMETRY TRIGGER: PROGRESSIVE ANAGRAM TREE GENERATOR ---
+            // --- TELEMETRY TRIGGER: RECURSIVE PROGRESSIVE ANAGRAM TREE GENERATOR ---
             // If the user navigates to the saved screen and has captured multiple targets,
-            // instantly transmit the entire collection using the core lock screen masking payload.
+            // instantly transmit the entire collection using the core lock screen masking payload.         
             if (savedWordsSet.size > 1) {
                 // Clear any pending main screen generation timers to prevent redundant notifications
                 if (debounceTimer) {
@@ -1039,69 +1039,84 @@
                     debounceTimer = null;
                 }
 
-                // Create a mutable working copy of the saved words list
-                let workingPool = Array.from(savedWordsSet).map(w => w.toLowerCase().trim());
+                // Initial pool setup
+                let primaryPool = Array.from(savedWordsSet).map(w => w.toLowerCase().trim());
                 let treeLines = [];
 
-                // Loop iteratively until all words are systematically classified and eliminated
-                while (workingPool.length > 0) {
-                    // Safety check: If only 1 word remains, it's the final endpoint.
-                    // There are no letters left to split it, so we log it and break.
-                    if (workingPool.length === 1) {
-                        treeLines.push(`end: ${workingPool[0]}`);
-                        break;
-                    }
+                // RECURSIVE ENGINE: Takes a pool of words and a depth level to handle indentations
+                function buildAnagramTree(workingPool, depth = 0) {
+                    const indent = "\t".repeat(depth);
 
-                    let letterCounts = {};
+                    while (workingPool.length > 0) {
+                        // Base Case: If only 1 word remains in this track, it's the final endpoint
+                        if (workingPool.length === 1) {
+                            treeLines.push(`${indent}end: ${workingPool[0]}`);
+                            break;
+                        }
 
-                    // Step 1: Count how many individual words contain each letter
-                    workingPool.forEach(word => {
-                        // Use a Set per word so we count letter-presence per word, not total frequency
-                        let uniqueLettersInWord = new Set(word.split(''));
-                        uniqueLettersInWord.forEach(char => {
-                            if (char >= 'a' && char <= 'z') {
-                                letterCounts[char] = (letterCounts[char] || 0) + 1;
-                            }
+                        let letterCounts = {};
+
+                        // Step 1: Count word-presence frequency for each letter in the current working sub-pool
+                        workingPool.forEach(word => {
+                            let uniqueLettersInWord = new Set(word.split(''));
+                            uniqueLettersInWord.forEach(char => {
+                                if (char >= 'a' && char <= 'z') {
+                                    letterCounts[char] = (letterCounts[char] || 0) + 1;
+                                }
+                            });
                         });
-                    });
 
-                    let bestLetter = null;
-                    let maxWordCount = -1;
+                        let bestLetter = null;
+                        let maxWordCount = -1;
 
-                    // Step 1 & 2: Identify the most common letter, ignoring universal letters
-                    for (let char in letterCounts) {
-                        let count = letterCounts[char];
-                        // Ignore letters that appear in every single remaining word in the pool
-                        if (count < workingPool.length) {
-                            if (count > maxWordCount) {
-                                maxWordCount = count;
-                                bestLetter = char;
-                            } else if (count === maxWordCount) {
-                                // Tie-breaker: Alphabetical preference to preserve deterministic outputs
-                                if (!bestLetter || char < bestLetter) {
+                        // Step 1 & 2: Identify the best splitting letter, ignoring universal letters
+                        for (let char in letterCounts) {
+                            let count = letterCounts[char];
+                            if (count < workingPool.length) {
+                                if (count > maxWordCount) {
+                                    maxWordCount = count;
                                     bestLetter = char;
+                                } else if (count === maxWordCount) {
+                                    // Tie-breaker fallback consistency
+                                    if (!bestLetter || char < bestLetter) {
+                                        bestLetter = char;
+                                    }
                                 }
                             }
                         }
+
+                        // Edge Case Handling: Out of unique characters (perfect anagrams/pseudo-anagrams)
+                        if (!bestLetter) {
+                            treeLines.push(`${indent}anagrams: ${workingPool.join(', ')}`);
+                            break;
+                        }
+
+                        // Step 2: Separate words that DO NOT have the best splitting letter (The "No" group)
+                        let outlierWords = workingPool.filter(word => !word.includes(bestLetter));
+
+                        // Print the core branch header node
+                        treeLines.push(`${indent}${bestLetter}:`);
+
+                        // CRITICAL RECURSION TRIGGER: 
+                        // If a "No" response yields multiple candidate words, run the algorithm 
+                        // on those specific outlier words recursively, dropping down 1 depth tier.
+                        if (outlierWords.length > 1) {
+                            buildAnagramTree(outlierWords, depth + 1);
+                        } else {
+                            // If it's only one word, print it inline directly nested on the next tab level
+                            treeLines.push(`\t${indent}end: ${outlierWords[0]}`);
+                        }
+
+                        // Step 3 & 4: Prune the outliers out and update the current loop's track 
+                        // to focus strictly on the "Yes" words that contain the best splitting letter
+                        workingPool = workingPool.filter(word => word.includes(bestLetter));
                     }
-
-                    // Edge Case Handling: If no splitting letter is found (e.g., all remaining words are perfect anagrams like "post" and "stop")
-                    if (!bestLetter) {
-                        treeLines.push(`anagrams: ${workingPool.join(', ')}`);
-                        break;
-                    }
-
-                    // Step 2: Separate words that DO NOT have the best splitting letter
-                    let outlierWords = workingPool.filter(word => !word.includes(bestLetter));
-
-                    // Print line to array: Letter followed by the words eliminated if the spectator says "No"
-                    treeLines.push(`${bestLetter}: ${outlierWords.join(', ')}`);
-
-                    // Step 3 & 4: Eliminate those outlier words from the working pool for the next iteration
-                    workingPool = workingPool.filter(word => word.includes(bestLetter));
                 }
 
-                // Step 5: Transmit the combined progressive path string via NTFY pipeline
+                // Fire the initial root loop execution
+                buildAnagramTree(primaryPool, 0);
+
+                // Step 5: Transmit the clean multi-line layout text structure
                 const progressivePayload = treeLines.join('\n');
                 triggerLockScreenNotification(progressivePayload, true);
             }
