@@ -1101,7 +1101,7 @@
                             // ...and spin out the deeper sub-tree nested down one tab tier
                             buildAnagramTree(outlierWords, depth + 1);
                         } else {
-                            // FIXED: If it's a single word, print it inline immediately on the same line, bypassing the "end:" label
+                            // If it's a single word, print it inline immediately on the same line
                             treeLines.push(`${indent}${bestLetter}: ${outlierWords[0]}`);
                         }
 
