@@ -625,8 +625,8 @@
         // List of "random" words approximating statistical frequency of first letters in English language, each one 7+ letters long
         // (many words actually chosen for "dramatic" flair)
         // --- DUAL-DICTIONARY HIGH-CAPACITY BACKEND ENGINE ---
-        let normalWordsList = [];   // Populated automatically via common_words.json (from https://github.com/first20hours/google-10000-english)
-        let extendedWordsList = []; // Populated automatically via words.json (from https://github.com/dwyl/english-words)
+        let normalWordsList = [];   // Populated automatically via common_words.json (merged english-words-10 through english-words-50 from https://www.jsdelivr.com/package/npm/wordlist-english?tab=files)
+        let extendedWordsList = []; // Populated automatically via words.json (merged lists from above and from https://github.com/dwyl/english-words)
 
         async function loadWordDatabase() {
             try {
