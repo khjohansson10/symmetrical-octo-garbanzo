@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Magical Animation Prop</title>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="mobile-web-app-capable" content="yes">
+    <link rel="manifest" href="data:application/manifest+json,{'display':'standalone','orientation':'portrait'}">
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            background-color: #000;
+            background-size: cover;
+            background-position: center;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            overflow: hidden;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        /* Initial configuration UI */
+        #setupUI {
+            position: fixed;
+            insidest: 0;
+            z-index: 100;
+            background: #1c1c1e;
+            color: #fff;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        .btn {
+            background: #007aff;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 16px;
+            margin-top: 20px;
+            cursor: pointer;
+        }
+
+        /* Overlay Layout for Keypad Elements */
+        #gridContainer {
+            display: none;
+            position: absolute;
+            bottom: 15.6%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 286px;
+            grid-template-columns: repeat(3, 75px);
+            column-gap: 30px;
+            row-gap: 17px;
+            justify-content: center;
+        }
+
+        /* Non-interactive, purely visual circles */
+        .circle-node {
+            width: 75px;
+            height: 75px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.16);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 36px;
+            font-weight: 400;
+            letter-spacing: -0.5px;
+            transition: background 0.1s ease, transform 0.1s ease;
+            pointer-events: none;
+            padding-top: 2px;
+        }
+
+        /* Animated flash class triggered via JS */
+        .circle-node.active-flash {
+            background: rgba(255, 255, 255, 0.6);
+            transform: scale(0.95);
+        }
+
+        /* Add this new class to format the alphabetical subtext */
+        .circle-subtext {
+            font-size: 9px;
+            font-weight: 600;
+            letter-spacing: 2px;
+            margin-top: -3px;
+            text-indent: 2px; /* Offsets letter-spacing to center the string */
+        }
+
+        /* Final dynamic status text placement */
+        #statusMessage {
+            display: none;
+            position: absolute;
+            top: 25%;
+            width: 100%;
+            text-align: center;
+            color: #fff;
+            font-size: 24px;
+            font-weight: 300;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Setup Panel -->
+    <div id="setupUI">
+        <h2>Performance Setup</h2>
+        <p>Choose a background image from your device roll:</p>
+        <input type="file" id="bgPicker" accept="image/*">
+        <button class="btn" id="startBtn">Activate Prop</button>
+    </div>
+
+    <!-- Dynamic Status Target -->
+    <div id="statusMessage">Unlocked</div>
+
+    <!-- Purely Visual Grid -->
+    <div id="gridContainer">
+        <div class="circle-node" data-val="1">1<span class="circle-subtext">&nbsp;</span></div>
+        <div class="circle-node" data-val="2">2<span class="circle-subtext">ABC</span></div>
+        <div class="circle-node" data-val="3">3<span class="circle-subtext">DEF</span></div>
+        <div class="circle-node" data-val="4">4<span class="circle-subtext">GHI</span></div>
+        <div class="circle-node" data-val="5">5<span class="circle-subtext">JKL</span></div>
+        <div class="circle-node" data-val="6">6<span class="circle-subtext">MNO</span></div>
+        <div class="circle-node" data-val="7">7<span class="circle-subtext">PQRS</span></div>
+        <div class="circle-node" data-val="8">8<span class="circle-subtext">TUV</span></div>
+        <div class="circle-node" data-val="9">9<span class="circle-subtext">WXYZ</span></div>
+        <div></div> 
+        <div class="circle-node" data-val="0">0<span class="circle-subtext">&nbsp;</span></div>
+        <div></div> 
+    </div>
+
+    <script>
+        const bgPicker = document.getElementById('bgPicker');
+        const setupUI = document.getElementById('setupUI');
+        const startBtn = document.getElementById('startBtn');
+        const gridContainer = document.getElementById('gridContainer');
+        const statusMessage = document.getElementById('statusMessage');
+
+        // Handle image loading locally
+        bgPicker.addEventListener('change', (e) => {
+            const selectedFiles = e.target.files;
+            if (selectedFiles && selectedFiles[0]) {
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    document.body.style.backgroundImage = `url(${event.target.result})`;
+                };
+                reader.readAsDataURL(selectedFiles[0]);
+            }
+        });
+
+        // Trigger performance sequence
+        startBtn.addEventListener('click', () => {
+            setupUI.style.display = 'none';
+            gridContainer.style.display = 'grid';
+            
+            // Start the sequence after a initial 3-second delay
+            setTimeout(runAutomaticSequence, 3000);
+        });
+
+        // Automated execution logic
+        function runAutomaticSequence() {
+            // Hardcoded combination sequence to animate: 4 - 2 - 9 - 1
+            const sequence = ['4', '2', '9', '1'];
+            let step = 0;
+
+            function triggerNextKey() {
+                if (step < sequence.length) {
+                    const currentVal = sequence[step];
+                    const targetNode = document.querySelector(`.circle-node[data-val="${currentVal}"]`);
+                    
+                    if (targetNode) {
+                        // Turn flash on
+                        targetNode.classList.add('active-flash');
+                        
+                        // Turn flash off shortly after
+                        setTimeout(() => {
+                            targetNode.classList.remove('active-flash');
+                        }, 200);
+                    }
+                    
+                    step++;
+                    // Schedule next keypress animation with a slight rhythm variance
+                    setTimeout(triggerNextKey, 600);
+                } else {
+                    // NEW CODE: Leave empty or execute a callback that does not alter the UI.
+                    console.log("Animation complete. Grid layout locked.");
+                }
+            }
+
+            triggerNextKey();
+        }
+    </script>
+</body>
+</html>
