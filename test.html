@@ -1048,7 +1048,7 @@
                     const indent = "\t".repeat(depth);
 
                     while (workingPool.length > 0) {
-                        // Base Case: If only 1 word remains in this track, it's the final endpoint
+                        // Base Case: If only 1 word remains in this track, it's the final endpoint terminal
                         if (workingPool.length === 1) {
                             treeLines.push(`${indent}end: ${workingPool[0]}`);
                             break;
@@ -1094,17 +1094,15 @@
                         // Step 2: Separate words that DO NOT have the best splitting letter (The "No" group)
                         let outlierWords = workingPool.filter(word => !word.includes(bestLetter));
 
-                        // Print the core branch header node
-                        treeLines.push(`${indent}${bestLetter}:`);
-
-                        // CRITICAL RECURSION TRIGGER: 
-                        // If a "No" response yields multiple candidate words, run the algorithm 
-                        // on those specific outlier words recursively, dropping down 1 depth tier.
+                        // CRITICAL FORMATTING BRANCH RE-ENGINEERING:
                         if (outlierWords.length > 1) {
+                            // If there are multiple words, print the letter header on its own line...
+                            treeLines.push(`${indent}${bestLetter}:`);
+                            // ...and spin out the deeper sub-tree nested down one tab tier
                             buildAnagramTree(outlierWords, depth + 1);
                         } else {
-                            // If it's only one word, print it inline directly nested on the next tab level
-                            treeLines.push(`\t${indent}end: ${outlierWords[0]}`);
+                            // FIXED: If it's a single word, print it inline immediately on the same line, bypassing the "end:" label
+                            treeLines.push(`${indent}${bestLetter}: ${outlierWords[0]}`);
                         }
 
                         // Step 3 & 4: Prune the outliers out and update the current loop's track 
