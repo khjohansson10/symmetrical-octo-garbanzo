@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Magical Animation Prop</title>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="mobile-web-app-capable" content="yes">
+    <link rel="manifest" href="data:application/manifest+json,{'display':'standalone','orientation':'portrait'}">
     <style>
         * {
             box-sizing: border-box;
@@ -49,14 +53,15 @@
         #gridContainer {
             display: none;
             position: absolute;
-            bottom: 12%;
+            bottom: 15.6%;
             left: 50%;
             transform: translateX(-50%);
-            width: 85%;
-            max-width: 320px;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 20px 25px;
-            justify-items: center;
+            width: 100%;
+            max-width: 286px;
+            grid-template-columns: repeat(3, 75px);
+            column-gap: 30px;
+            row-gap: 17px;
+            justify-content: center;
         }
 
         /* Non-interactive, purely visual circles */
@@ -64,23 +69,35 @@
             width: 75px;
             height: 75px;
             border-radius: 50%;
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.16);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
             color: #fff;
-            font-size: 32px;
+            font-size: 36px;
             font-weight: 400;
+            letter-spacing: -0.5px;
             transition: background 0.1s ease, transform 0.1s ease;
-            pointer-events: none; /* Block all physical touch/click events */
+            pointer-events: none;
+            padding-top: 2px;
         }
 
         /* Animated flash class triggered via JS */
         .circle-node.active-flash {
             background: rgba(255, 255, 255, 0.6);
             transform: scale(0.95);
+        }
+
+        /* Add this new class to format the alphabetical subtext */
+        .circle-subtext {
+            font-size: 9px;
+            font-weight: 600;
+            letter-spacing: 2px;
+            margin-top: -3px;
+            text-indent: 2px; /* Offsets letter-spacing to center the string */
         }
 
         /* Final dynamic status text placement */
@@ -111,18 +128,18 @@
 
     <!-- Purely Visual Grid -->
     <div id="gridContainer">
-        <div class="circle-node" data-val="1">1</div>
-        <div class="circle-node" data-val="2">2</div>
-        <div class="circle-node" data-val="3">3</div>
-        <div class="circle-node" data-val="4">4</div>
-        <div class="circle-node" data-val="5">5</div>
-        <div class="circle-node" data-val="6">6</div>
-        <div class="circle-node" data-val="7">7</div>
-        <div class="circle-node" data-val="8">8</div>
-        <div class="circle-node" data-val="9">9</div>
-        <div></div> <!-- Spacer -->
-        <div class="circle-node" data-val="0">0</div>
-        <div></div> <!-- Spacer -->
+        <div class="circle-node" data-val="1">1<span class="circle-subtext">&nbsp;</span></div>
+        <div class="circle-node" data-val="2">2<span class="circle-subtext">ABC</span></div>
+        <div class="circle-node" data-val="3">3<span class="circle-subtext">DEF</span></div>
+        <div class="circle-node" data-val="4">4<span class="circle-subtext">GHI</span></div>
+        <div class="circle-node" data-val="5">5<span class="circle-subtext">JKL</span></div>
+        <div class="circle-node" data-val="6">6<span class="circle-subtext">MNO</span></div>
+        <div class="circle-node" data-val="7">7<span class="circle-subtext">PQRS</span></div>
+        <div class="circle-node" data-val="8">8<span class="circle-subtext">TUV</span></div>
+        <div class="circle-node" data-val="9">9<span class="circle-subtext">WXYZ</span></div>
+        <div></div> 
+        <div class="circle-node" data-val="0">0<span class="circle-subtext">&nbsp;</span></div>
+        <div></div> 
     </div>
 
     <script>
@@ -134,13 +151,13 @@
 
         // Handle image loading locally
         bgPicker.addEventListener('change', (e) => {
-            const file = e.target.files[0];
-            if (file) {
+            const selectedFiles = e.target.files;
+            if (selectedFiles && selectedFiles[0]) {
                 const reader = new FileReader();
                 reader.onload = (event) => {
                     document.body.style.backgroundImage = `url(${event.target.result})`;
                 };
-                reader.readAsDataURL(file);
+                reader.readAsDataURL(selectedFiles[0]);
             }
         });
 
@@ -178,11 +195,8 @@
                     // Schedule next keypress animation with a slight rhythm variance
                     setTimeout(triggerNextKey, 600);
                 } else {
-                    // Sequence finished: hide numbers and reveal success state
-                    setTimeout(() => {
-                        gridContainer.style.display = 'none';
-                        statusMessage.style.display = 'block';
-                    }, 500);
+                    // NEW CODE: Leave empty or execute a callback that does not alter the UI.
+                    console.log("Animation complete. Grid layout locked.");
                 }
             }
 
