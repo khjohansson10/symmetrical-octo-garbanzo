@@ -163,11 +163,23 @@
 
         // Trigger performance sequence
         startBtn.addEventListener('click', () => {
+            const docEl = document.documentElement;
+            
+            // Request programmatic fullscreen authorization from the browser
+            if (docEl.requestFullscreen) {
+                docEl.requestFullscreen().catch(err => console.log("Fullscreen error:", err));
+            } else if (docEl.webkitRequestFullscreen) { /* iOS/Safari compatibility wrapper */
+                docEl.webkitRequestFullscreen().catch(err => console.log("Fullscreen error:", err));
+            } else if (docEl.msRequestFullscreen) { /* IE11 compatibility wrapper */
+                docEl.msRequestFullscreen();
+            }
+
+            // Hide configuration UI and reveal grid layout
             setupUI.style.display = 'none';
             gridContainer.style.display = 'grid';
             
-            // Start the sequence after a initial 3-second delay
-            setTimeout(runAutomaticSequence, 3000);
+            // Initiate the automated key flash sequence
+            setTimeout(runAutomaticSequence, 2000);
         });
 
         // Automated execution logic
