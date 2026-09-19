@@ -85,10 +85,11 @@
     .word-row {
         display: flex;
         flex-direction: row; 
-        flex-wrap: wrap; /* Keeps the dynamic wrapping feature intact for long words */
-        align-items: center; 
+        flex-wrap: wrap; /* Permits the layout to break vertically when words overflow */
+        align-items: center; /* FIXED: Keeps the heart centered with text naturally when side-by-side */
         justify-content: center; 
-        gap: 18px; 
+        gap: 18px; /* Horizontal gap between text and heart when side-by-side */
+        row-gap: 2px; /* FIXED: Controls the vertical proximity when the heart wraps beneath long words */
         width: 100%;
     }
 
@@ -137,9 +138,9 @@
 
     /* Precision CSS Tooltip Layout Architecture Matrix */
     .heart-interactive-wrapper {
-        position: relative; /* Establishes the structural boundary for the absolute child banner */
+        position: relative; 
         display: inline-flex;
-        transform: translateY(8px);
+        /* FIXED: Removed transform: translateY(12px) entirely to prevent it from pushing wrapped hearts downward */
     }
 
     /* Clean, native relative centering rules for the absolute tooltip bubble banner */
