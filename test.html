@@ -84,13 +84,29 @@
     /* Handles horizontal alignment of text next to its respective heart */
     .word-row {
         display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 18px;
+        flex-direction: row; /* Maintains side-by-side flex track by default */
+        flex-wrap: wrap; /* NEW: Permits the row layout to split when long words occupy maximum width bounds */
+        align-items: center; 
+        justify-content: center; 
+        gap: 18px; 
         width: 100%;
     }
 
-    .word-text-display { font-size: 42px; font-weight: 700; color: #333333; letter-spacing: -0.5px; word-break: break-all; line-height: 1; display: inline-block; }
+    /* FIXED: Prevent word fragmentation, isolate horizontal scrolling, and support natural wrapping stack breaks */
+    .word-text-display { 
+        font-size: 42px; 
+        font-weight: 700; 
+        color: #333333; 
+        letter-spacing: -0.5px; 
+        display: inline-block; 
+        line-height: 1; 
+        
+        white-space: nowrap; /* NEW: Enforces the characters to stay on a single line forever */
+        word-break: normal; /* NEW: Overrides your old word-breaking engine rule completely */
+        overflow-x: auto; /* NEW: Provides an individual swipe track if words exceed viewport boundaries */
+        
+        max-width: calc(100% - 68px); /* NEW: Controls space distribution so standard words leave breathing room for the icon box */
+    }
     
     /* FIXED: Restored clean flex-centering and dimensions. Stripped padding to prevent shrinking the heart asset */
     .heart-svg-wrapper { 
