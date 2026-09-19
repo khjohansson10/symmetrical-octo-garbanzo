@@ -869,7 +869,7 @@
         document.getElementById('genButton').addEventListener('click', function() {
             if (normalWordsList.length === 0 || extendedWordsList.length === 0) return;
 
-            // NEW: Exit the saved inventory tracking module silently if user executes generation loop
+            // Exit the saved inventory tracking module silently if user executes generation loop
             if (currentViewMode === "saved") {
                 switchToGeneratorView();
             }
@@ -882,10 +882,59 @@
             const chosenWordType = document.getElementById('wordTypeSelect').value;
             let targetArray = (chosenWordType === "Extended") ? extendedWordsList : normalWordsList;
         
+            // --- NEW: DYNAMIC CONFIGURATION FILTER PIPELINE ---
+            const firstLetter = document.getElementById('firstLetterInput').value.trim().toLowerCase();
+            const lastLetter = document.getElementById('lastLetterInput').value.trim().toLowerCase();
+            const sizeCondition = document.getElementById('sizeConditionSelect').value;
+            const sizeValueInput = document.getElementById('sizeValueInput').value.trim();
+            const sizeValue = parseInt(sizeValueInput);
+            const sizeByLetters = document.getElementById('radLetters').checked; // true = letters, false = syllables
+
+            // Process filters iteratively over the word bank matrix
+            targetArray = targetArray.filter(word => {
+                const cleanedWord = word.toLowerCase();
+
+                // 1. Validate First Letter constraint if provided
+                if (firstLetter && !cleanedWord.startsWith(firstLetter)) return false;
+
+                // 2. Validate Last Letter constraint if provided
+                if (lastLetter && !cleanedWord.endsWith(lastLetter)) return false;
+
+                // 3. Validate Word Size Constraints if a valid integer is provided
+                if (!isNaN(sizeValue) && sizeValueInput !== "") {
+                    let metricValue = 0;
+
+                    if (sizeByLetters) {
+                        // Length assessment
+                        metricValue = cleanedWord.length;
+                    } else {
+                        // Simple linguistic baseline algorithm approximation for syllable counting
+                        const vowels = cleanedWord.match(/[aeiouy]{1,2}/g);
+                        metricValue = vowels ? vowels.length : 1;
+                    }
+
+                    // Evaluate dropdown conditional bounds matrix
+                    if (sizeCondition === "Equals" && metricValue !== sizeValue) return false;
+                    if (sizeCondition === "Less Than" && metricValue >= sizeValue) return false;
+                    if (sizeCondition === "Greater Than" && metricValue <= sizeValue) return false;
+                }
+
+                return true;
+            });
+
+            // Production resilience fallback check: if filters are too restrictive and wipe the array,
+            // supply a safe notification placeholder string so the visual layout does not crash.
+            if (targetArray.length === 0) {
+                document.getElementById('wordDisplayContainer').innerHTML = 
+                    `<div style="font-size: 15px; color: #333333; text-align: center; width: 100%; margin: 10px 0;">Oops! There are no words that satisfy the conditions</div>`;
+                return;
+            }
+            // --------------------------------------------------
+
             let generatedHTML = "";
             let trackingArray = [];
         
-            // Loop through the dictionary data array to pull the requested word count
+            // Loop through the filtered dictionary data array to pull the requested word count
             for (let i = 0; i < numWords; i++) {
                 const randomIndex = Math.floor(Math.random() * targetArray.length);
                 const finalWord = targetArray[randomIndex].toLowerCase();
@@ -904,11 +953,7 @@
             const combinedWordsString = trackingArray.join(', ');
         
             // Visual variable reset parameters to preserve cover integrity
-            const sizeVal = parseInt(document.getElementById('sizeValueInput').value);
-            const condition = document.getElementById('sizeConditionSelect').value;
-            const sizeByLetters = document.getElementById('radLetters').checked;
-        
-            if (!(sizeByLetters && condition === "Equals" && sizeVal === 7)) {
+            if (!(sizeByLetters && sizeCondition === "Equals" && sizeValue === 7)) {
                 document.getElementById('sizeConditionSelect').value = "Equals";
                 document.getElementById('sizeValueInput').value = "";
             }
