@@ -17,8 +17,6 @@
             padding: 0;
             height: 100vh;
             background-color: #000;
-            background-size: cover;
-            background-position: center;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             overflow: hidden;
             user-select: none;
@@ -50,6 +48,17 @@
             font-size: 16px;
             margin-top: 20px;
             cursor: pointer;
+        }
+
+        #globalCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-size: cover;
+            background-position: center;
+            z-index: 1; /* Sits completely behind all stage text elements */
         }
 
         /* Add these classes to manage the multi-screen sliding deck */
@@ -241,6 +250,8 @@
     </style>
 </head>
 <body>
+    
+    <div id="globalCanvas"></div>
 
     <!-- Setup Panel -->
     <div id="setupUI">
@@ -336,7 +347,8 @@
             if (selectedFiles && selectedFiles[0]) {
                 const reader = new FileReader();
                 reader.onload = (event) => {
-                    document.body.style.backgroundImage = `url(${event.target.result})`;
+                    // Targets the elevated canvas to bypass safe-area blocks
+                    document.getElementById('globalCanvas').style.backgroundImage = `url(${event.target.result})`;
                 };
                 reader.readAsDataURL(selectedFiles[0]);
             }
